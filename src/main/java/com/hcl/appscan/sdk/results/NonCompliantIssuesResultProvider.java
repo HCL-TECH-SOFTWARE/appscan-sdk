@@ -43,8 +43,8 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 			} else if (obj.has(KEY) && obj.get(KEY).equals(UNAUTHORIZED_ACTION)) {
 				m_status = FAILED;
 				return;
-			} else if (obj.has(STATUS) && obj.get(STATUS).equals(UNSTABLE)) {
-                            m_status = UNSTABLE;
+			} else if (obj.has(STATUS) && obj.get(STATUS).equals(UNKNOWN)) {
+                            m_status = UNKNOWN;
                             return;
 			}
 

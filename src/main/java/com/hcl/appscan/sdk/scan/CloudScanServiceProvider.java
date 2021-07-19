@@ -117,8 +117,8 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		
 		if (response.getResponseCode() == HttpsURLConnection.HTTP_OK || response.getResponseCode() == HttpsURLConnection.HTTP_CREATED)
 			return (JSONObject) response.getResponseBodyAsJSON();
-                else if (response.getResponseCode() == -1) { //If the server is not reachable
-                    return new JSONObject().put(STATUS,UNSTABLE);
+                else if (response.getResponseCode() == -1) { //If the server is not reachable internet disconnect
+                    return new JSONObject().put(STATUS,UNKNOWN);
                 }
 		else if (response.getResponseCode() != HttpsURLConnection.HTTP_BAD_REQUEST) {
 			JSONArtifact json = response.getResponseBodyAsJSON();

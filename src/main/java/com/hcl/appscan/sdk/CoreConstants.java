@@ -84,7 +84,7 @@ public interface CoreConstants {
 	String PAUSING						= "Pausing";											//$NON-NLS-1$
 	String PAUSED						= "Paused";												//$NON-NLS-1$
 	String SUSPENDED					= "Suspended";											//$NON-NLS-1$
-        String UNKNOWN                                         = "Unknown";                                                                                   //$NON-NLS-1$
+        String UNKNOWN                                          = "Unknown";                                                                                   //$NON-NLS-1$
         
 	String TOTAL_ISSUES					= "NIssuesFound";										//$NON-NLS-1$
 	String HIGH_ISSUES					= "NHighIssues";										//$NON-NLS-1$

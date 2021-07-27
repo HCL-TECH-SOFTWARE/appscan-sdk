@@ -17,5 +17,4 @@ public interface ScanConstants {
 	String ERROR_RUNNING_SCAN		= "error.running.scan";			//$NON-NLS-1$
 	String SCAN_FAILED				= "error.scan.failed";			//$NON-NLS-1$
 	String TARGET_INVALID			= "error.target.invalid";		//$NON-NLS-1$
-        String SERVER_UNAVAILABLE		= "error.server.unavailable";           //$NON-NLS-1$
 }

@@ -44,8 +44,8 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 				m_status = FAILED;
 				return;
 			} else if (obj.has(STATUS) && obj.get(STATUS).equals(UNKNOWN)) {
-                            m_status = UNKNOWN;
-                            return;
+                m_status = UNKNOWN;
+                return;
 			}
 
 			obj = (JSONObject) obj.get(LATEST_EXECUTION);

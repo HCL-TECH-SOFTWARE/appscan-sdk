@@ -120,6 +120,8 @@ implements	IModelXMLConstants
 	}
 
 	private String getTargetPath(ISASTTarget target) {
+		if (target.getTargetFile() == null)
+			return target.getTarget();
 		if(!m_useRelativePaths)
 			return target.getTargetFile().getAbsolutePath();
 

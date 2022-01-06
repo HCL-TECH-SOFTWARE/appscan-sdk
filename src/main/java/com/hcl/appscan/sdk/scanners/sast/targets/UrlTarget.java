@@ -9,11 +9,11 @@ import java.util.Map;
  */
 public class UrlTarget extends DefaultTarget {
 
-	private File m_targetFile;
-	private Map m_properties;
+	private String m_targetFile;
+	private Map<String, String> m_properties;
 	
 	public UrlTarget(String target) {
-		m_targetFile = new File(target);
+		m_targetFile = target;
 		m_properties = new HashMap<String, String>();
 	}
 	
@@ -24,7 +24,7 @@ public class UrlTarget extends DefaultTarget {
 	
 	@Override
 	public String getTarget() {
-		return m_targetFile.toString();
+		return m_targetFile;
 	}
 
 	@Override

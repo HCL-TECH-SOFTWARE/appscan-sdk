@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017. 
+ * © Copyright HCL Technologies Ltd. 2017, 2022. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -41,7 +41,7 @@ public class AuthenticationHandler implements CoreConstants {
 	public boolean login(String username, String password, boolean persist) throws IOException, JSONException {
 		return login(username, password, persist, LoginType.ASoC);
 	}
-
+	
 	/**
 	 * Authenticates a user using the given LoginType.
 	 * @param username The username.
@@ -53,10 +53,30 @@ public class AuthenticationHandler implements CoreConstants {
 	 * @throws JSONException If an error occurs.
 	 */
 	public boolean login(String username, String password, boolean persist, LoginType type) throws IOException, JSONException {
+		return login(username, password, persist, type, null);
+	}
+
+	/**
+	 * Authenticates a user using the given LoginType.
+	 * @param username The username.
+	 * @param password The password.
+	 * @param persist True to persist the credentials.
+	 * @param type The LoginType.
+	 * @param clientType The client to specify in the ClientType header.
+	 * @return True if successful.
+	 * @throws IOException If an error occurs.
+	 * @throws JSONException If an error occurs.
+	 */
+	public boolean login(String username, String password, boolean persist, LoginType type, String clientType) throws IOException, JSONException {
 		
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put(CONTENT_TYPE, "application/x-www-form-urlencoded"); //$NON-NLS-1$
 		headers.put(CHARSET, UTF8);
+		if(clientType != null) {
+			//Only allow letters, numbers, -, _, and . characters.
+			clientType = clientType.replaceAll("[^a-zA-Z0-9\\-\\._]", "");
+			headers.put(CoreConstants.CLIENT_TYPE, clientType);
+		}
 		
 		Map<String, String> params = new HashMap<String, String>();
 		String url;

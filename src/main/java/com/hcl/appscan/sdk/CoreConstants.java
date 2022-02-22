@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017,2020,2021.
+ * © Copyright HCL Technologies Ltd. 2017,2022.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -44,7 +44,8 @@ public interface CoreConstants {
 	String CONTENT_DISPOSITION 			= "Content-Disposition";				 				//$NON-NLS-1$
 	String CONTENT_LENGTH				= "Content-Length";				 						//$NON-NLS-1$
 	String CONTENT_TYPE					= "Content-Type";		 								//$NON-NLS-1$
-
+	String CLIENT_TYPE					= "ClientType";		 									//$NON-NLS-1$
+	
 	String API_ENV						= "/api/v2";				 							//$NON-NLS-1$
 	String API_BLUEMIX					= "Bluemix";					 						//$NON-NLS-1$
 	String API_BLUEMIX_LOGIN 			= API_ENV + "/Account/BluemixLogin";					//$NON-NLS-1$

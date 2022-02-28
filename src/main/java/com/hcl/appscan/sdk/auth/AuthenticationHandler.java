@@ -72,11 +72,6 @@ public class AuthenticationHandler implements CoreConstants {
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put(CONTENT_TYPE, "application/x-www-form-urlencoded"); //$NON-NLS-1$
 		headers.put(CHARSET, UTF8);
-		if(clientType != null) {
-			//Only allow letters, numbers, -, _, and . characters.
-			clientType = clientType.replaceAll("[^a-zA-Z0-9\\-\\._]", "");
-			headers.put(CoreConstants.CLIENT_TYPE, clientType);
-		}
 		
 		Map<String, String> params = new HashMap<String, String>();
 		String url;
@@ -84,6 +79,12 @@ public class AuthenticationHandler implements CoreConstants {
 		if(type == LoginType.ASoC_Federated) {
 			params.put(KEY_ID, username);
 			params.put(KEY_SECRET, password);
+			if(clientType != null) {
+				//Only allow letters, numbers, -, _, and . characters.
+				clientType = clientType.replaceAll("[^a-zA-Z0-9\\-\\._]", "");
+				params.put(CoreConstants.CLIENT_TYPE, clientType);
+				headers.put(CoreConstants.CLIENT_TYPE, clientType);
+			}
 		    url = m_authProvider.getServer() + API_KEY_LOGIN;
 		}
 		else {

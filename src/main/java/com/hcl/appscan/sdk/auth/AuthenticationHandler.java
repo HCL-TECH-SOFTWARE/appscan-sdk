@@ -110,7 +110,7 @@ public class AuthenticationHandler implements CoreConstants {
 	
 	public boolean isTokenExpired() {
 		boolean isExpired;
-		String request_url = m_authProvider.getServer() + API_SCANS;
+		String request_url = m_authProvider.getServer() + API_APPS_COUNT;
 		
 		Map<String, String> headers = m_authProvider.getAuthorizationHeader(false);
 		headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$

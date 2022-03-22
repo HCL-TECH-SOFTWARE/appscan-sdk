@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.hcl</groupId>
   <artifactId>appscan.sdk</artifactId>
-  <version>1.0.28-SNAPSHOT</version>
+  <version>1.0.27-SNAPSHOT</version>
 
   <name>HCL AppScan on Cloud SDK</name>
   <description>SDK for interacting with HCL AppScan on Cloud</description>

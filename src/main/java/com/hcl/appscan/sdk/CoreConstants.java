@@ -77,6 +77,7 @@ public interface CoreConstants {
 
 	String DEFAULT_RESULT_NAME			= "asoc_results";										//$NON-NLS-1$
 	String SACLIENT_INSTALL_DIR			= "SAClientInstall";									//$NON-NLS-1$
+	String SKIP_UPDATE					= "skipUpdate";											//$NON-NLS-1$
 
 	String RUNNING						= "Running";											//$NON-NLS-1$
 	String WAITING_TO_RUN				= "Waiting to Run";										//$NON-NLS-1$

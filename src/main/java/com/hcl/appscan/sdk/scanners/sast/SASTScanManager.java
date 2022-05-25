@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2020. 
+ * © Copyright HCL Technologies Ltd. 2017, 2022. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -33,16 +33,14 @@ public class SASTScanManager implements IScanManager{
 	private List<ISASTTarget> m_targets;
 	private SASTScan m_scan;
 	private String m_workingDirectory;
-	private boolean m_isThirdPartyScanningEnabled;
-	private boolean m_isOpenSourceOnlyEnabled;
-	private boolean m_isSourceCodeOnlyEnabled;
+	private boolean m_isThirdPartyScanningEnabled = false;
+	private boolean m_isOpenSourceOnlyEnabled = false;
+	private boolean m_isSourceCodeOnlyEnabled = false;
+	private boolean m_isStaticAnalysisOnlyEnabled = false;
 
 	public SASTScanManager(String workingDir) {
 		m_workingDirectory = workingDir;
 		m_targets = new ArrayList<>();
-		m_isThirdPartyScanningEnabled = false;
-		m_isOpenSourceOnlyEnabled = false;
-		m_isSourceCodeOnlyEnabled = false;
 	}
 
 	@Override
@@ -101,16 +99,36 @@ public class SASTScanManager implements IScanManager{
 		}
 	}
 	
+	/**
+	 * Enables the scanning of third party libraries that are excluded by default.
+	 * @param isThirdPartyScanningEnabled - True to enable the scanning of known 3rd party libraries that are excluded by default.
+	 */
 	public void setIsThirdPartyScanningEnabled(boolean isThirdPartyScanningEnabled) {
 		m_isThirdPartyScanningEnabled = isThirdPartyScanningEnabled;
 	}
 
+	/**
+	 * Only scan for known vulnerabilities in 3rd party libraries. Disables static analysis.
+	 * @param isOpenSourceOnlyEnabled - True to scan only for known vulnerabilities in 3rd party libraries.
+	 */
 	public void setIsOpenSourceOnlyEnabled(boolean isOpenSourceOnlyEnabled) {
 		m_isOpenSourceOnlyEnabled = isOpenSourceOnlyEnabled;
 	}
-	
+
+	/**
+	 * Only scan source code files. Ignore other file types such as .jar, .war, .dll, etc.
+	 * @param isSourceCodeOnlyEnabled - True to only scan source code files.
+	 */
 	public void setIsSourceCodeOnlyEnabled(boolean isSourceCodeOnlyEnabled) {
 		m_isSourceCodeOnlyEnabled = isSourceCodeOnlyEnabled;
+	}
+	
+	/**
+	 * Only run static analysis. Disables scanning for known vulnerabilities in 3rd party libraries.
+	 * @param isStaticAnalysisOnlyEnabled - True to scan only for known vulnerabilities in 3rd party libraries.
+	 */
+	public void setIsStaticAnalysisOnlyEnabled(boolean isStaticAnalysisOnlyEnabled) {
+		m_isStaticAnalysisOnlyEnabled = isStaticAnalysisOnlyEnabled;
 	}
 
 	public void createConfig() throws AppScanException {
@@ -123,7 +141,7 @@ public class SASTScanManager implements IScanManager{
 		try {
 			ModelWriter writer = new XmlWriter(useRelativeTargetPaths);
 			writer.initWriters(new File(m_workingDirectory));		
-			writer.visit(m_targets, m_isThirdPartyScanningEnabled, m_isOpenSourceOnlyEnabled, m_isSourceCodeOnlyEnabled);
+			writer.visit(m_targets, m_isThirdPartyScanningEnabled, m_isOpenSourceOnlyEnabled, m_isSourceCodeOnlyEnabled, m_isStaticAnalysisOnlyEnabled);
 			writer.write();
 		} catch (IOException | TransformerException  e) {
 			throw new AppScanException(e.getLocalizedMessage(), e);

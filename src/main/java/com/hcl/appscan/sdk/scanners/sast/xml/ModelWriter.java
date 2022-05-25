@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017. 
+ * © Copyright HCL Technologies Ltd. 2017, 2022. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -120,5 +120,5 @@ public abstract class ModelWriter {
 
 	public abstract String getOutputLocation();
 
-	public abstract void visit(List<ISASTTarget> targets, boolean isThirdPartyScanningEnabled, boolean isOpenSourceOnlyEnabled, boolean isSourceCodeOnlyEnabled);
+	public abstract void visit(List<ISASTTarget> targets, boolean isThirdPartyScanningEnabled, boolean isOpenSourceOnlyEnabled, boolean isSourceCodeOnlyEnabled, boolean isStaticAnalysisOnlyEnabled);
 }

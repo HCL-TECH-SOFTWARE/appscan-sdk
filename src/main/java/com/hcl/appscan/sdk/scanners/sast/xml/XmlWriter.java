@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017.
+ * © Copyright HCL Technologies Ltd. 2017, 2022.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -52,7 +52,7 @@ implements	IModelXMLConstants
 
 	@Override
 	public void visit(List<ISASTTarget> targets, boolean isThirdPartyScanningEnabled,
-	                  boolean isOpenSourceOnlyEnabled, boolean isSourceCodeOnlyEnabled) {
+	                  boolean isOpenSourceOnlyEnabled, boolean isSourceCodeOnlyEnabled, boolean isStaticAnalysisOnlyEnabled) {
 		m_config.beginElement(E_CONFIGURATION);
 
 		if (isThirdPartyScanningEnabled) {
@@ -65,6 +65,10 @@ implements	IModelXMLConstants
 		
 		if (isSourceCodeOnlyEnabled) {
 			m_config.setAttribute(A_SOURCE_CODE_ONLY, "true");
+		}
+		
+		if (isStaticAnalysisOnlyEnabled) {
+			m_config.setAttribute(A_STATIC_ANALYSIS_ONLY, "true");
 		}
 
 		m_config.beginElement(E_TARGETS);

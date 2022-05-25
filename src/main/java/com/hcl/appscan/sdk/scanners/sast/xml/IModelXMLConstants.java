@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017. 
+ * © Copyright HCL Technologies Ltd. 2017, 2022. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -23,6 +23,7 @@ public interface IModelXMLConstants {
 	String A_THIRD_PARTY            = "thirdParty";             //$NON-NLS-1$
 	String A_OPEN_SOURCE_ONLY       = "openSourceOnly";         //$NON-NLS-1$
 	String A_SOURCE_CODE_ONLY		= "sourceCodeOnly";         //$NON-NLS-1$
+	String A_STATIC_ANALYSIS_ONLY	= "staticAnalysisOnly";     //$NON-NLS-1$
 
 	//Java
 	String A_PATH					= "path";					//$NON-NLS-1$

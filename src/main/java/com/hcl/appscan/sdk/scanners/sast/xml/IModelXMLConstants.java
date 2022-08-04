@@ -32,6 +32,7 @@ public interface IModelXMLConstants {
 	String A_JDK_PATH				= "jdk_path";				//$NON-NLS-1$
 	String A_JSP_COMPILER			= "jsp_compiler";			//$NON-NLS-1$
 	String A_ADDITIONAL_CLASSPATH	= "additional_classpath";	//$NON-NLS-1$
+	String A_IRX_MINOR_CACHE_HOME	= "irx_minor_cache_home";	//$NON-NLS-1$
 	String A_OUTPUTS_ONLY			= "outputs-only";			//$NON-NLS-1$
 	
 	//C++

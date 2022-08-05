@@ -145,9 +145,6 @@ public class SystemUtil {
 	 * @return A string representation of the user-specified irx cache location
 	 */
 	public static String getIrxMinorCacheHome() {
-		String irx_cache_path = "";
-		if (System.getProperty(IModelXMLConstants.A_IRX_MINOR_CACHE_HOME.toUpperCase()) != null)
-			irx_cache_path = System.getProperty(IModelXMLConstants.A_IRX_MINOR_CACHE_HOME.toUpperCase());
-		return irx_cache_path;
+		return System.getProperty(IModelXMLConstants.A_IRX_MINOR_CACHE_HOME.toUpperCase());
 	}
 }

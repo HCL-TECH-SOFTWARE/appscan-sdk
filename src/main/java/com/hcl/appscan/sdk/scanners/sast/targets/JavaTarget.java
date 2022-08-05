@@ -20,7 +20,7 @@ public abstract class JavaTarget extends DefaultTarget implements IJavaTarget {
 		HashMap<String, String> buildInfos = new HashMap<String, String>();
 		String irx_cache_path = SystemUtil.getIrxMinorCacheHome();
 		
-		if (irx_cache_path != "") {
+		if (irx_cache_path != null) {
 			File cache_dir = new File(irx_cache_path);
 			cache_dir.mkdir();
 			buildInfos.put(IModelXMLConstants.A_IRX_MINOR_CACHE_HOME, irx_cache_path);

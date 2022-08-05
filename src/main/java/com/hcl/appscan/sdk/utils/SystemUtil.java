@@ -148,8 +148,6 @@ public class SystemUtil {
 		String irx_cache_path = "";
 		if (System.getProperty(IModelXMLConstants.A_IRX_MINOR_CACHE_HOME.toUpperCase()) != null)
 			irx_cache_path = System.getProperty(IModelXMLConstants.A_IRX_MINOR_CACHE_HOME.toUpperCase());
-		else if (System.getProperty(IModelXMLConstants.A_IRX_MINOR_CACHE_HOME) != null)
-			irx_cache_path = System.getProperty(IModelXMLConstants.A_IRX_MINOR_CACHE_HOME);
 		return irx_cache_path;
 	}
 }

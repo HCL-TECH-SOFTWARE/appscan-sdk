@@ -50,6 +50,12 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 
 		if (("Manual").equals(scanLoginType)) {
 			String trafficFile = params.remove(TRAFFIC_FILE);
+			File file = new File(trafficFile);
+			if(!file.isAbsolute()) {
+				String targetPath = "${WORKSPACE}" + File.separator + file.getPath();
+				file = new File(targetPath);
+			}
+			trafficFile = file.getAbsolutePath();
 			if (trafficFile != null && new File(trafficFile).isFile()) {
 				File fileTraffic = new File(trafficFile);
 
@@ -72,11 +78,17 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 		if (scanFile != null && new File(scanFile).isFile()) {
 			type = DYNAMIC_ANALYZER_WITH_FILE;
 			File file = new File(scanFile);
+			if(!file.isAbsolute()) {
+				String targetPath = "${WORKSPACE}" + File.separator + file.getPath();
+				file = new File(targetPath);
+			}
+			scanFile = file.getAbsolutePath();
+			File scanFiles = new File(scanFile);
 
 			try {
-				String fileId = getServiceProvider().submitFile(file);
+				String fileId = getServiceProvider().submitFile(scanFiles);
 				if(fileId == null)
-					throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, file.getName()));
+					throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, scanFiles.getName()));
 				params.put(SCAN_FILE_ID, fileId);
 			} catch (IOException e) {
 				throw new ScannerException(Messages.getMessage(SCAN_FAILED, e.getLocalizedMessage()));

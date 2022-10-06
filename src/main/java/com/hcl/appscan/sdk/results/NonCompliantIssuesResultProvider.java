@@ -1,5 +1,5 @@
 /**
- * © Copyright HCL Technologies Ltd. 2018,2020,2021.
+ * © Copyright HCL Technologies Ltd. 2018, 2022.
  */
 package com.hcl.appscan.sdk.results;
 
@@ -201,8 +201,10 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 		configParams.put("Discussion", false);
 		configParams.put("Overview", true);
 		configParams.put("TableOfContent", true);
-		configParams.put("Advisories", true);
+		configParams.put("Advisories", false);
 		configParams.put("FixRecommendation", true);
+		configParams.put("Articles", true);
+		configParams.put("Coverage", true);
 		configParams.put("History", true);
 		configParams.put("IsTrialReport", false);
 		configParams.put("ReportFileType", format);

@@ -45,6 +45,7 @@ public interface CoreConstants {
 	String CONTENT_LENGTH				= "Content-Length";				 						//$NON-NLS-1$
 	String CONTENT_TYPE					= "Content-Type";		 								//$NON-NLS-1$
 	String CLIENT_TYPE					= "ClientType";		 									//$NON-NLS-1$
+	String SCAN_SCOPE					= "Scan";												//$NON-NLS-1$
 	
 	String API_ENV						= "/api/v2";				 							//$NON-NLS-1$
 	String API_BLUEMIX					= "Bluemix";					 						//$NON-NLS-1$

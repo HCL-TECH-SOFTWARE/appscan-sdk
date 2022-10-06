@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2020.
+ * © Copyright HCL Technologies Ltd. 2017, 2022.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -171,36 +171,36 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
 	}
 	
 	protected void getReport(String scanId, String format, File destination) throws IOException, JSONException {
-		IAuthenticationProvider authProvider = m_scanProvider.getAuthenticationProvider();
-		if(authProvider.isTokenExpired()) {
-			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_LOGIN_EXPIRED)));
+
+		String reportId = createIssuesReport(scanId, format);
+
+		if (reportId == null) {
 			return;
 		}
-	
-		String request_url = authProvider.getServer() + String.format(API_SCANS_REPORT, scanId, format);
-		Map<String, String> request_headers = authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_LENGTH, "0"); //$NON-NLS-1$
-	
-		HttpClient client = new HttpClient(m_scanProvider.getAuthenticationProvider().getProxy());
-		HttpResponse response = client.get(request_url, request_headers, null);
-	
-		if (response.getResponseCode() == HttpsURLConnection.HTTP_OK) {
-			if (destination.isDirectory()) {
-				String fileName = DEFAULT_RESULT_NAME + "_" + SystemUtil.getTimeStamp() + "." + format; //$NON-NLS-1$ //$NON-NLS-2$
-				destination = new File(destination, fileName);
-			}
-	
-			destination.getParentFile().mkdirs();
-			response.getResponseBodyAsFile(destination);
-		} else {
-			JSONObject object = (JSONObject) response.getResponseBodyAsJSON();
-			if (object.has(MESSAGE)) {
-				if (response.getResponseCode() == HttpsURLConnection.HTTP_BAD_REQUEST)
-					m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_RESULT)));
-				else
-					m_progress.setStatus(new Message(Message.ERROR, object.getString(MESSAGE)));
+
+		String status = getReportStatus(reportId);
+
+		while (!status.equalsIgnoreCase(READY) && !status.equalsIgnoreCase(FAILED)) {
+			try {
+				Thread.sleep(3000);
+				status = getReportStatus(reportId);
+			} catch (InterruptedException e) {
+				// ignore
 			}
 		}
+
+		if (!status.equalsIgnoreCase(READY)) {
+			throw new IOException("error.getting.issues");
+		}
+
+		HttpResponse response = downloadReport(reportId);
+		if (destination.isDirectory()) {
+			String fileName = DEFAULT_RESULT_NAME + "_" + SystemUtil.getTimeStamp() + "." + format; //$NON-NLS-1$ //$NON-NLS-2$
+			destination = new File(destination, fileName);
+		}
+
+		destination.getParentFile().mkdirs();
+		response.getResponseBodyAsFile(destination);
 	}
 	
 	private void checkResults() {
@@ -229,4 +229,89 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
     	JSONObject obj = (JSONObject) response.getResponseBodyAsJSON();
     	return obj.getString(STATUS);
     }
+    
+	protected String createIssuesReport(String scanId, String format) throws IOException, JSONException {
+		IAuthenticationProvider authProvider = m_scanProvider.getAuthenticationProvider();
+		if (authProvider.isTokenExpired()) {
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_LOGIN_EXPIRED)));
+			return null;
+		}
+
+		String request_url = authProvider.getServer() + String.format(API_REPORT_SELECTED_ISSUES, SCAN_SCOPE, scanId);
+		Map<String, String> request_headers = authProvider.getAuthorizationHeader(true);
+		request_headers.put("Content-Type", "application/json; charset=UTF-8");
+		request_headers.put("Accept", "application/json");
+
+		HttpClient client = new HttpClient(m_scanProvider.getAuthenticationProvider().getProxy());
+		HttpResponse response = client.post(request_url, request_headers, getReportParams(format).toString());
+		if (response.getResponseCode() != HttpsURLConnection.HTTP_OK) {
+			return null;
+		}
+
+		JSONObject obj = (JSONObject) response.getResponseBodyAsJSON();
+		String reportId = obj.getString("Id");
+		return reportId;
+	}
+    
+    protected JSONObject getReportParams(String format) throws JSONException {
+		JSONObject configParams = new JSONObject();
+		configParams.put("Summary", true);
+		configParams.put("Details", true);
+		configParams.put("Discussion", false);
+		configParams.put("Overview", true);
+		configParams.put("TableOfContent", true);
+		configParams.put("Advisories", true);
+		configParams.put("FixRecommendation", true);
+		configParams.put("History", true);
+		configParams.put("IsTrialReport", false);
+		configParams.put("ReportFileType", format);
+		configParams.put("Title", getScanName());
+		configParams.put("Notes", "");
+		configParams.put("Locale", SystemUtil.getLocale());
+		
+		JSONObject params = new JSONObject();
+    	params.put("Configuration", configParams);
+    	params.put("ApplyPolicies", "None");
+    	return params;
+    }
+    
+	protected String getScanName() {
+		JSONObject obj;
+		try {
+			obj = m_scanProvider.getScanDetails(m_scanId);
+			return obj.getString("Name");
+		} catch (IOException | JSONException e) {
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS, e.getMessage())), e);
+			return "";
+		}
+	}
+	
+	protected HttpResponse downloadReport(String reportId) throws IOException, JSONException {
+		IAuthenticationProvider authProvider = m_scanProvider.getAuthenticationProvider();
+		if (authProvider.isTokenExpired()) {
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_LOGIN_EXPIRED)));
+			return null;
+		}
+		String request_url = authProvider.getServer() + String.format(API_DOWNLOAD_REPORT, reportId);
+		Map<String, String> request_headers = authProvider.getAuthorizationHeader(true);
+		request_headers.put(CONTENT_LENGTH, "0"); //$NON-NLS-1$
+
+		HttpClient client = new HttpClient(m_scanProvider.getAuthenticationProvider().getProxy());
+		HttpResponse response = client.get(request_url, request_headers, null);
+		int responseCode = response.getResponseCode();
+		if (responseCode == HttpsURLConnection.HTTP_OK)
+			return response;
+		else if (responseCode == HttpsURLConnection.HTTP_INTERNAL_ERROR)
+			return downloadReport(reportId);
+		else {
+			JSONObject object = (JSONObject) response.getResponseBodyAsJSON();
+			if (object.has(MESSAGE)) {
+				if (response.getResponseCode() == HttpsURLConnection.HTTP_BAD_REQUEST)
+					m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_RESULT)));
+				else
+					m_progress.setStatus(new Message(Message.ERROR, object.getString(MESSAGE)));
+			}
+			return null;
+		}
+	}
 }

@@ -19,6 +19,7 @@ import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.Messages;
 import com.hcl.appscan.sdk.error.HttpException;
 import com.hcl.appscan.sdk.http.HttpClient;
+import com.hcl.appscan.sdk.http.HttpsClient;
 import com.hcl.appscan.sdk.http.HttpResponse;
 
 public class AuthenticationHandler implements CoreConstants {
@@ -116,7 +117,7 @@ public class AuthenticationHandler implements CoreConstants {
 		headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
 		headers.put(CHARSET, UTF8);
 		
-		HttpClient httpClient = new HttpClient(m_authProvider.getProxy());
+		HttpsClient httpClient = new HttpsClient();
 		HttpResponse httpResponse;
 		try {
 			httpResponse = httpClient.get(request_url, headers, null);

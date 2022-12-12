@@ -1,3 +1,5 @@
+# This repository has moved to https://github.com/hclproducts/appscan-sdk
+
 # appscan-sdk
 SDK for interacting with HCL AppScan on Cloud and HCL AppScan Enterprise ADAC Jobs
 

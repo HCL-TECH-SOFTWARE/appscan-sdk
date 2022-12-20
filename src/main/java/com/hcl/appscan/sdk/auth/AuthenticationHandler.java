@@ -116,15 +116,25 @@ public class AuthenticationHandler implements CoreConstants {
 		Map<String, String> headers = m_authProvider.getAuthorizationHeader(false);
 		headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
 		headers.put(CHARSET, UTF8);
-		
-		HttpsClient httpClient = new HttpsClient();
-		HttpResponse httpResponse;
-		try {
-			httpResponse = httpClient.get(request_url, headers, null);
-			isExpired = httpResponse.getResponseCode() != HttpsURLConnection.HTTP_OK;
-		} catch (IOException e) {
-			isExpired = true;
-		}
+        HttpResponse httpResponse;
+
+        if(!(m_authProvider.getServer().endsWith("appscan.com/"))){
+            HttpsClient httpClient = new HttpsClient();
+            try {
+                httpResponse = httpClient.get(request_url, headers, null);
+                isExpired = httpResponse.getResponseCode() != HttpsURLConnection.HTTP_OK;
+            } catch (IOException e) {
+                isExpired = true;
+            }
+        } else {
+            HttpClient httpClient = new HttpClient(m_authProvider.getProxy());
+            try {
+                httpResponse = httpClient.get(request_url, headers, null);
+                isExpired = httpResponse.getResponseCode() != HttpsURLConnection.HTTP_OK;
+            } catch (IOException e) {
+                isExpired = true;
+            }
+        }
 		return isExpired;
 	}
 }

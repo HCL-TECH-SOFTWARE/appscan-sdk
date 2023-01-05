@@ -67,8 +67,8 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 				return json.getString(ID);
 			}
 			else if (json != null && json.has(MESSAGE)) {
-                String errorResponse = json.getString(MESSAGE);
-                if(json.has(FORMAT_PARAMS)) {
+				String errorResponse = json.getString(MESSAGE);
+				if(json.has(FORMAT_PARAMS)) {
 					JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);
 					if(jsonArray != null){
 						String[] messageParams = new String[jsonArray.size()];

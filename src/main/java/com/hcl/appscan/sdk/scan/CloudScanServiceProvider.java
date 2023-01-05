@@ -67,15 +67,17 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 				return json.getString(ID);
 			}
 			else if (json != null && json.has(MESSAGE)) {
-                                String errorResponse = json.getString(MESSAGE);
-				JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);
-				if(jsonArray != null){
-					String[] test = new String[jsonArray.size()];
-					for (int i = 0; i < jsonArray.size(); i++) {
-						test[i] = (String)jsonArray.get(i);
+                String errorResponse = json.getString(MESSAGE);
+                if(json.has(FORMAT_PARAMS)) {
+					JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);
+					if(jsonArray != null){
+						String[] messageParams = new String[jsonArray.size()];
+						for (int i = 0; i < jsonArray.size(); i++) {
+							messageParams[i] = (String)jsonArray.get(i);
+						}
+						errorResponse = MessageFormat.format(errorResponse, (Object[]) messageParams);
 					}
-					errorResponse = MessageFormat.format(errorResponse, (Object[]) test);
-				}
+                }
 				m_progress.setStatus(new Message(Message.ERROR, errorResponse));
 			}
 			else

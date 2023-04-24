@@ -70,7 +70,7 @@ public class SAClient implements SASTConstants {
 						 getClientArgs(properties),
 						 properties.get(APPSCAN_IRGEN_CLIENT),
 						 properties.get(APPSCAN_CLIENT_VERSION),
-						 properties.get(IRGEN_CLIENT_PLUGIN_VERSION));
+						 properties.get(IRGEN_CLIENT_PLUGIN_VERSION),properties);
 	}
 
 	/**
@@ -84,10 +84,10 @@ public class SAClient implements SASTConstants {
 	 */
 	@Deprecated
 	public int run(String workingDir, List<String> args) throws IOException, ScannerException {
-		return runClient(workingDir, args, "", "", "");
+		return runClient(workingDir, args, "", "", "",null);
 	}
 		
-	private int runClient(String workingDir, List<String> args, String irGenClient, String clientVersion, String irgenClientPluginVersion) throws IOException, ScannerException {
+	private int runClient(String workingDir, List<String> args, String irGenClient, String clientVersion, String irgenClientPluginVersion, Map<String, String> properties) throws IOException, ScannerException {
 		List<String> arguments = new ArrayList<String>();
 		arguments.add(getClientScript());
 		arguments.addAll(args);
@@ -104,7 +104,17 @@ public class SAClient implements SASTConstants {
 			m_builder.environment().put(IRGEN_CLIENT_PLUGIN_VERSION, irgenClientPluginVersion);
 			
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(PREPARING_IRX, getLocalClientVersion())));
-		final Process proc = m_builder.start();
+        if(properties.get("certificates")!=null && properties.get("certificates").equals("true")){
+            String server360 = "-DBLUEMIX_SERVER="+properties.get("serverURL")+" -Dacceptssl";
+            m_builder.environment().put("APPSCAN_OPTS",server360);
+            properties.remove("serverURL");
+            properties.remove("certificates");
+        } else{
+            String server = "-DBLUEMIX_SERVER="+properties.get("serverURL");
+            m_builder.environment().put("APPSCAN_OPTS",server);
+            properties.remove("serverURL");
+        }
+        final Process proc = m_builder.start();
 		new Thread(new Runnable() {
 			@Override
 			public void run() {

@@ -45,4 +45,6 @@ public interface IAuthenticationProvider {
 	 * @return The proxy
 	 */
 	public Proxy getProxy();
+
+    public boolean getCertificates();
 }

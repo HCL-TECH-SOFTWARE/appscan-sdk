@@ -118,7 +118,7 @@ public class AuthenticationHandler implements CoreConstants {
 		headers.put(CHARSET, UTF8);
         HttpResponse httpResponse;
 
-        if(!(m_authProvider.getServer().endsWith("appscan.com/"))){
+        if(!(m_authProvider.getServer().endsWith("appscan.com"))){
             HttpsClient httpClient = new HttpsClient();
             try {
                 httpResponse = httpClient.get(request_url, headers, null);

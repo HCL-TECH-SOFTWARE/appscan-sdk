@@ -326,7 +326,8 @@ public class SAClient implements SASTConstants {
                 if (properties.containsKey(SOURCE_CODE_ONLY) || System.getProperty(SOURCE_CODE_ONLY) != null)
                         args.add(OPT_SOURCE_CODE_ONLY);
                 if(properties.containsKey(SCAN_SPEED)){
-                    args.add("-Dscan_speed="+properties.get(SCAN_SPEED));
+                    args.add(OPT_SCAN_SPEED);
+                    args.add(properties.get(SCAN_SPEED));
                 }
 		
 		return args;

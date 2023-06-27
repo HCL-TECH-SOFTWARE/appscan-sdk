@@ -31,7 +31,8 @@ public interface SASTConstants {
 	String THIRD_PARTY					= "thirdParty";						//$NON-NLS-1$
         String OPEN_SOURCE_ONLY                                  = "openSourceOnly";                                     //$NON-NLS-1$
         String SOURCE_CODE_ONLY                                  = "sourceCodeOnly";                                     //$NON-NLS-1$
-    String SCAN_SPEED                                  = "scanSpeed";                                     //$NON-NLS-1$
+    String SCAN_SPEED                   = "scanSpeed";                      //$NON-NLS-1$
+    String OPT_SCAN_SPEED               = "-s";                             //$NON-NLS-1$
     String OPT_NAME						= "-n";								//$NON-NLS-1$
 	String OPT_SAVE_LOCATION			= "-d";								//$NON-NLS-1$
 	String OPT_LOG_LOCATION				= "-l";								//$NON-NLS-1$

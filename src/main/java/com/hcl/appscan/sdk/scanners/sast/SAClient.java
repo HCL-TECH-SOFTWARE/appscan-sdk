@@ -112,8 +112,8 @@ public class SAClient implements SASTConstants {
                     String server = "-DBLUEMIX_SERVER="+serverURL;
                     if(acceptInvalidCerts != null && acceptInvalidCerts.equals("true")){
                         server = server+" -Dacceptssl";
-                        m_builder.environment().put("APPSCAN_OPTS",server);
                     }
+                    m_builder.environment().put("APPSCAN_OPTS",server);
                 }
 
                 final Process proc = m_builder.start();

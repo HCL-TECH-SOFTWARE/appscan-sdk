@@ -39,7 +39,7 @@ public interface IScanServiceProvider {
 	 * @return The id of the submitted file.
 	 * @throws IOException If an error occurs.
 	 */
-	public String submitFile(File file) throws IOException;
+	public String submitFile(File file, String scanMethod) throws IOException;
 
 	/**
 	 * Gets the detailed description of a scan in JSON format.

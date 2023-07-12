@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import com.hcl.appscan.sdk.Messages;
 
@@ -111,4 +112,27 @@ public class ArchiveUtil {
 				output.close();
 		}
 	}
+
+    public void zipFolder(String sourceFile, String zipName) throws IOException {
+        File fileToZip = new File(sourceFile);
+        File[] srcFiles = fileToZip.listFiles();
+        FileOutputStream fos = new FileOutputStream("C:\\Temp" + "\\"+zipName+".zip");
+        ZipOutputStream zipOut = new ZipOutputStream(fos);
+
+        for (File srcFile : srcFiles) {
+            File fileToZips = srcFile;
+            FileInputStream fis = new FileInputStream(fileToZips);
+            ZipEntry zipEntry = new ZipEntry(fileToZips.getName());
+            zipOut.putNextEntry(zipEntry);
+
+            byte[] bytes = new byte[1024];
+            int length;
+            while((length = fis.read(bytes)) >= 0) {
+                zipOut.write(bytes, 0, length);
+            }
+            fis.close();
+        }
+        zipOut.close();
+        fos.close();
+    }
 }

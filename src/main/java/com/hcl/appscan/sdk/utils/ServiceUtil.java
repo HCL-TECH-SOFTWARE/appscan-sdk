@@ -80,9 +80,9 @@ public class ServiceUtil implements CoreConstants {
 		return getSAClientVersion(Proxy.NO_PROXY);
 	}
 
-    public static String getSAClientVersion(Proxy proxy) throws IOException {
-        return getSAClientVersion(proxy, "");
-    }
+    	public static String getSAClientVersion(Proxy proxy) throws IOException {
+        	return getSAClientVersion(proxy, "");
+    	}
 	
 	/**
 	 * Gets the latest available version of the SAClientUtil package used for running static analysis.

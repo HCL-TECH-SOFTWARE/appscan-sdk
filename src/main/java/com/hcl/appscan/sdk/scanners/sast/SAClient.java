@@ -214,9 +214,9 @@ public class SAClient implements SASTConstants {
 		}
 	}
 
-    public boolean shouldUpdateClient() throws IOException {
-            return shouldUpdateClient("");
-    }
+    	public boolean shouldUpdateClient() throws IOException {
+            	return shouldUpdateClient("");
+    	}
 	
 	public boolean shouldUpdateClient(String serverURL) throws IOException {
 		String serverVersion = ServiceUtil.getSAClientVersion(m_proxy,serverURL);

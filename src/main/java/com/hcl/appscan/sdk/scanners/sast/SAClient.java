@@ -112,8 +112,8 @@ public class SAClient implements SASTConstants {
                     String server = "-DBLUEMIX_SERVER="+serverURL;
                     if(acceptInvalidCerts != null && acceptInvalidCerts.equals("true")){
                         server = server+" -Dacceptssl";
-                        m_builder.environment().put("APPSCAN_OPTS",server);
                     }
+                    m_builder.environment().put("APPSCAN_OPTS",server);
                 }
 
                 final Process proc = m_builder.start();
@@ -165,7 +165,7 @@ public class SAClient implements SASTConstants {
 		String scriptPath = "bin" + File.separator + getScriptName(); //$NON-NLS-1$
 		File install = findClientInstall();
 		
-		if(install != null && new File(install, scriptPath).isFile() && !shouldUpdateClient())
+		if(install != null && new File(install, scriptPath).isFile() && !shouldUpdateClient(serverURL))
 			return new File(install, scriptPath).getAbsolutePath();
 		
 		//Download it.
@@ -213,9 +213,13 @@ public class SAClient implements SASTConstants {
 			return false;
 		}
 	}
+
+    	public boolean shouldUpdateClient() throws IOException {
+            	return shouldUpdateClient("");
+    	}
 	
-	public boolean shouldUpdateClient() throws IOException {
-		String serverVersion = ServiceUtil.getSAClientVersion(m_proxy);
+	public boolean shouldUpdateClient(String serverURL) throws IOException {
+		String serverVersion = ServiceUtil.getSAClientVersion(m_proxy,serverURL);
 		String localVersion = getLocalClientVersion();
 
 		if(compareVersions(localVersion, serverVersion) && System.getProperty(CoreConstants.SKIP_UPDATE) == null) {

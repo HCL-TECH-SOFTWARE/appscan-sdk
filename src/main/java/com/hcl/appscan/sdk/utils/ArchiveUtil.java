@@ -115,24 +115,33 @@ public class ArchiveUtil {
 
     public void zipFolder(String sourceFile, String zipName) throws IOException {
         File fileToZip = new File(sourceFile);
-        File[] srcFiles = fileToZip.listFiles();
         FileOutputStream fos = new FileOutputStream("C:\\Temp" + "\\"+zipName+".zip");
         ZipOutputStream zipOut = new ZipOutputStream(fos);
 
-        for (File srcFile : srcFiles) {
-            File fileToZips = srcFile;
-            FileInputStream fis = new FileInputStream(fileToZips);
-            ZipEntry zipEntry = new ZipEntry(fileToZips.getName());
-            zipOut.putNextEntry(zipEntry);
-
-            byte[] bytes = new byte[1024];
-            int length;
-            while((length = fis.read(bytes)) >= 0) {
-                zipOut.write(bytes, 0, length);
-            }
-            fis.close();
-        }
+        zipFile(fileToZip, fileToZip.getName(), zipOut);
         zipOut.close();
         fos.close();
+    }
+
+    private static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
+        if (fileToZip.isHidden()) {
+            return;
+        }
+        if (fileToZip.isDirectory()) {
+            File[] children = fileToZip.listFiles();
+            for (File childFile : children) {
+                zipFile(childFile, fileName + "/" + childFile.getName(), zipOut);
+            }
+            return;
+        }
+        FileInputStream fis = new FileInputStream(fileToZip);
+        ZipEntry zipEntry = new ZipEntry(fileName);
+        zipOut.putNextEntry(zipEntry);
+        byte[] bytes = new byte[1024];
+        int length;
+        while ((length = fis.read(bytes)) >= 0) {
+            zipOut.write(bytes, 0, length);
+        }
+        fis.close();
     }
 }

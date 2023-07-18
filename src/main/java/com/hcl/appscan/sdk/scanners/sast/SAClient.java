@@ -336,6 +336,8 @@ public class SAClient implements SASTConstants {
                             args.add(BALANCED);
                         } else if (properties.get(SCAN_SPEED).equals(FASTEST)) {
                             args.add(SIMPLE);
+                        } else {
+                            args.add(properties.get(SCAN_SPEED));
                         }
                 }
 		

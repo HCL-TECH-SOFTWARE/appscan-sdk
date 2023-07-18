@@ -115,7 +115,7 @@ public class ArchiveUtil {
 
     public void zipFolder(String sourceFile, String zipName) throws IOException {
         File fileToZip = new File(sourceFile);
-        FileOutputStream fos = new FileOutputStream("C:\\Temp" + "\\"+zipName+".zip");
+        FileOutputStream fos = new FileOutputStream(System.getProperty("java.io.tmpdir")+File.separator+zipName+".zip");
         ZipOutputStream zipOut = new ZipOutputStream(fos);
 
         zipFile(fileToZip, fileToZip.getName(), zipOut);

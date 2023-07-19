@@ -101,7 +101,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPLOADING_FILE, file.getAbsolutePath())));
         String fileUploadAPI;
 		
-		if(scanMethod.equals(CoreConstants.UPLOAD_DIRECT) && !file.getName().endsWith(SASTConstants.IRX_EXTENSION)){
+		if(scanMethod !=null && scanMethod.equals(CoreConstants.UPLOAD_DIRECT) && !file.getName().endsWith(SASTConstants.IRX_EXTENSION)){
             fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD + "?fileType=SourceCodeArchive";
         } else{
             fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD;

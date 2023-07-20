@@ -50,18 +50,16 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		try {
             Map<String, String> params = getProperties();
             String scanMethodValue = params.get(CoreConstants.SCAN_METHOD);
-            String fileId = null;
             if(scanMethodValue!=null && scanMethodValue.equals(CoreConstants.UPLOAD_DIRECT)){
                 File targetFile = new File(getTarget());
                 if(targetFile.isFile()){
                     m_file = targetFile;
-                    fileId = getServiceProvider().submitFile(m_file, scanMethodValue);
                 } else if (targetFile.isDirectory()) {
                     String zipName = getProperties().get(CoreConstants.SCAN_NAME);
                     new ArchiveUtil().zipFolder(getTarget(),zipName);
                     m_file = new File(System.getProperty("java.io.tmpdir")+File.separator+zipName+".zip");
-                    fileId = getServiceProvider().submitFile(m_file, scanMethodValue);
                 }
+                String fileId = getServiceProvider().submitFile(m_file, scanMethodValue);
                 if(fileId == null)
                     throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_irx.getName()));
 
@@ -117,7 +115,7 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		if(getProperties().containsKey(PREPARE_ONLY))
 			return;
 
-		String fileId = getServiceProvider().submitFile(m_irx, getProperties().get(CoreConstants.SCAN_METHOD));
+		String fileId = getServiceProvider().submitFile(m_irx);
 		if(fileId == null)
 			throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_irx.getName()));		
 				

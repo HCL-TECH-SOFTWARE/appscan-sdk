@@ -54,7 +54,7 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 				File fileTraffic = new File(trafficFile);
 
 				try {
-					String fileTrafficId = getServiceProvider().submitFile(fileTraffic,"");
+					String fileTrafficId = getServiceProvider().submitFile(fileTraffic);
 					if (fileTrafficId == null) {
 						throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, fileTraffic.getName()));
 					}
@@ -74,7 +74,7 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 			File file = new File(scanFile);
 
 			try {
-				String fileId = getServiceProvider().submitFile(file,"");
+				String fileId = getServiceProvider().submitFile(file);
 				if(fileId == null)
 					throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, file.getName()));
 				params.put(SCAN_FILE_ID, fileId);

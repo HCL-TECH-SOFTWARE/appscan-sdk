@@ -89,7 +89,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		return null;
 	}
 
-	@Deprecated
+	@Override
     public String submitFile(File file) throws IOException {
         return submitFile(file,"");
     }

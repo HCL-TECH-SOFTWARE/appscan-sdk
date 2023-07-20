@@ -364,6 +364,11 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 	}
 
     @Override
+    public String submitFile(File file) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public String submitFile(File file, String scanMethod) throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

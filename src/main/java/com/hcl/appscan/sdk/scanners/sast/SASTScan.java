@@ -55,13 +55,13 @@ public class SASTScan extends ASoCScan implements SASTConstants {
                 if(targetFile.isFile()){
                     m_file = targetFile;
                 } else if (targetFile.isDirectory()) {
-                    String zipName = getProperties().get(CoreConstants.SCAN_NAME);
+                    String zipName = getProperties().get(CoreConstants.APP_ID);
                     new ArchiveUtil().zipFolder(getTarget(),zipName);
                     m_file = new File(System.getProperty("java.io.tmpdir")+File.separator+zipName+".zip");
                 }
                 String fileId = getServiceProvider().submitFile(m_file, scanMethodValue);
                 if(fileId == null)
-                    throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_irx.getName()));
+                    throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_file.getName()));
 
                 params.put(ARSA_FILE_ID, fileId);
                 setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, params));

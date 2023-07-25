@@ -109,11 +109,9 @@ public class SAClient implements SASTConstants {
 			
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(PREPARING_IRX, getLocalClientVersion())));
                 if((serverURL !=null) && !serverURL.isEmpty()){
-                    String server = "-DBLUEMIX_SERVER="+serverURL;
                     if(acceptInvalidCerts != null && acceptInvalidCerts.equals("true")){
-                        server = server+" -Dacceptssl";
+                        System.setProperty("acceptssl","");
                     }
-                    m_builder.environment().put("APPSCAN_OPTS",server);
                 }
 
                 final Process proc = m_builder.start();

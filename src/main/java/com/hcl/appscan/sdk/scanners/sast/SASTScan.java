@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.util.Map;
 
+import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.Messages;
 import com.hcl.appscan.sdk.error.InvalidTargetException;
 import com.hcl.appscan.sdk.error.ScannerException;
@@ -18,6 +19,7 @@ import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
 import com.hcl.appscan.sdk.scanners.ASoCScan;
+import com.hcl.appscan.sdk.utils.ArchiveUtil;
 
 /**
  * A class for running static scans. For greater control over what gets scanned a {@link SASTScanManager} should be used.
@@ -28,6 +30,7 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 	private static final String REPORT_FORMAT = "html"; //$NON-NLS-1$
 	
 	private File m_irx;
+    	private File m_file;
 	
 	public SASTScan(Map<String, String> properties, IScanServiceProvider provider) {
 		super(properties, new DefaultProgress(), provider);
@@ -45,11 +48,32 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 			throw new InvalidTargetException(Messages.getMessage(TARGET_INVALID, target));
 
 		try {
-			generateIR();
-			analyzeIR();
-		} catch(IOException e) {
-			throw new ScannerException(Messages.getMessage(SCAN_FAILED, e.getLocalizedMessage()));
-		}
+            		Map<String, String> params = getProperties();
+            		String scanMethodValue = params.get(CoreConstants.SCAN_METHOD);
+            		if(scanMethodValue!=null && scanMethodValue.equals(CoreConstants.UPLOAD_DIRECT)){
+                		File targetFile = new File(getTarget());
+                		if(targetFile.isFile()){
+                    			m_file = targetFile;
+                		} else if (targetFile.isDirectory()) {
+                    			String zipName = getProperties().get(CoreConstants.APP_ID);
+                    			new ArchiveUtil().zipFolder(getTarget(),zipName);
+                    			m_file = new File(System.getProperty("java.io.tmpdir")+File.separator+zipName+".zip");
+                		}
+                		String fileId = getServiceProvider().submitFile(m_file, scanMethodValue);
+                		if(fileId == null)
+                    			throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_file.getName()));
+
+                		params.put(ARSA_FILE_ID, fileId);
+                		setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, params));
+                		if(getScanId() == null)
+                    			throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
+            			} else{
+                			generateIR();
+                			analyzeIR();
+            			}
+			} catch(IOException e) {
+				throw new ScannerException(Messages.getMessage(SCAN_FAILED, e.getLocalizedMessage()));
+			}
 	}
 
 	@Override

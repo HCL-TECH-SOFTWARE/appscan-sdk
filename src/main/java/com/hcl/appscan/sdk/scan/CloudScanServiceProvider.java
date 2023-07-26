@@ -31,6 +31,7 @@ import com.hcl.appscan.sdk.http.HttpPart;
 import com.hcl.appscan.sdk.http.HttpResponse;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.logging.Message;
+import com.hcl.appscan.sdk.scanners.sast.SASTConstants;
 
 public class CloudScanServiceProvider implements IScanServiceProvider, Serializable, CoreConstants {
 
@@ -89,13 +90,23 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 	}
 
 	@Override
-	public String submitFile(File file) throws IOException {
+    	public String submitFile(File file) throws IOException {
+        	return submitFile(file,"");
+    	}
+	
+    	@Override
+	public String submitFile(File file, String scanMethod) throws IOException {
 		if(loginExpired())
 			return null;
 		
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPLOADING_FILE, file.getAbsolutePath())));
+        	String fileUploadAPI;
 		
-		String fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD;
+		if(scanMethod !=null && scanMethod.equals(CoreConstants.UPLOAD_DIRECT) && !file.getName().endsWith(SASTConstants.IRX_EXTENSION)){
+            		fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD + "?fileType=SourceCodeArchive";
+        	} else {
+            		fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD;
+        	}
 		
 		List<HttpPart> parts = new ArrayList<HttpPart>();
 		parts.add(new HttpPart(FILE_TO_UPLOAD, file, "multipart/form-data")); //$NON-NLS-1$

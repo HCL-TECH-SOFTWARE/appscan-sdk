@@ -30,11 +30,11 @@ public interface CoreConstants {
 	String USER_MESSAGE					= "UserMessage";										//$NON-NLS-1$
 	String IS_VALID						= "IsValid";											//$NON-NLS-1$
 	String SOURCE_CODE_ONLY				= "sourceCodeOnly";										//$NON-NLS-1$
-    String SCAN_METHOD                     = "scanMethod";                                            //$NON-NLS-1$
-    String CREATE_IRX                     = "createIRX";                                            //$NON-NLS-1$
-    String UPLOAD_DIRECT                     = "uploadDirect";                                            //$NON-NLS-1$
+    	String SCAN_METHOD                     			= "scanMethod";                                            					//$NON-NLS-1$
+    	String CREATE_IRX                     			= "createIRX";                                            					//$NON-NLS-1$
+    	String UPLOAD_DIRECT                     		= "uploadDirect";                                            					//$NON-NLS-1$
 
-    String BINDING_ID					= "Bindingid";											//$NON-NLS-1$
+    	String BINDING_ID					= "Bindingid";											//$NON-NLS-1$
 	String KEY_ID						= "KeyId";												//$NON-NLS-1$
 	String KEY_SECRET					= "KeySecret";											//$NON-NLS-1$
 	String PASSWORD						= "Password";											//$NON-NLS-1$

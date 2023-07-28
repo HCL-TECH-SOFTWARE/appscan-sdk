@@ -51,8 +51,10 @@ public class ServiceUtil implements CoreConstants {
 	 */
 	public static void getSAClientUtil(File destination, Proxy proxy, String serverURL, String acceptInvalidCerts) throws IOException {
         String request_url = SystemUtil.getDefaultServer();
-        if(serverURL != null && !serverURL.isEmpty() && !System.getenv(APPSCAN_OPTS).contains(BLUEMIX_SERVER)) {
-            request_url = serverURL;
+        if(serverURL != null && !serverURL.isEmpty()) {
+            if(System.getenv(CoreConstants.APPSCAN_OPTS) == null || !System.getenv(CoreConstants.APPSCAN_OPTS).contains(CoreConstants.BLUEMIX_SERVER)){
+                request_url = serverURL;
+            }
         }
         request_url += String.format(API_SACLIENT_DOWNLOAD, API_SCX, SystemUtil.getOS());
 
@@ -92,8 +94,10 @@ public class ServiceUtil implements CoreConstants {
 	 */
 	public static String getSAClientVersion(Proxy proxy, String serverURL) throws IOException {
         String request_url = SystemUtil.getDefaultServer();
-        if(serverURL != null && !serverURL.isEmpty() && !System.getenv(APPSCAN_OPTS).contains(BLUEMIX_SERVER)) {
-            request_url = serverURL;
+        if(serverURL != null && !serverURL.isEmpty()) {
+            if(System.getenv(CoreConstants.APPSCAN_OPTS) == null || !System.getenv(CoreConstants.APPSCAN_OPTS).contains(CoreConstants.BLUEMIX_SERVER)){
+                request_url = serverURL;
+            }
         }
         request_url += String.format(API_SACLIENT_VERSION, API_SCX, SystemUtil.getOS(), "true"); 
 		

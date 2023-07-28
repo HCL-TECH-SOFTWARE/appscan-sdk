@@ -30,7 +30,6 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 	private static final String REPORT_FORMAT = "html"; //$NON-NLS-1$
 	
 	private File m_irx;
-    	private File m_file;
 	
 	public SASTScan(Map<String, String> properties, IScanServiceProvider provider) {
 		super(properties, new DefaultProgress(), provider);

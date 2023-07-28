@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017. 
+ * © Copyright HCL Technologies Ltd. 2017, 2023. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -31,7 +31,17 @@ public interface SASTConstants {
 	String THIRD_PARTY					= "thirdParty";						//$NON-NLS-1$
         String OPEN_SOURCE_ONLY                                  = "openSourceOnly";                                     //$NON-NLS-1$
         String SOURCE_CODE_ONLY                                  = "sourceCodeOnly";                                     //$NON-NLS-1$
-        String OPT_NAME						= "-n";								//$NON-NLS-1$
+    	String SCAN_SPEED                                        = "scanSpeed";                                          //$NON-NLS-1$
+    	String OPT_SCAN_SPEED                                    = "-s";                                                 //$NON-NLS-1$
+    	String OPT_NAME						= "-n";								//$NON-NLS-1$
+    	String NORMAL						= "normal";								//$NON-NLS-1$
+    	String FAST						= "fast";								//$NON-NLS-1$
+    	String FASTER						= "faster";								//$NON-NLS-1$
+    	String FASTEST						= "fastest";								//$NON-NLS-1$
+    	String SIMPLE						= "simple";								//$NON-NLS-1$
+    	String BALANCED						= "balanced";								//$NON-NLS-1$
+    	String DEEP						= "deep";								//$NON-NLS-1$
+    	String THOROUGH						= "thorough";								//$NON-NLS-1$
 	String OPT_SAVE_LOCATION			= "-d";								//$NON-NLS-1$
 	String OPT_LOG_LOCATION				= "-l";								//$NON-NLS-1$
 	String OPT_CONFIG					= "-c";								//$NON-NLS-1$

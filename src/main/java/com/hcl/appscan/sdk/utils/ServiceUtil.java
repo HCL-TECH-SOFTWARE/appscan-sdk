@@ -50,12 +50,8 @@ public class ServiceUtil implements CoreConstants {
 	 * @throws IOException If an error occurs.
 	 */
 	public static void getSAClientUtil(File destination, Proxy proxy, String serverURL, String acceptInvalidCerts) throws IOException {
-        String request_url;
-        if(serverURL != null && !serverURL.isEmpty() && !serverURL.contains("appscan.com")){
-            request_url = serverURL + String.format(API_SACLIENT_DOWNLOAD, API_SCX, SystemUtil.getOS());
-        } else {
-            request_url = SystemUtil.getDefaultServer() + String.format(API_SACLIENT_DOWNLOAD, API_SCX, SystemUtil.getOS());
-        }
+        String request_url = requiredServerURL(serverURL);
+        request_url += String.format(API_SACLIENT_DOWNLOAD, API_SCX, SystemUtil.getOS());
 
         HttpClient client = new HttpClient(proxy,acceptInvalidCerts.equals("true"));
         HttpResponse response = client.get(request_url, null, null);
@@ -69,6 +65,16 @@ public class ServiceUtil implements CoreConstants {
 		else
 			throw new IOException(response.getResponseBodyAsString());
 	}
+
+    private static String requiredServerURL(String serverURL){
+        String request_url = SystemUtil.getDefaultServer();
+        if(serverURL != null && !serverURL.isEmpty()) {
+            if(System.getenv(CoreConstants.APPSCAN_OPTS) == null || !System.getenv(CoreConstants.APPSCAN_OPTS).contains(CoreConstants.BLUEMIX_SERVER)){
+                request_url = serverURL;
+            }
+        }
+        return request_url;
+    }
 	
 	/**
 	 * Gets the latest available version of the SAClientUtil package used for running static analysis.
@@ -79,6 +85,10 @@ public class ServiceUtil implements CoreConstants {
 	public static String getSAClientVersion() throws IOException {
 		return getSAClientVersion(Proxy.NO_PROXY);
 	}
+
+    	public static String getSAClientVersion(Proxy proxy) throws IOException {
+        	return getSAClientVersion(proxy, "");
+    	}
 	
 	/**
 	 * Gets the latest available version of the SAClientUtil package used for running static analysis.
@@ -87,8 +97,9 @@ public class ServiceUtil implements CoreConstants {
 	 * @return The current version of the package.
 	 * @throws IOException If an error occurs.
 	 */
-	public static String getSAClientVersion(Proxy proxy) throws IOException {
-		String request_url = SystemUtil.getDefaultServer() + String.format(API_SACLIENT_VERSION, API_SCX, SystemUtil.getOS(), "true"); //$NON-NLS-1$
+	public static String getSAClientVersion(Proxy proxy, String serverURL) throws IOException {
+        String request_url = requiredServerURL(serverURL);
+        request_url += String.format(API_SACLIENT_VERSION, API_SCX, SystemUtil.getOS(), "true"); 
 		
 		HttpClient client = new HttpClient(proxy);
 		HttpResponse response = client.get(request_url, null, null);

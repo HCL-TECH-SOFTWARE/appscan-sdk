@@ -369,6 +369,11 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     }
 
     @Override
+    public String submitFile(File file, String scanMethod) throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public JSONObject getScanDetails(String jobId) throws IOException, JSONException {
         if(loginExpired())
 			return null;

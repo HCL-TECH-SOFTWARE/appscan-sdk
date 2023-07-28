@@ -88,25 +88,17 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		}
 		return null;
 	}
-
-	@Override
-    	public String submitFile(File file) throws IOException {
-        	return submitFile(file,"");
-    	}
 	
     	@Override
-	public String submitFile(File file, String scanMethod) throws IOException {
+	public String submitFile(File file) throws IOException {
 		if(loginExpired())
 			return null;
 		
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPLOADING_FILE, file.getAbsolutePath())));
-        	String fileUploadAPI;
-		
-		if(scanMethod !=null && scanMethod.equals(CoreConstants.UPLOAD_DIRECT) && !file.getName().endsWith(SASTConstants.IRX_EXTENSION)){
-            		fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD + "?fileType=SourceCodeArchive";
-        	} else {
-            		fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD;
-        	}
+            String fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD;
+            if(!file.getName().toLowerCase().endsWith(SASTConstants.IRX_EXTENSION)) {
+                fileUploadAPI += "?fileType=SourceCodeArchive";
+            }
 		
 		List<HttpPart> parts = new ArrayList<HttpPart>();
 		parts.add(new HttpPart(FILE_TO_UPLOAD, file, "multipart/form-data")); //$NON-NLS-1$

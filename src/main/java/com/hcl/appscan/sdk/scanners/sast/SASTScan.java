@@ -47,33 +47,16 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		if(target == null || !(new File(target).exists()))
 			throw new InvalidTargetException(Messages.getMessage(TARGET_INVALID, target));
 
-		try {
-            		Map<String, String> params = getProperties();
-            		String scanMethodValue = params.get(CoreConstants.SCAN_METHOD);
-            		if(scanMethodValue!=null && scanMethodValue.equals(CoreConstants.UPLOAD_DIRECT)){
-                		File targetFile = new File(getTarget());
-                		if(targetFile.isFile()){
-                    			m_file = targetFile;
-                		} else if (targetFile.isDirectory()) {
-                    			String zipName = getProperties().get(CoreConstants.APP_ID);
-                    			new ArchiveUtil().zipFolder(getTarget(),zipName);
-                    			m_file = new File(System.getProperty("java.io.tmpdir")+File.separator+zipName+".zip");
-                		}
-                		String fileId = getServiceProvider().submitFile(m_file, scanMethodValue);
-                		if(fileId == null)
-                    			throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_file.getName()));
-
-                		params.put(ARSA_FILE_ID, fileId);
-                		setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, params));
-                		if(getScanId() == null)
-                    			throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
-            			} else{
-                			generateIR();
-                			analyzeIR();
-            			}
-			} catch(IOException e) {
-				throw new ScannerException(Messages.getMessage(SCAN_FAILED, e.getLocalizedMessage()));
-			}
+        try {
+            if(getProperties().containsKey(CoreConstants.UPLOAD_DIRECT)){
+                generateZip();
+            } else {
+                generateIR();
+            }
+            analyzeIR();
+        } catch(IOException e) {
+            throw new ScannerException(Messages.getMessage(SCAN_FAILED, e.getLocalizedMessage()));
+        }
 	}
 
 	@Override
@@ -110,6 +93,19 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		if(!m_irx.isFile())
 			throw new ScannerException(Messages.getMessage(ERROR_GENERATING_IRX, getScanLogs().getAbsolutePath()));
 	}
+
+    private void generateZip() throws IOException,ScannerException {
+        File targetFile = new File(getTarget());
+        if(targetFile.isFile()){
+            m_irx = targetFile;
+        } else if (targetFile.isDirectory()) {
+            String zipName = getProperties().get(CoreConstants.APP_ID);
+            new ArchiveUtil().zipFolder(getTarget(),zipName);
+            m_irx = new File(System.getProperty("java.io.tmpdir")+File.separator+zipName+".zip");
+        }
+        if(!m_irx.isFile())
+            throw new ScannerException(Messages.getMessage(ERROR_GENERATING_IRX, getScanLogs().getAbsolutePath()));
+    }
 	
 	private void analyzeIR() throws IOException, ScannerException {
 		if(getProperties().containsKey(PREPARE_ONLY))

@@ -20,6 +20,7 @@ import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
 import com.hcl.appscan.sdk.scanners.ASoCScan;
 import com.hcl.appscan.sdk.utils.ArchiveUtil;
+import com.hcl.appscan.sdk.utils.FileUtil;
 
 /**
  * A class for running static scans. For greater control over what gets scanned a {@link SASTScanManager} should be used.
@@ -30,7 +31,6 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 	private static final String REPORT_FORMAT = "html"; //$NON-NLS-1$
 	
 	private File m_irx;
-    	private File m_file;
 	
 	public SASTScan(Map<String, String> properties, IScanServiceProvider provider) {
 		super(properties, new DefaultProgress(), provider);
@@ -99,9 +99,10 @@ public class SASTScan extends ASoCScan implements SASTConstants {
         if(targetFile.isFile()){
             m_irx = targetFile;
         } else if (targetFile.isDirectory()) {
-            String zipName = getProperties().get(CoreConstants.APP_ID);
-            new ArchiveUtil().zipFolder(getTarget(),zipName);
-            m_irx = new File(System.getProperty("java.io.tmpdir")+File.separator+zipName+".zip");
+            String zipName = getName();
+            new ArchiveUtil().zipFileOrFolder(targetFile, zipName);
+            String validatedZipName = FileUtil.getValidFilename(zipName);
+            m_irx = new File(System.getProperty("java.io.tmpdir")+File.separator+validatedZipName+ZIP_EXTENSION);
         }
         if(!m_irx.isFile())
             throw new ScannerException(Messages.getMessage(ERROR_GENERATING_IRX, getScanLogs().getAbsolutePath()));

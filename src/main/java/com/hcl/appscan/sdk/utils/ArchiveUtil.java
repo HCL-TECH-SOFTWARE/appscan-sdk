@@ -18,6 +18,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import com.hcl.appscan.sdk.Messages;
+import com.hcl.appscan.sdk.scanners.sast.SASTConstants;
 
 public class ArchiveUtil {
 
@@ -113,11 +114,10 @@ public class ArchiveUtil {
 		}
 	}
 
-    public void zipFolder(String sourceFile, String zipName) throws IOException {
-        File fileToZip = new File(sourceFile);
-        FileOutputStream fos = new FileOutputStream(System.getProperty("java.io.tmpdir")+File.separator+zipName+".zip");
+    public void zipFileOrFolder(File fileToZip, String zipName) throws IOException {
+        String validatedZipName = FileUtil.getValidFilename(zipName);
+        FileOutputStream fos = new FileOutputStream(System.getProperty("java.io.tmpdir")+File.separator+validatedZipName+ SASTConstants.ZIP_EXTENSION);
         ZipOutputStream zipOut = new ZipOutputStream(fos);
-
         zipFile(fileToZip, fileToZip.getName(), zipOut);
         zipOut.close();
         fos.close();

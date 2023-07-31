@@ -114,9 +114,8 @@ public class ArchiveUtil {
 		}
 	}
 
-    public void zipFileOrFolder(File fileToZip, String zipName) throws IOException {
-        String validatedZipName = FileUtil.getValidFilename(zipName);
-        FileOutputStream fos = new FileOutputStream(System.getProperty("java.io.tmpdir")+File.separator+validatedZipName+ SASTConstants.ZIP_EXTENSION);
+    public static void zipFileOrFolder(File fileToZip, File zipFile) throws IOException {
+        FileOutputStream fos = new FileOutputStream(zipFile.getAbsolutePath());
         ZipOutputStream zipOut = new ZipOutputStream(fos);
         zipFile(fileToZip, fileToZip.getName(), zipOut);
         zipOut.close();

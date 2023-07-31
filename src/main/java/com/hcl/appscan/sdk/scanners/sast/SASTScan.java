@@ -99,13 +99,13 @@ public class SASTScan extends ASoCScan implements SASTConstants {
         if(targetFile.isFile()){
             m_irx = targetFile;
         } else if (targetFile.isDirectory()) {
-            String zipName = getName();
-            new ArchiveUtil().zipFileOrFolder(targetFile, zipName);
-            String validatedZipName = FileUtil.getValidFilename(zipName);
-            m_irx = new File(System.getProperty("java.io.tmpdir")+File.separator+validatedZipName+ZIP_EXTENSION);
+            String validatedZipName = FileUtil.getValidFilename(getName());
+            String zipLocation = System.getProperty("java.io.tmpdir")+File.separator+validatedZipName+ZIP_EXTENSION;
+            ArchiveUtil.zipFileOrFolder(targetFile, new File(zipLocation));
+            m_irx = new File(zipLocation);
         }
         if(!m_irx.isFile())
-            throw new ScannerException(Messages.getMessage(ERROR_GENERATING_IRX, getScanLogs().getAbsolutePath()));
+            throw new ScannerException(Messages.getMessage(ERROR_GENERATING_ZIP, getScanLogs().getAbsolutePath()));
     }
 	
 	private void analyzeIR() throws IOException, ScannerException {

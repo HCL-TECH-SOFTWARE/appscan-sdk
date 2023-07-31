@@ -32,7 +32,6 @@ public interface CoreConstants {
 	String SOURCE_CODE_ONLY				= "sourceCodeOnly";										//$NON-NLS-1$
     	String CREATE_IRX                     			= "createIRX";                                            					//$NON-NLS-1$
     	String UPLOAD_DIRECT                     		= "uploadDirect";                                            					//$NON-NLS-1$
-
     	String BINDING_ID					= "Bindingid";											//$NON-NLS-1$
     String APPSCAN_OPTS                 = "APPSCAN_OPTS";                                       //$NON-NLS-1$
 	String BLUEMIX_SERVER               = "BLUEMIX_SERVER";                                     //$NON-NLS-1$

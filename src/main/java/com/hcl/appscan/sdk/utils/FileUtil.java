@@ -6,6 +6,7 @@
 
 package com.hcl.appscan.sdk.utils;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
 public class FileUtil {
@@ -30,4 +31,14 @@ public class FileUtil {
 		}
 		return builder.toString();
 	}
+
+    public static String getFileExtension(File file) {
+        String fileName = file.getName();
+        String extension = "";
+        int index = fileName.lastIndexOf('.');
+        if(index != -1) {
+            extension = fileName.substring(index+1);
+        }
+        return extension;
+    }
 }

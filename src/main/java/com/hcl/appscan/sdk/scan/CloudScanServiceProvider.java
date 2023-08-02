@@ -11,12 +11,14 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import com.hcl.appscan.sdk.scanners.dynamic.DASTConstants;
+import com.hcl.appscan.sdk.utils.FileUtil;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -40,6 +42,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 
 	private IProgress m_progress;
 	private IAuthenticationProvider m_authProvider;
+    private static final String[] DAST_FILES_EXTENSIONS = {DASTConstants.SCAN_EXTENSION, DASTConstants.SCANT_EXTENSION, DASTConstants.CONFIG_EXTENSION};
 	
 	public CloudScanServiceProvider(IProgress progress, IAuthenticationProvider authProvider) {
 		m_progress = progress;
@@ -97,7 +100,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		
 		   m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPLOADING_FILE, file.getAbsolutePath())));
             String fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD;
-            if(!file.getName().toLowerCase().endsWith(SASTConstants.IRX_EXTENSION) && !file.getName().toLowerCase().endsWith(DASTConstants.SCAN_EXTENSION) && !file.getName().toLowerCase().endsWith(DASTConstants.SCANT_EXTENSION) && !file.getName().toLowerCase().endsWith(DASTConstants.CONFIG_EXTENSION)) {
+            if(!file.getName().toLowerCase().endsWith(SASTConstants.IRX_EXTENSION) && !(Arrays.asList(DAST_FILES_EXTENSIONS).contains(FileUtil.getFileExtension(file)))) {
                 fileUploadAPI += "?fileType=SourceCodeArchive";
             }
 		

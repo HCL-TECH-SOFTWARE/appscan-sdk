@@ -17,6 +17,9 @@ public interface DASTConstants {
 	String TRAFFIC_FILE                 = "trafficFile";
 	String TRAFFIC_FILE_ID              = "LoginSequenceFileId";
 	String LOGIN_TYPE                   = "LoginType";
+    	String SCAN_EXTENSION               = ".scan";                          //$NON-NLS-1$
+    	String SCANT_EXTENSION              = ".scant";                         //$NON-NLS-1$
+    	String CONFIG_EXTENSION             = ".config";                        //$NON-NLS-1$
 	//Errors
 	String ERROR_SUBMITTING_SCAN		= "error.submitting.scan";			//$NON-NLS-1$
 }

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.hcl.appscan.sdk.scanners.dynamic.DASTConstants;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -96,7 +97,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		
 		   m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPLOADING_FILE, file.getAbsolutePath())));
             String fileUploadAPI =  m_authProvider.getServer() + API_FILE_UPLOAD;
-            if(!file.getName().toLowerCase().endsWith(SASTConstants.IRX_EXTENSION)) {
+            if(!file.getName().toLowerCase().endsWith(SASTConstants.IRX_EXTENSION) && !file.getName().toLowerCase().endsWith(DASTConstants.SCAN_EXTENSION) && !file.getName().toLowerCase().endsWith(DASTConstants.SCANT_EXTENSION) && !file.getName().toLowerCase().endsWith(DASTConstants.CONFIG_EXTENSION)) {
                 fileUploadAPI += "?fileType=SourceCodeArchive";
             }
 		

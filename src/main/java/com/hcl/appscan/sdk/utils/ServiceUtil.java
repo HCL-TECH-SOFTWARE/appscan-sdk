@@ -69,10 +69,8 @@ public class ServiceUtil implements CoreConstants {
     private static String requiredServerURL(String serverURL){
         String request_url = SystemUtil.getDefaultServer();
         if(serverURL != null && !serverURL.isEmpty()) {
-            if(System.getenv(CoreConstants.APPSCAN_OPTS) == null || !System.getenv(CoreConstants.APPSCAN_OPTS).contains(CoreConstants.BLUEMIX_SERVER)){
                 request_url = serverURL;
             }
-        }
         return request_url;
     }
 	

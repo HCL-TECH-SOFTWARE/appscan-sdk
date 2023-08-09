@@ -123,7 +123,7 @@ public class ArchiveUtil {
     }
 
     private static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
-        if (fileToZip.isHidden() || (fileToZip.isDirectory() && fileToZip.getName().equals(".git"))) {
+        if (fileToZip.getName().startsWith(".")) {
             return;
         }
         if (fileToZip.isDirectory()) {

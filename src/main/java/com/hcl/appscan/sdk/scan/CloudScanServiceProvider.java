@@ -55,8 +55,12 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 			return null;
 		
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));
-		
-		String request_url =  m_authProvider.getServer() + String.format(API_SCANNER, type);
+        String request_url;
+        if(type.equals("Software Composition Analysis")){
+            request_url = m_authProvider.getServer() + "/api/v4/Scans/Sca";
+        } else {
+            request_url =  m_authProvider.getServer() + String.format(API_SCANNER, type);
+        }
 		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
 		
 		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());

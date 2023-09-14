@@ -20,6 +20,6 @@ public class SCAScanFactory implements IScanFactory {
 
     @Override
     public String getType() {
-        return "Software Composition Analysis";
+        return "Sca";
     }
 }

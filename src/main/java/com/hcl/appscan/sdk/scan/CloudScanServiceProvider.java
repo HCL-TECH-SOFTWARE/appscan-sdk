@@ -55,27 +55,36 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 			return null;
 		
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));
+        Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
         String request_url;
-        if(type.equals("Software Composition Analysis")){
-            request_url = m_authProvider.getServer() + "/api/v4/Scans/Sca";
+        if(type.equals("Sca")) {
+            request_url = m_authProvider.getServer() + String.format(API_SCANNER_V4, "Sca");
+            params.remove("EnableMailNotification");
+            params.remove("FullyAutomatic");
+            params.remove("acceptInvalidCerts");
+            request_headers.put("Content-Type", "application/json");
+            request_headers.put("accept", "application/json");
         } else {
             request_url =  m_authProvider.getServer() + String.format(API_SCANNER, type);
         }
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		
+
 		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
 		
 		try {
-			HttpResponse response = client.postForm(request_url, request_headers, params);
+			HttpResponse response;
+            if (type.equals("Sca")) {
+                response = client.postFormNew(request_url,request_headers,params);
+            } else {
+                response = client.postForm(request_url, request_headers, params);
+            }
 			int status = response.getResponseCode();
 		
 			JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
 			
-			if (status == HttpsURLConnection.HTTP_CREATED) {
+			if (status == HttpsURLConnection.HTTP_CREATED || status == 200) {
 				m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS)));
 				return json.getString(ID);
-			}
-			else if (json != null && json.has(MESSAGE)) {
+			} else if (json != null && json.has(MESSAGE)) {
 				String errorResponse = json.getString(MESSAGE);
 				if(json.has(FORMAT_PARAMS)) {
 					JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);

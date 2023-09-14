@@ -14,7 +14,8 @@ public interface SASTConstants {
 	String APPSCAN_CLIENT_VERSION       = "APPSCAN_CLIENT_VERSION";			//$NON-NLS-1$
 	String IRGEN_CLIENT_PLUGIN_VERSION  = "IRGEN_CLIENT_PLUGIN_VERSION";	//$NON-NLS-1$
 	String ARSA_FILE_ID					= "ARSAFileId";						//$NON-NLS-1$
-	String WIN_SCRIPT					= "appscan.bat";					//$NON-NLS-1$
+    String FILE_ID					= "ApplicationFileId";						//$NON-NLS-1$
+    String WIN_SCRIPT					= "appscan.bat";					//$NON-NLS-1$
 	String UNIX_SCRIPT					= "appscan.sh";						//$NON-NLS-1$
 
 	String IRX_EXTENSION				= ".irx";							//$NON-NLS-1$

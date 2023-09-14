@@ -50,6 +50,7 @@ public interface CoreConstants {
 	String CLIENT_TYPE					= "ClientType";		 									//$NON-NLS-1$
 	
 	String API_ENV						= "/api/v2";				 							//$NON-NLS-1$
+    String API_ENV_V4						= "api/v4";				 							//$NON-NLS-1$
 	String API_BLUEMIX					= "Bluemix";					 						//$NON-NLS-1$
 	String API_BLUEMIX_LOGIN 			= API_ENV + "/Account/BluemixLogin";					//$NON-NLS-1$
 	String API_KEY_LOGIN				= API_ENV + "/Account/ApiKeyLogin";						//$NON-NLS-1$
@@ -63,6 +64,7 @@ public interface CoreConstants {
 	String API_FILE_UPLOAD				= API_ENV + "/FileUpload";								//$NON-NLS-1$
 	String API_SCAN						= API_ENV + "/%s";										//$NON-NLS-1$
 	String API_SCANNER					= API_ENV + "/Scans/%s";								//$NON-NLS-1$
+    String API_SCANNER_V4               = API_ENV_V4 + "/Scans/%s";                             //$NON-NLS-1$
 	String API_SCANS					= API_ENV + "/Scans";									//$NON-NLS-1$
 	String API_NONCOMPLIANT_ISSUES 		= API_ENV + "/Scans/%s/NonCompliantIssues";				//$NON-NLS-1$
 	String API_SCANS_REPORT				= API_ENV + "/Scans/%s/Report/%s";						//$NON-NLS-1$

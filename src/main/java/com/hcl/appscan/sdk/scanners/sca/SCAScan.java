@@ -82,9 +82,9 @@ public class SCAScan extends ASoCScan implements SASTConstants {
             throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_irx.getName()));
 
         Map<String, String> params = getProperties();
-        params.put(ARSA_FILE_ID, fileId);
+        params.put(FILE_ID, fileId);
 
-        setScanId(getServiceProvider().createAndExecuteScan("Software Composition Analysis", params));
+        setScanId(getServiceProvider().createAndExecuteScan("Sca", params));
         if(getScanId() == null)
             throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
     }

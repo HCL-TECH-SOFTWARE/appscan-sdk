@@ -6,6 +6,9 @@
 
 package com.hcl.appscan.sdk.http;
 
+import org.apache.wink.json4j.JSON;
+import org.apache.wink.json4j.JSONObject;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -166,6 +169,14 @@ public class HttpClient {
 		String body = buildQueryString(params);
 		return post(url, headerProperties, body);
 	}
+
+    public HttpResponse postFormNew(String url, Map<String, String> headerProperties, Map<String, String> params)
+            throws IOException {
+        JSONObject json = new JSONObject(params);
+        String body = json.toString();
+        return post(url, headerProperties, body);
+
+    }
 
 	/**
 	 * Submit a form with parameters using the put request.

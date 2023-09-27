@@ -325,7 +325,7 @@ public class SAClient implements SASTConstants {
 			args.add(OPT_VERBOSE);
 		if(properties.containsKey(THIRD_PARTY) || System.getProperty(THIRD_PARTY) != null)
 			args.add(OPT_THIRD_PARTY);
-		if (properties.containsKey(OPEN_SOURCE_ONLY) || System.getProperty(OPEN_SOURCE_ONLY) != null)
+		if (properties.containsKey(OPEN_SOURCE_ONLY) || System.getProperty(OPEN_SOURCE_ONLY) != null || properties.get(CoreConstants.SCANNER_TYPE).equals("Sca"))
 			args.add(OPT_OPEN_SOURCE_ONLY);
                 if (properties.containsKey(SOURCE_CODE_ONLY) || System.getProperty(SOURCE_CODE_ONLY) != null)
                         args.add(OPT_SOURCE_CODE_ONLY);

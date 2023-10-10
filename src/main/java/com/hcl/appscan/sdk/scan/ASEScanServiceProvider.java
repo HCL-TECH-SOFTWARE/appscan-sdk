@@ -108,6 +108,8 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         apiParams.put("applicationId",properties.get("application"));
         apiParams.put("name", properties.get("ScanName"));
         apiParams.put("templateId", properties.get("templateId"));
+        apiParams.put("description", properties.get("description"));
+        apiParams.put("contact", properties.get("contact"));
         return apiParams;
     }
     

@@ -244,9 +244,14 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			HttpResponse response = client.postMultipart(request_url, request_headers, parts);
 			int status = response.getResponseCode();
 			if (status != HttpsURLConnection.HTTP_OK) {
-				return false;
+                JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
+                if(json != null && json.has("errorMessage")){
+                    String errorResponse = json.getString("errorMessage");
+                    m_progress.setStatus(new Message(Message.ERROR, errorResponse));
+                }
+                return false;
 			}
-		} catch(IOException e) {
+		} catch(IOException | JSONException e) {
 			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
 			return false;
 		}

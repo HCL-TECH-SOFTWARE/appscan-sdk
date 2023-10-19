@@ -144,7 +144,6 @@ public class ServiceUtil implements CoreConstants {
 
 			HttpClient client = new HttpClient(proxy);
             Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);
-            requestHeaders.put("accept", "application/json");
             requestHeaders.put("Content-Type", "application/json");
 			HttpResponse response = client.post(request_url, requestHeaders, body.toString());
 

@@ -50,7 +50,7 @@ public interface CoreConstants {
 	String CLIENT_TYPE					= "ClientType";		 									//$NON-NLS-1$
 	
 	String API_ENV						= "/api/v2";				 							//$NON-NLS-1$
-    String API_ENV_V4						= "api/v4";				 							//$NON-NLS-1$
+    String API_ENV_V4						= "/api/v4";				 							//$NON-NLS-1$
 	String API_BLUEMIX					= "Bluemix";					 						//$NON-NLS-1$
 	String API_BLUEMIX_LOGIN 			= API_ENV + "/Account/BluemixLogin";					//$NON-NLS-1$
 	String API_KEY_LOGIN				= API_ENV + "/Account/ApiKeyLogin";						//$NON-NLS-1$

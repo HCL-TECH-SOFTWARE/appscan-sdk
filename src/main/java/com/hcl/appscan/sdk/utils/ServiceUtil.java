@@ -143,7 +143,9 @@ public class ServiceUtil implements CoreConstants {
 			body.put(URL, url);
 
 			HttpClient client = new HttpClient(proxy);
-			HttpResponse response = client.post(request_url, provider.getAuthorizationHeader(false), body.toString());
+            		Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);
+            		requestHeaders.put("Content-Type", "application/json");
+			HttpResponse response = client.post(request_url, requestHeaders, body.toString());
 
 			if (response.isSuccess()) {
 				JSONArtifact responseContent = response.getResponseBodyAsJSON();

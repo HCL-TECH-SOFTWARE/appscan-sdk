@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.Messages;
 import com.hcl.appscan.sdk.error.InvalidTargetException;
 import com.hcl.appscan.sdk.error.ScannerException;
@@ -17,6 +18,7 @@ import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
 import com.hcl.appscan.sdk.scanners.ASoCScan;
+import com.hcl.appscan.sdk.utils.ServiceUtil;
 
 public class DASTScan extends ASoCScan implements DASTConstants {
 
@@ -41,6 +43,10 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 
 		Map<String, String> params = getProperties();
 		params.put(STARTING_URL, target);
+
+        	if(!ServiceUtil.isValidUrl(params.get(STARTING_URL),getServiceProvider().getAuthenticationProvider())) {
+            		throw new ScannerException(Messages.getMessage(CoreConstants.ERROR_URL_VALIDATION));
+        	}
 
 		String scanLoginType = null;
 		if (params.get(LOGIN_TYPE) != null) {

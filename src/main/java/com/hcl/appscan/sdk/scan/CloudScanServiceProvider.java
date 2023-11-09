@@ -58,10 +58,8 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
         Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
         String request_url;
         if(type.equals("Sca")) {
+            // To execute the SCA scan we are using the V4 APIs.
             request_url = m_authProvider.getServer() + String.format(API_SCANNER_V4, "Sca");
-            params.remove("EnableMailNotification");
-            params.remove("FullyAutomatic");
-            params.remove("acceptInvalidCerts");
             request_headers.put("Content-Type", "application/json");
             request_headers.put("accept", "application/json");
         } else {
@@ -73,7 +71,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		try {
 			HttpResponse response;
             if (type.equals("Sca")) {
-                response = client.postFormNew(request_url,request_headers,params);
+                response = client.postFormV4(request_url,request_headers,params);
             } else {
                 response = client.postForm(request_url, request_headers, params);
             }

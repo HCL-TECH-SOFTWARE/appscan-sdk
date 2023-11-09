@@ -55,26 +55,26 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 			return null;
 		
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));
-        Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-        String request_url;
-        if(type.equals("Sca")) {
-            // To execute the SCA scan we are using the V4 APIs.
-            request_url = m_authProvider.getServer() + String.format(API_SCANNER_V4, "Sca");
-            request_headers.put("Content-Type", "application/json");
-            request_headers.put("accept", "application/json");
-        } else {
-            request_url =  m_authProvider.getServer() + String.format(API_SCANNER, type);
-        }
+        	Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+        	String request_url;
+        	if(type.equals("Sca")) {
+            	// To execute the SCA scan we are using the V4 APIs.
+            		request_url = m_authProvider.getServer() + String.format(API_SCANNER_V4, "Sca");
+            		request_headers.put("Content-Type", "application/json");
+            		request_headers.put("accept", "application/json");
+        	} else {
+            		request_url =  m_authProvider.getServer() + String.format(API_SCANNER, type);
+        	}
 
 		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
 		
 		try {
 			HttpResponse response;
-            if (type.equals("Sca")) {
-                response = client.postFormV4(request_url,request_headers,params);
-            } else {
-                response = client.postForm(request_url, request_headers, params);
-            }
+           	 if (type.equals("Sca")) {
+                	response = client.postFormV4(request_url,request_headers,params);
+            	} else {
+                	response = client.postForm(request_url, request_headers, params);
+            	}
 			int status = response.getResponseCode();
 		
 			JSONObject json = (JSONObject) response.getResponseBodyAsJSON();

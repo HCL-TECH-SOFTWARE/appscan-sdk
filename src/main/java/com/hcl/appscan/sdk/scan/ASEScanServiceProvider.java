@@ -108,6 +108,8 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         apiParams.put("applicationId",properties.get("application"));
         apiParams.put("name", properties.get("ScanName"));
         apiParams.put("templateId", properties.get("templateId"));
+        apiParams.put("description", properties.get("description"));
+        apiParams.put("contact", properties.get("contact"));
         return apiParams;
     }
     
@@ -244,9 +246,13 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			HttpResponse response = client.postMultipart(request_url, request_headers, parts);
 			int status = response.getResponseCode();
 			if (status != HttpsURLConnection.HTTP_OK) {
-				return false;
+                		JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
+                		if(json != null && json.has("errorMessage")){
+                    			m_progress.setStatus(new Message(Message.ERROR, json.getString("errorMessage")));
+                	}
+                		return false;
 			}
-		} catch(IOException e) {
+		} catch(IOException | JSONException e) {
 			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
 			return false;
 		}

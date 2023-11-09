@@ -24,6 +24,7 @@ import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.logging.Message;
 import com.hcl.appscan.sdk.utils.ArchiveUtil;
+import com.hcl.appscan.sdk.utils.FileUtil;
 import com.hcl.appscan.sdk.utils.ServiceUtil;
 import com.hcl.appscan.sdk.utils.SystemUtil;
 
@@ -305,7 +306,7 @@ public class SAClient implements SASTConstants {
 		
 		if(properties.containsKey(CoreConstants.SCAN_NAME)) {
 			args.add(OPT_NAME);
-			args.add(properties.get(CoreConstants.SCAN_NAME));
+			args.add(FileUtil.getValidFilename(properties.get(CoreConstants.SCAN_NAME)));
 		}
 		if(properties.containsKey(LOG_LOCATION)) {
 			args.add(OPT_LOG_LOCATION);

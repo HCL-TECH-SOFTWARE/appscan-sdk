@@ -55,23 +55,34 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 			return null;
 		
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));
-		
-		String request_url =  m_authProvider.getServer() + String.format(API_SCANNER, type);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		
+        	Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+        	String request_url;
+        	if(type.equals("Sca")) {
+            	// To execute the SCA scan we are using the V4 APIs.
+            		request_url = m_authProvider.getServer() + String.format(API_SCANNER_V4, "Sca");
+            		request_headers.put("Content-Type", "application/json");
+            		request_headers.put("accept", "application/json");
+        	} else {
+            		request_url =  m_authProvider.getServer() + String.format(API_SCANNER, type);
+        	}
+
 		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
 		
 		try {
-			HttpResponse response = client.postForm(request_url, request_headers, params);
+			HttpResponse response;
+           	 	if (type.equals("Sca")) {
+                		response = client.postFormV4(request_url,request_headers,params);
+            		} else {
+                		response = client.postForm(request_url, request_headers, params);
+            		}
 			int status = response.getResponseCode();
 		
 			JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
 			
-			if (status == HttpsURLConnection.HTTP_CREATED) {
+			if (status == HttpsURLConnection.HTTP_CREATED || status == HttpsURLConnection.HTTP_OK) {
 				m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS)));
 				return json.getString(ID);
-			}
-			else if (json != null && json.has(MESSAGE)) {
+			} else if (json != null && json.has(MESSAGE)) {
 				String errorResponse = json.getString(MESSAGE);
 				if(json.has(FORMAT_PARAMS)) {
 					JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);
@@ -82,7 +93,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 						}
 						errorResponse = MessageFormat.format(errorResponse, (Object[]) messageParams);
 					}
-                }
+                		}
 				m_progress.setStatus(new Message(Message.ERROR, errorResponse));
 			}
 			else

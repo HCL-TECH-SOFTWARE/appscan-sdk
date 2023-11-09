@@ -70,11 +70,11 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		
 		try {
 			HttpResponse response;
-           	 if (type.equals("Sca")) {
-                	response = client.postFormV4(request_url,request_headers,params);
-            	} else {
-                	response = client.postForm(request_url, request_headers, params);
-            	}
+           	 	if (type.equals("Sca")) {
+                		response = client.postFormV4(request_url,request_headers,params);
+            		} else {
+                		response = client.postForm(request_url, request_headers, params);
+            		}
 			int status = response.getResponseCode();
 		
 			JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
@@ -93,7 +93,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 						}
 						errorResponse = MessageFormat.format(errorResponse, (Object[]) messageParams);
 					}
-                }
+                		}
 				m_progress.setStatus(new Message(Message.ERROR, errorResponse));
 			}
 			else

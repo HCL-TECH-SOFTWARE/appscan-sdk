@@ -48,6 +48,10 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		if(target == null || !(new File(target).exists()))
 			throw new InvalidTargetException(Messages.getMessage(TARGET_INVALID, target));
 
+        if (getProperties().containsKey(OPEN_SOURCE_ONLY)){
+            getProgress().setStatus(new Message(Message.WARNING, Messages.getMessage(CoreConstants.WARNING_SCA)));
+        }
+
         try {
             if(getProperties().containsKey(CoreConstants.UPLOAD_DIRECT)){
                 generateZip();

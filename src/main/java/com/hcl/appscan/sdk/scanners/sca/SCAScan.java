@@ -55,7 +55,6 @@ public class SCAScan extends SASTScan implements SASTConstants {
 
         Map<String, String> params = getProperties();
         params.put(FILE_ID, fileId);
-
         setScanId(getServiceProvider().createAndExecuteScan(CoreConstants.SCA, params));
         if(getScanId() == null)
             throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));

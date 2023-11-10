@@ -132,6 +132,7 @@ public interface CoreConstants {
 	String ERROR_UPLOADING_FILE			= "error.upload.file";									//$NON-NLS-1$
 	String ERROR_GETTING_INFO			= "error.getting.info";									//$NON-NLS-1$
     String ERROR_URL_VALIDATION			= "error.url.validation";								//$NON-NLS-1$
+    String WARNING_SCA			        = "warning.sca";								        //$NON-NLS-1$
     String FORMAT_PARAMS			        = "FormatParams";								        //$NON-NLS-1$
 	
 	// ASE Status Messages

@@ -30,7 +30,10 @@ public interface CoreConstants {
 	String USER_MESSAGE					= "UserMessage";										//$NON-NLS-1$
 	String IS_VALID						= "IsValid";											//$NON-NLS-1$
 	String SOURCE_CODE_ONLY				= "sourceCodeOnly";										//$NON-NLS-1$
-    	String CREATE_IRX                     			= "createIRX";                                            					//$NON-NLS-1$
+    String SOFTWARE_COMPOSITION_ANALYZER = "Software Composition Analyzer";                     //$NON-NLS-1$
+    String SCA                           = "Sca";                                               //$NON-NLS-1$
+
+    String CREATE_IRX                     			= "createIRX";                                            					//$NON-NLS-1$
     	String UPLOAD_DIRECT                     		= "uploadDirect";                                            					//$NON-NLS-1$
     	String BINDING_ID					= "Bindingid";											//$NON-NLS-1$
     String APPSCAN_OPTS                 = "APPSCAN_OPTS";                                       //$NON-NLS-1$
@@ -129,7 +132,6 @@ public interface CoreConstants {
 	String ERROR_UPLOADING_FILE			= "error.upload.file";									//$NON-NLS-1$
 	String ERROR_GETTING_INFO			= "error.getting.info";									//$NON-NLS-1$
     String ERROR_URL_VALIDATION			= "error.url.validation";								//$NON-NLS-1$
-    String WARNING_SCA			        = "warning.sca";								        //$NON-NLS-1$
     String FORMAT_PARAMS			        = "FormatParams";								        //$NON-NLS-1$
 	
 	// ASE Status Messages

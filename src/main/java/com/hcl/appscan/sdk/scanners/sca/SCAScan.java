@@ -1,5 +1,6 @@
 package com.hcl.appscan.sdk.scanners.sca;
 
+import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.Messages;
 import com.hcl.appscan.sdk.error.InvalidTargetException;
 import com.hcl.appscan.sdk.error.ScannerException;
@@ -8,13 +9,14 @@ import com.hcl.appscan.sdk.scan.IScanServiceProvider;
 import com.hcl.appscan.sdk.scanners.ASoCScan;
 import com.hcl.appscan.sdk.scanners.sast.SAClient;
 import com.hcl.appscan.sdk.scanners.sast.SASTConstants;
+import com.hcl.appscan.sdk.scanners.sast.SASTScan;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.Map;
 
-public class SCAScan extends ASoCScan implements SASTConstants {
+public class SCAScan extends SASTScan implements SASTConstants {
     private static final long serialVersionUID = 1L;
     private static final String REPORT_FORMAT = "html"; //$NON-NLS-1$
     private File m_irx;
@@ -40,37 +42,7 @@ public class SCAScan extends ASoCScan implements SASTConstants {
 
     @Override
     public String getType() {
-        return "Software Composition Analysis";
-    }
-
-    @Override
-    public String getReportFormat() {
-        return REPORT_FORMAT;
-    }
-
-    public File getIrx() {
-        return m_irx;
-    }
-
-    private void generateIR() throws IOException, ScannerException {
-        File targetFile = new File(getTarget());
-
-        //If we were given an irx file, don't generate a new one
-        if(targetFile.getName().endsWith(".irx") && targetFile.isFile()) {
-            m_irx = targetFile;
-            return;
-        }
-
-        //Get the target directory
-        String targetDir = targetFile.isDirectory() ? targetFile.getAbsolutePath() : targetFile.getParent();
-
-        //Create and run the process
-        Proxy proxy = getServiceProvider() == null ? Proxy.NO_PROXY : getServiceProvider().getAuthenticationProvider().getProxy();
-        new SAClient(getProgress(), proxy).run(targetDir, getProperties());
-        String irxDir = getProperties().containsKey(SAVE_LOCATION) ? getProperties().get(SAVE_LOCATION) : targetDir;
-        m_irx = new File(irxDir, getName() + IRX_EXTENSION);
-        if(!m_irx.isFile())
-            throw new ScannerException(Messages.getMessage(ERROR_GENERATING_IRX, getScanLogs().getAbsolutePath()));
+        return CoreConstants.SOFTWARE_COMPOSITION_ANALYZER;
     }
 
     private void analyzeIR() throws IOException, ScannerException {
@@ -84,18 +56,8 @@ public class SCAScan extends ASoCScan implements SASTConstants {
         Map<String, String> params = getProperties();
         params.put(FILE_ID, fileId);
 
-        setScanId(getServiceProvider().createAndExecuteScan("Sca", params));
+        setScanId(getServiceProvider().createAndExecuteScan(CoreConstants.SCA, params));
         if(getScanId() == null)
             throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
-    }
-
-    private File getScanLogs() {
-        if(m_irx == null) {
-            return new File("logs"); //$NON-NLS-1$
-        }
-        String logsFile = m_irx.getName();
-        logsFile = logsFile.substring(0, logsFile.lastIndexOf(".")); //$NON-NLS-1$
-        logsFile += "_logs.zip"; //$NON-NLS-1$
-        return new File(m_irx.getParentFile(), logsFile);
     }
 }

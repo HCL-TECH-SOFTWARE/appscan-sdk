@@ -1,3 +1,8 @@
+/**
+ * © Copyright HCL Technologies Ltd. 2023.
+ * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package com.hcl.appscan.sdk.scanners.sca;
 
 import com.hcl.appscan.sdk.CoreConstants;
@@ -7,7 +12,6 @@ import com.hcl.appscan.sdk.scan.CloudScanServiceProvider;
 import com.hcl.appscan.sdk.scan.IScan;
 import com.hcl.appscan.sdk.scan.IScanFactory;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
-import com.hcl.appscan.sdk.scanners.sast.SASTScan;
 
 import java.util.Map;
 

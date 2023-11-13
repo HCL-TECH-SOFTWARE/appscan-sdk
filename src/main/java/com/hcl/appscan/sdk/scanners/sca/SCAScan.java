@@ -1,3 +1,8 @@
+/**
+ * © Copyright HCL Technologies Ltd. 2023.
+ * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package com.hcl.appscan.sdk.scanners.sca;
 
 import com.hcl.appscan.sdk.CoreConstants;
@@ -6,14 +11,11 @@ import com.hcl.appscan.sdk.error.InvalidTargetException;
 import com.hcl.appscan.sdk.error.ScannerException;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
-import com.hcl.appscan.sdk.scanners.ASoCScan;
-import com.hcl.appscan.sdk.scanners.sast.SAClient;
 import com.hcl.appscan.sdk.scanners.sast.SASTConstants;
 import com.hcl.appscan.sdk.scanners.sast.SASTScan;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.Proxy;
 import java.util.Map;
 
 public class SCAScan extends SASTScan implements SASTConstants {

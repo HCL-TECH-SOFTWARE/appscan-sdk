@@ -78,7 +78,7 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		return m_irx;
 	}
 	
-	private void generateIR() throws IOException, ScannerException {
+	protected void generateIR() throws IOException, ScannerException {
 		File targetFile = new File(getTarget());
 
 		//If we were given an irx file, don't generate a new one

@@ -109,6 +109,39 @@ public class HttpClient {
 		return makeRequest(Method.POST, url, headerProperties, body);
 	}
 
+    /**
+     * Submit a post request.
+     *
+     * @param url The URL string.
+     * @param headerProperties An optional Map of header properties.
+     * @param params An optional Map of properties.
+     * @return The response as a byte array.
+     * @throws IOException If an error occurs.
+     */
+    public HttpResponse post(String url, Map<String, String> headerProperties, Map<String, String> params)
+            throws IOException {
+        Map<String, Object> objectMap = new HashMap<>();
+        for (String key : params.keySet()) {
+            String value = params.get(key);
+            if (value != null) {
+                if (value.equalsIgnoreCase("true")) {
+                    objectMap.put(key, true);
+                } else if (value.equalsIgnoreCase("false")) {
+                    objectMap.put(key, false);
+                } else {
+                    // If the string is not "true" or "false," keep it as is
+                    objectMap.put(key, value);
+                }
+            } else {
+                // If the value is not a string, keep it as is
+                objectMap.put(key, value);
+            }
+        }
+        JSONObject json = new JSONObject(objectMap);
+        String body = json.toString();
+        return post(url, headerProperties, body);
+    }
+
 	/**
 	 * Submit a put request.
 	 * 
@@ -170,39 +203,6 @@ public class HttpClient {
 		String body = buildQueryString(params);
 		return post(url, headerProperties, body);
 	}
-
-    /**
-     * Submit a form with parameters using the post request, mainly for v4 APIs.
-     *
-     * @param url The URL string.
-     * @param headerProperties An optional Map of header properties.
-     * @param params An optional Map of parameters.
-     * @return The response as a byte array.
-     * @throws IOException If an error occurs.
-     */
-    public HttpResponse postFormV4(String url, Map<String, String> headerProperties, Map<String, String> params)
-            throws IOException {
-        Map<String, Object> objectMap = new HashMap<>();
-        for (String key : params.keySet()) {
-            String value = params.get(key);
-            if (value != null) {
-                if (value.equalsIgnoreCase("true")) {
-                    objectMap.put(key, true);
-                } else if (value.equalsIgnoreCase("false")) {
-                    objectMap.put(key, false);
-                } else {
-                    // If the string is not "true" or "false," keep it as is
-                    objectMap.put(key, value);
-                }
-            } else {
-                // If the value is not a string, keep it as is
-                objectMap.put(key, value);
-            }
-        }
-        JSONObject json = new JSONObject(objectMap);
-        String body = json.toString();
-        return post(url, headerProperties, body);
-    }
 
 	/**
 	 * Submit a form with parameters using the put request.

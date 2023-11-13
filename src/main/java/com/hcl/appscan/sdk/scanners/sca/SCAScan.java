@@ -19,7 +19,6 @@ import java.util.Map;
 public class SCAScan extends SASTScan implements SASTConstants {
     private static final long serialVersionUID = 1L;
     private static final String REPORT_FORMAT = "html"; //$NON-NLS-1$
-    private File m_irx;
 
     public SCAScan(Map<String, String> properties, IProgress progress, IScanServiceProvider provider) {
         super(properties, progress, provider);
@@ -49,9 +48,9 @@ public class SCAScan extends SASTScan implements SASTConstants {
         if(getProperties().containsKey(PREPARE_ONLY))
             return;
 
-        String fileId = getServiceProvider().submitFile(m_irx);
+        String fileId = getServiceProvider().submitFile(getIrx());
         if(fileId == null)
-            throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_irx.getName()));
+            throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, getIrx().getName()));
 
         Map<String, String> params = getProperties();
         params.put(FILE_ID, fileId);

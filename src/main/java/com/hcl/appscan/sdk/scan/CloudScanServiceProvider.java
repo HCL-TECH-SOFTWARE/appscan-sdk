@@ -48,9 +48,9 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		m_progress = progress;
 		m_authProvider = authProvider;
 	}
-
+  
     @Override
-	public String createAndExecuteScan(String type, Map<String, String> params) {
+    public String createAndExecuteScan(String type, Map<String, String> params) {
         if(loginExpired() || !verifyApplication(params.get(APP_ID)))
             return null;
 
@@ -97,7 +97,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
             m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, e.getLocalizedMessage())));
         }
         return null;
-	}
+	  }
 
     private boolean shouldUseV4Api(String type) {
         return type.equals(CoreConstants.SCA);

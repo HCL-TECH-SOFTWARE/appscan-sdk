@@ -51,10 +51,10 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 
     @Override
 	public String createAndExecuteScan(String type, Map<String, String> params) {
-		return shouldUseV4Api(type) ? createAndExecuteScanV4(type, params) : createAndExecuteScanV2(type, params);
+		return shouldUseV4Api(type) ? createAndExecuteScanUsingV4Api(type, params) : createAndExecuteScanUsingV2Api(type, params);
 	}
 
-    public String createAndExecuteScanV2(String type, Map<String, String> params) {
+    private String createAndExecuteScanUsingV2Api(String type, Map<String, String> params) {
         if(loginExpired() || !verifyApplication(params.get(APP_ID)))
             return null;
 
@@ -95,7 +95,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
         return null;
     }
 
-    public String createAndExecuteScanV4(String type, Map<String, String> params) {
+    private String createAndExecuteScanUsingV4Api(String type, Map<String, String> params) {
         if(loginExpired() || !verifyApplication(params.get(APP_ID)))
             return null;
 

@@ -46,9 +46,9 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 		params.put(STARTING_URL, target);
 
         IAuthenticationProvider authProvider = getServiceProvider().getAuthenticationProvider();
-        	if(params.get(PRESENCE_ID).equals("") && !ServiceUtil.isValidUrl(params.get(STARTING_URL), authProvider, authProvider.getProxy())) {
-            		throw new ScannerException(Messages.getMessage(CoreConstants.ERROR_URL_VALIDATION));
-        	}
+        if(params.get(PRESENCE_ID).equals("") && !ServiceUtil.isValidUrl(params.get(STARTING_URL), authProvider, authProvider.getProxy())) {
+			throw new ScannerException(Messages.getMessage(CoreConstants.ERROR_URL_VALIDATION));
+		}
 
 		String scanLoginType = null;
 		if (params.get(LOGIN_TYPE) != null) {

@@ -48,10 +48,6 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		if(target == null || !(new File(target).exists()))
 			throw new InvalidTargetException(Messages.getMessage(TARGET_INVALID, target));
 
-        if (getProperties().containsKey(OPEN_SOURCE_ONLY)){
-            getProgress().setStatus(new Message(Message.WARNING, Messages.getMessage(CoreConstants.WARNING_SCA)));
-        }
-
         try {
             if(getProperties().containsKey(CoreConstants.UPLOAD_DIRECT)){
                 generateZip();
@@ -113,7 +109,7 @@ public class SASTScan extends ASoCScan implements SASTConstants {
             throw new ScannerException(Messages.getMessage(ERROR_GENERATING_ZIP, getScanLogs().getAbsolutePath()));
     }
 	
-	private void analyzeIR() throws IOException, ScannerException {
+	protected void analyzeIR() throws IOException, ScannerException {
 		if(getProperties().containsKey(PREPARE_ONLY))
 			return;
 
@@ -122,9 +118,13 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 			throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_irx.getName()));		
 				
 		Map<String, String> params = getProperties();
-		params.put(ARSA_FILE_ID, fileId);
-		
-		setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, params));
+		params.put(FILE_ID, fileId);
+
+        if(getType().equals(CoreConstants.SOFTWARE_COMPOSITION_ANALYZER)) {
+            setScanId(getServiceProvider().createAndExecuteScan(CoreConstants.SCA, params));
+        } else {
+            setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, params));
+        }
 		if(getScanId() == null)
 			throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
 	}

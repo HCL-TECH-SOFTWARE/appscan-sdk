@@ -17,7 +17,6 @@ import com.hcl.appscan.sdk.error.InvalidTargetException;
 import com.hcl.appscan.sdk.error.ScannerException;
 import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
-import com.hcl.appscan.sdk.logging.Message;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
 import com.hcl.appscan.sdk.scanners.ASoCScan;
 import com.hcl.appscan.sdk.utils.ArchiveUtil;
@@ -120,14 +119,14 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		Map<String, String> params = getProperties();
 		params.put(FILE_ID, fileId);
 
-        if(getType().equals(CoreConstants.SOFTWARE_COMPOSITION_ANALYZER)) {
-            setScanId(getServiceProvider().createAndExecuteScan(CoreConstants.SCA, params));
-        } else {
-            setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, params));
-        }
+        submitScan();
 		if(getScanId() == null)
 			throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
 	}
+
+    public void submitScan() {
+        setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, getProperties()));
+    }
 	
 	private File getScanLogs() {
 		if(m_irx == null) {

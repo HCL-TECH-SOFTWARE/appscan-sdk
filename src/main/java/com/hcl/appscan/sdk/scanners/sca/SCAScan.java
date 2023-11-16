@@ -45,4 +45,9 @@ public class SCAScan extends SASTScan implements SASTConstants {
     public String getType() {
         return CoreConstants.SOFTWARE_COMPOSITION_ANALYZER;
     }
+
+    @Override
+    public void submitScan() {
+        setScanId(getServiceProvider().createAndExecuteScan(CoreConstants.SCA, getProperties()));
+    }
 }

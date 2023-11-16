@@ -45,19 +45,4 @@ public class SCAScan extends SASTScan implements SASTConstants {
     public String getType() {
         return CoreConstants.SOFTWARE_COMPOSITION_ANALYZER;
     }
-
-    private void analyzeIR() throws IOException, ScannerException {
-        if(getProperties().containsKey(PREPARE_ONLY))
-            return;
-
-        String fileId = getServiceProvider().submitFile(getIrx());
-        if(fileId == null)
-            throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, getIrx().getName()));
-
-        Map<String, String> params = getProperties();
-        params.put(FILE_ID, fileId);
-        setScanId(getServiceProvider().createAndExecuteScan(CoreConstants.SCA, params));
-        if(getScanId() == null)
-            throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
-    }
 }

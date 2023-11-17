@@ -29,11 +29,11 @@ public interface CoreConstants {
 	String VERSION_NUMBER				= "VersionNumber";										//$NON-NLS-1$
 	String USER_MESSAGE					= "UserMessage";										//$NON-NLS-1$
 	String IS_VALID						= "IsValid";											//$NON-NLS-1$
-	String SOURCE_CODE_ONLY				= "sourceCodeOnly";										//$NON-NLS-1$
-    	String SOFTWARE_COMPOSITION_ANALYZER 		= "Software Composition Analyzer";                     //$NON-NLS-1$
-    	String SCA                           		= "Sca";                                               //$NON-NLS-1$
+	String SOURCE_CODE_ONLY					= "sourceCodeOnly";										//$NON-NLS-1$
+    	String SOFTWARE_COMPOSITION_ANALYZER 			= "Software Composition Analyzer";                     //$NON-NLS-1$
+    	String SCA                           			= "Sca";                                               //$NON-NLS-1$
 
-    String CREATE_IRX                     			= "createIRX";                                            					//$NON-NLS-1$
+    	String CREATE_IRX                     			= "createIRX";                                            					//$NON-NLS-1$
     	String UPLOAD_DIRECT                     		= "uploadDirect";                                            					//$NON-NLS-1$
     	String BINDING_ID					= "Bindingid";											//$NON-NLS-1$
     String APPSCAN_OPTS                 = "APPSCAN_OPTS";                                       //$NON-NLS-1$

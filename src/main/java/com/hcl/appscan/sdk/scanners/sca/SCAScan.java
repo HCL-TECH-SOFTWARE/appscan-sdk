@@ -47,7 +47,7 @@ public class SCAScan extends SASTScan implements SASTConstants {
     }
 
     @Override
-    public void submitScan() {
+    protected void submitScan() {
         setScanId(getServiceProvider().createAndExecuteScan(CoreConstants.SCA, getProperties()));
     }
 }

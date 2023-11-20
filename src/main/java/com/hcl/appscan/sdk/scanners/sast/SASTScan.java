@@ -73,7 +73,7 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		return m_irx;
 	}
 	
-	private void generateIR() throws IOException, ScannerException {
+	protected void generateIR() throws IOException, ScannerException {
 		File targetFile = new File(getTarget());
 
 		//If we were given an irx file, don't generate a new one
@@ -108,7 +108,7 @@ public class SASTScan extends ASoCScan implements SASTConstants {
             throw new ScannerException(Messages.getMessage(ERROR_GENERATING_ZIP, getScanLogs().getAbsolutePath()));
     }
 	
-	private void analyzeIR() throws IOException, ScannerException {
+	protected void analyzeIR() throws IOException, ScannerException {
 		if(getProperties().containsKey(PREPARE_ONLY))
 			return;
 
@@ -117,12 +117,16 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 			throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_irx.getName()));		
 				
 		Map<String, String> params = getProperties();
-		params.put(ARSA_FILE_ID, fileId);
-		
-		setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, params));
+		params.put(FILE_ID, fileId);
+
+        	submitScan();
 		if(getScanId() == null)
 			throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
 	}
+
+    	protected void submitScan() {
+        	setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, getProperties()));
+    	}
 	
 	private File getScanLogs() {
 		if(m_irx == null) {

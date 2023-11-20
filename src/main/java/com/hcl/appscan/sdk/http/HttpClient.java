@@ -6,6 +6,9 @@
 
 package com.hcl.appscan.sdk.http;
 
+import org.apache.wink.json4j.JSON;
+import org.apache.wink.json4j.JSONObject;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,6 +19,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +108,39 @@ public class HttpClient {
 		if (body==null) body = ""; //$NON-NLS-1$
 		return makeRequest(Method.POST, url, headerProperties, body);
 	}
+
+    /**
+     * Submit a post request.
+     *
+     * @param url The URL string.
+     * @param headerProperties An optional Map of header properties.
+     * @param params An optional Map of properties.
+     * @return The response as a byte array.
+     * @throws IOException If an error occurs.
+     */
+    public HttpResponse post(String url, Map<String, String> headerProperties, Map<String, String> params)
+            throws IOException {
+        Map<String, Object> objectMap = new HashMap<>();
+        for (String key : params.keySet()) {
+            String value = params.get(key);
+            if (value != null) {
+                if (value.equalsIgnoreCase("true")) {
+                    objectMap.put(key, true);
+                } else if (value.equalsIgnoreCase("false")) {
+                    objectMap.put(key, false);
+                } else {
+                    // If the string is not "true" or "false," keep it as is
+                    objectMap.put(key, value);
+                }
+            } else {
+                // If the value is not a string, keep it as is
+                objectMap.put(key, value);
+            }
+        }
+        JSONObject json = new JSONObject(objectMap);
+        String body = json.toString();
+        return post(url, headerProperties, body);
+    }
 
 	/**
 	 * Submit a put request.

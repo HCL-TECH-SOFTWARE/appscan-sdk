@@ -48,50 +48,60 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		m_progress = progress;
 		m_authProvider = authProvider;
 	}
-	
-	@Override
-	public String createAndExecuteScan(String type, Map<String, String> params) {
-		if(loginExpired() || !verifyApplication(params.get(APP_ID)))
-			return null;
-		
-		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));
-		
-		String request_url =  m_authProvider.getServer() + String.format(API_SCANNER, type);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		
-		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
-		
-		try {
-			HttpResponse response = client.postForm(request_url, request_headers, params);
-			int status = response.getResponseCode();
-		
-			JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
-			
-			if (status == HttpsURLConnection.HTTP_CREATED) {
-				m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS)));
-				return json.getString(ID);
-			}
-			else if (json != null && json.has(MESSAGE)) {
-				String errorResponse = json.getString(MESSAGE);
-				if(json.has(FORMAT_PARAMS)) {
-					JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);
-					if(jsonArray != null){
-						String[] messageParams = new String[jsonArray.size()];
-						for (int i = 0; i < jsonArray.size(); i++) {
-							messageParams[i] = (String)jsonArray.get(i);
-						}
-						errorResponse = MessageFormat.format(errorResponse, (Object[]) messageParams);
-					}
+  
+    @Override
+    public String createAndExecuteScan(String type, Map<String, String> params) {
+        if(loginExpired() || !verifyApplication(params.get(APP_ID)))
+            return null;
+
+        m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));
+        Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+        HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
+
+        try {
+            HttpResponse response;
+            if(shouldUseV4Api(type)) {
+                request_headers.put("Content-Type", "application/json");
+                request_headers.put("accept", "application/json");
+                String request_url = m_authProvider.getServer() + String.format(API_SCANNER_V4, type);
+                response = client.post(request_url,request_headers,params);
+            } else {
+                String request_url = m_authProvider.getServer() + String.format(API_SCANNER, type);
+                response = client.postForm(request_url,request_headers,params);
+            }
+
+            int status = response.getResponseCode();
+
+            JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
+
+            if (status == HttpsURLConnection.HTTP_CREATED || status == HttpsURLConnection.HTTP_OK) {
+                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS)));
+                return json.getString(ID);
+            } else if (json != null && json.has(MESSAGE)) {
+                String errorResponse = json.getString(MESSAGE);
+                if(json.has(FORMAT_PARAMS)) {
+                    JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);
+                    if(jsonArray != null){
+                        String[] messageParams = new String[jsonArray.size()];
+                        for (int i = 0; i < jsonArray.size(); i++) {
+                            messageParams[i] = (String)jsonArray.get(i);
+                        }
+                        errorResponse = MessageFormat.format(errorResponse, (Object[]) messageParams);
+                    }
                 }
-				m_progress.setStatus(new Message(Message.ERROR, errorResponse));
-			}
-			else
-				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, status)));
-		} catch(IOException | JSONException e) {
-			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, e.getLocalizedMessage())));
-		}
-		return null;
-	}
+                m_progress.setStatus(new Message(Message.ERROR, errorResponse));
+            }
+            else
+                m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, status)));
+        } catch(IOException | JSONException e) {
+            m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, e.getLocalizedMessage())));
+        }
+        return null;
+	  }
+
+    private boolean shouldUseV4Api(String type) {
+        return type.equals(CoreConstants.SCA);
+    }
   
     @Override
 	  public String submitFile(File file) throws IOException {

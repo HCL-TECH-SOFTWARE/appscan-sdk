@@ -1,3 +1,4 @@
 com.hcl.appscan.sdk.scanners.sast.SASTScanFactory
 com.hcl.appscan.sdk.scanners.dynamic.DASTScanFactory
 com.hcl.appscan.sdk.scanners.ase.ASEScanFactory
+com.hcl.appscan.sdk.scanners.sca.SCAScanFactory

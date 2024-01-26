@@ -20,7 +20,7 @@ public interface IScan {
 	 * @throws ScannerException if a fatal error occurs in the scan.
 	 * @throws InvalidTargetException if the target is invalid.
 	 */
-	public void run() throws ScannerException, InvalidTargetException, JSONException;
+	public void run() throws ScannerException, InvalidTargetException;
 	
 	/**
 	 * Gets the id of the scan.

@@ -51,7 +51,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
   
     @Override
     public String createAndExecuteScan(String type, Map<String, String> params) {
-        if(loginExpired() || !verifyApplication(params.get(APP_ID)))
+        if(loginExpired() || !verifyApplication(params.get(APP_ID).toString()))
             return null;
 
         m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));
@@ -93,55 +93,6 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
         }
         return null;
 	  }
-
-    @Override
-    public String createAndExecuteScanWithJSONParameter(String type, JSONObject params) {
-        try {
-            if(loginExpired() || !verifyApplication(params.get(APP_ID).toString()))
-                return null;
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-
-        m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));
-        Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-        HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
-
-        try {
-            HttpResponse response;
-            request_headers.put("Content-Type", "application/json");
-            request_headers.put("accept", "application/json");
-            String request_url = m_authProvider.getServer() + String.format(API_SCANNER, type);
-            response = client.posts(request_url, request_headers, params);
-
-            int status = response.getResponseCode();
-
-            JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
-
-            if (status == HttpsURLConnection.HTTP_CREATED || status == HttpsURLConnection.HTTP_OK) {
-                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS)));
-                return json.getString(ID);
-            } else if (json != null && json.has(MESSAGE)) {
-                String errorResponse = json.getString(MESSAGE);
-                if(json.has(FORMAT_PARAMS) && !json.isNull(FORMAT_PARAMS)) {
-                    JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);
-                    if(jsonArray != null){
-                        String[] messageParams = new String[jsonArray.size()];
-                        for (int i = 0; i < jsonArray.size(); i++) {
-                            messageParams[i] = (String)jsonArray.get(i);
-                        }
-                        errorResponse = MessageFormat.format(errorResponse, (Object[]) messageParams);
-                    }
-                }
-                m_progress.setStatus(new Message(Message.ERROR, errorResponse));
-            }
-            else
-                m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, status)));
-        } catch(IOException | JSONException e) {
-            m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, e.getLocalizedMessage())));
-        }
-        return null;
-    }
   
     @Override
 	  public String submitFile(File file) throws IOException {

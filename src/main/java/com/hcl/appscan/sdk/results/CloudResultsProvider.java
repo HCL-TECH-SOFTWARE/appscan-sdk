@@ -237,7 +237,7 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
 		}
     	
     	JSONObject obj = (JSONObject) response.getResponseBodyAsJSON();
-        JSONArray array = obj.getJSONArray("Items");
+        JSONArray array = obj.getJSONArray(ITEMS);
         JSONObject json= (JSONObject) array.get(0);
     	return json.getString(STATUS);
     }

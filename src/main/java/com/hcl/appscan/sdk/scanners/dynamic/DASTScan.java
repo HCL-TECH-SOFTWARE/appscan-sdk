@@ -18,6 +18,7 @@ import com.hcl.appscan.sdk.error.ScannerException;
 import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
+import com.hcl.appscan.sdk.scan.CloudScanServiceProvider;
 import com.hcl.appscan.sdk.scanners.ASoCScan;
 import com.hcl.appscan.sdk.utils.ServiceUtil;
 import org.apache.wink.json4j.JSONException;
@@ -37,7 +38,7 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 	}
 
 	@Override
-	public void run() throws ScannerException, InvalidTargetException, JSONException {
+	public void run() throws ScannerException, InvalidTargetException {
 		String type = DYNAMIC_ANALYZER;
 		String target = getTarget();
 		
@@ -91,8 +92,12 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 			}
 		}
 
-		JSONObject propertiesJSON = createJSONForProperties(params);
-		setScanId(getServiceProvider().createAndExecuteScanWithJSONParameter(type, propertiesJSON));
+        try {
+            JSONObject propertiesJSON = createJSONForProperties(params);
+            setScanId(getServiceProvider().createAndExecuteScan(type, propertiesJSON));
+        } catch (JSONException e) {
+            throw new ScannerException(Messages.getMessage(ERROR_RUNNING_SCAN, e.getLocalizedMessage()));
+        }
 
 		if(getScanId() == null)
 			throw new ScannerException(Messages.getMessage(ERROR_CREATING_SCAN));

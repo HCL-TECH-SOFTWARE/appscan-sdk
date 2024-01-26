@@ -33,15 +33,6 @@ public interface IScanServiceProvider {
 	public String createAndExecuteScan(String type, Map<String, String> params);
 
 	/**
-	 * Creates and executes a scan.
-	 *
-	 * @param type The type of scan to execute. For example DynamicAnalyzer.
-	 * @param params A JSON of scan parameters.
-	 * @return The id of the submitted scan, if successful.  Otherwise, null.
-	 */
-	public String createAndExecuteScanWithJSONParameter(String type, JSONObject params);
-
-	/**
 	 * Submits a file for scanning.
 	 * 
 	 * @param file The file to submit.

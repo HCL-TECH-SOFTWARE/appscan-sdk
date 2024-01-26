@@ -115,36 +115,13 @@ public class HttpClient {
      *
      * @param url The URL string.
      * @param headerProperties An optional Map of header properties.
-     * @param params An optional Map of properties.
+     * @param parameters An optional Map of properties.
      * @return The response as a byte array.
      * @throws IOException If an error occurs.
      */
-    public HttpResponse post(String url, Map<String, String> headerProperties, Map<String, String> params)
-            throws IOException {
-        Map<String, Object> objectMap = new HashMap<>();
-        for (String key : params.keySet()) {
-            String value = params.get(key);
-            if (value != null) {
-                if (value.equalsIgnoreCase("true")) {
-                    objectMap.put(key, true);
-                } else if (value.equalsIgnoreCase("false")) {
-                    objectMap.put(key, false);
-                } else {
-                    // If the string is not "true" or "false," keep it as is
-                    objectMap.put(key, value);
-                }
-            } else {
-                // If the value is not a string, keep it as is
-                objectMap.put(key, value);
-            }
-        }
-        JSONObject json = new JSONObject(objectMap);
-        String body = json.toString();
-        return post(url, headerProperties, body);
-    }
-
-    public HttpResponse posts(String url, Map<String, String> headerProperties, JSONObject params)
+    public HttpResponse post(String url, Map<String, String> headerProperties, Map<String, String> parameters)
             throws IOException, JSONException {
+        JSONObject params = new JSONObject(parameters);
         JSONObject objectMap = new JSONObject();
         for (Object key : params.keySet()) {
             if (params.get(key) != null){

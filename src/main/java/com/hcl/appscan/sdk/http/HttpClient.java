@@ -5,14 +5,12 @@
  */
 
 package com.hcl.appscan.sdk.http;
-
-import org.apache.wink.json4j.JSON;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -259,7 +257,7 @@ public class HttpClient {
 	private HttpResponse makeMultipartRequest(Method method, String url,
 			Map<String, String> headerProperties, List<HttpPart> parts)
 					throws IOException {
-		HttpsURLConnection conn = makeConnection(url, method, headerProperties);
+		HttpURLConnection conn = makeConnection(url, method, headerProperties);
 				
 		DataOutputStream outputStream = null;
 		conn.setChunkedStreamingMode(1024);
@@ -315,7 +313,7 @@ public class HttpClient {
 	private HttpResponse makeRequest(Method method, String url,
 			Map<String, String> headerProperties, String payload)
 			throws IOException {
-		HttpsURLConnection conn = makeConnection(url, method, headerProperties);
+		HttpURLConnection conn = makeConnection(url, method, headerProperties);
 
 		// Write payload
 		if (payload != null) {
@@ -330,15 +328,15 @@ public class HttpClient {
 		return new HttpResponse(conn);
 	}
 	
-	private HttpsURLConnection makeConnection(String url, Method method,
+	private HttpURLConnection makeConnection(String url, Method method,
 			Map<String, String> headerProperties) throws IOException {
 		URL requestURL = new URL(url);
-		HttpsURLConnection conn = null;
-		conn = (HttpsURLConnection) requestURL.openConnection(m_proxy);
+		HttpURLConnection conn = null;
+		conn = (HttpURLConnection) requestURL.openConnection(m_proxy);
 		conn.setRequestMethod(method.name());
 		conn.setReadTimeout(0);
-		if(m_bypassSSL) {
-			bypassSSL(conn);
+		if((conn instanceof HttpsURLConnection) && m_bypassSSL) {
+			bypassSSL((HttpsURLConnection)conn);
 		}
 
 		// HTTP headers

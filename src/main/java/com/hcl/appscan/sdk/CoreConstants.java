@@ -77,11 +77,11 @@ public interface CoreConstants {
 	String API_SACLIENT_DOWNLOAD		= "/api/%s/StaticAnalyzer/SAClientUtil?os=%s"; 			//$NON-NLS-1$
 	String API_SACLIENT_VERSION			= "/api/%s/StaticAnalyzer/SAClientUtil?os=%s&meta=%s"; 	//$NON-NLS-1$
 	String API_KEY_PATH					= "/api/ideclientuilogin";								//$NON-NLS-1$
-	String API_REPORT_STATUS			= "/api/v4/Reports";									//$NON-NLS-1$
-	String API_ISSUES_COUNT				= "/api/v4/Issues/%s/%s";				//$NON-NLS-1$
-	String API_REGIONS					= "/api/v4/Utils/Regions";								//$NON-NLS-1$
-	String API_IS_VALID_URL				= "/api/v4/Scans/IsValidUrl";							//$NON-NLS-1$
-	String API_AUTHENTICATION		        = "/api/v4/Account/IsAuthenticated";					//$NON-NLS-1$
+	String API_REPORT_STATUS			= API_ENV_LATEST + "/Reports";									//$NON-NLS-1$
+	String API_ISSUES_COUNT				= API_ENV_LATEST + "/Issues/%s/%s";				//$NON-NLS-1$
+	String API_REGIONS					= API_ENV_LATEST + "/Utils/Regions";								//$NON-NLS-1$
+	String API_IS_VALID_URL				= API_ENV_LATEST + "/Scans/IsValidUrl";							//$NON-NLS-1$
+	String API_AUTHENTICATION		        = API_ENV_LATEST + "/Account/IsAuthenticated";					//$NON-NLS-1$
 
 	String DEFAULT_RESULT_NAME			= "asoc_results";										//$NON-NLS-1$
 	String SACLIENT_INSTALL_DIR			= "SAClientInstall";									//$NON-NLS-1$

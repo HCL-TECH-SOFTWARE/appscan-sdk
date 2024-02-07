@@ -51,10 +51,8 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
   
     @Override
     public String createAndExecuteScan(String type, Map<String, String> params) {
-        if(loginExpired() || params.containsKey(APP_ID)) {
-            if(!verifyApplication(params.get(APP_ID).toString())) {
-                return null;
-            }
+        if(loginExpired() || (params.containsKey(APP_ID) && !verifyApplication(params.get(APP_ID).toString()))) {
+            return null;
         }
 
         m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));

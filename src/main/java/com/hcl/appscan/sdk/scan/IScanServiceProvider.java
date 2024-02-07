@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024.
+ * © Copyright HCL Technologies Ltd. 2017,2018. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -31,7 +31,7 @@ public interface IScanServiceProvider {
 	 * @return The id of the submitted scan, if successful.  Otherwise, null.
 	 */
 	public String createAndExecuteScan(String type, Map<String, String> params);
-
+  
 	/**
 	 * Submits a file for scanning.
 	 * 

@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024.
+ * © Copyright HCL Technologies Ltd. 2017. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -10,7 +10,6 @@ import com.hcl.appscan.sdk.error.InvalidTargetException;
 import com.hcl.appscan.sdk.error.ScannerException;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.results.IResultsProvider;
-import org.apache.wink.json4j.JSONException;
 
 public interface IScan {
 

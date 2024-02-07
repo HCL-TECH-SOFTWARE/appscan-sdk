@@ -55,7 +55,6 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
             if(!verifyApplication(params.get(APP_ID).toString())) {
                 return null;
             }
-            return null;
         }
 
         m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN)));

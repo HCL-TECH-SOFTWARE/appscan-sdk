@@ -37,7 +37,7 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 	protected void loadResults() {
 		try {
 			JSONObject items = m_scanProvider.getScanDetails(m_scanId);
-			JSONObject obj = items.getJSONObject(LATEST_EXECUTION);
+			JSONObject obj = items == null ? null : items.getJSONObject(LATEST_EXECUTION);
 			if (obj == null) {
 				m_status = FAILED;
 				return;

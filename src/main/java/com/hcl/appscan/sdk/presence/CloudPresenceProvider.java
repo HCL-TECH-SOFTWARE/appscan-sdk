@@ -78,12 +78,11 @@ public class CloudPresenceProvider implements IPresenceProvider, CoreConstants {
 	public Map<String, String> getDetails(String id) {
 		if(!authenticated())
 			return null;
-
 		String url =  m_authProvider.getServer() + API_PRESENCES+"?%24filter=Id%20eq%20"+id;
 		Map<String, String> headers = m_authProvider.getAuthorizationHeader(true);
 		Map<String, String> details = new HashMap<String, String>();
-		HttpClient client = new HttpClient(m_authProvider.getProxy());
 
+		HttpClient client = new HttpClient(m_authProvider.getProxy());
 		try {
 			HttpResponse response = client.get(url, headers, null);
 			if(response.isSuccess()) {
@@ -101,7 +100,6 @@ public class CloudPresenceProvider implements IPresenceProvider, CoreConstants {
 		catch(IOException | JSONException e) {
 			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage("error.getting.presence.details", id)), e); //$NON-NLS-1$
 		}
-
 		return details;
 	}
 

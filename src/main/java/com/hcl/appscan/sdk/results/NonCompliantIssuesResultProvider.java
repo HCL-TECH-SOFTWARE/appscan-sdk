@@ -195,6 +195,7 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 		JSONObject body = new JSONObject();
 		body.put("Configuration", getConfiguration(format));
 		body.put("ApplyPolicies", "All");
+        body.put("OdataFilter", "Status eq 'Open' or Status eq 'InProgress' or Status eq 'Reopened' or Status eq 'New'");
 		return body;
 	}
 

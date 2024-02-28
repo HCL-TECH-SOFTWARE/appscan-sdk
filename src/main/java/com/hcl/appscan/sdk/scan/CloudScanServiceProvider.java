@@ -137,7 +137,8 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 			return null;
 		
 		String request_url = m_authProvider.getServer() + API_BASIC_DETAILS;
-		request_url +=String.format("?$filter=Id eq %s",scanId);
+		String query = ("?$filter=Id eq "+scanId).replaceAll(" ", "%20");
+		request_url += query;
 		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
 		
 		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
@@ -153,7 +154,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 				return (JSONObject) array.getJSONObject(0);
 			}
 		} else if (response.getResponseCode() == -1) {
-			return new JSONObject().put(STATUS,UNKNOWN); //If the server is not reachable Internet disconnect
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS, scanId)));
 		} else if (response.getResponseCode() != HttpsURLConnection.HTTP_BAD_REQUEST) {
 			JSONArtifact json = response.getResponseBodyAsJSON();
 			if (json != null && ((JSONObject)json).has(MESSAGE))
@@ -179,7 +180,8 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
     			return null;
     		
     		String request_url = m_authProvider.getServer() + String.format(API_ISSUES_COUNT, "Scan", scanId);
-    		request_url +="?$apply=groupby((Severity),aggregate($count as N))";
+    		String query = "?applyPolicies=All&%24apply=groupby%28%28Severity%29%2Caggregate%28%24count%20as%20N%29%29";
+    		request_url += query;
     		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
     		request_headers.put("Content-Type", "application/json; charset=UTF-8");
     		request_headers.put("Accept", "application/json");

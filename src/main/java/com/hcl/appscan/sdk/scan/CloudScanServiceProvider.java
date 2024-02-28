@@ -154,7 +154,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 				return (JSONObject) array.getJSONObject(0);
 			}
 		} else if (response.getResponseCode() == -1) {
-			return new JSONObject().put(STATUS,UNKNOWN); //If the server is not reachable Internet disconnect
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS, scanId)));
 		} else if (response.getResponseCode() != HttpsURLConnection.HTTP_BAD_REQUEST) {
 			JSONArtifact json = response.getResponseBodyAsJSON();
 			if (json != null && ((JSONObject)json).has(MESSAGE))

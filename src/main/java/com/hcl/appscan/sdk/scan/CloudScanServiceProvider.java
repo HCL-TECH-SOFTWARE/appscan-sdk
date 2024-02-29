@@ -179,7 +179,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
     			return null;
     		
     		String request_url = m_authProvider.getServer() + String.format(API_ISSUES_COUNT, "Scan", scanId);
-    		request_url += "?applyPolicies=All&%24apply=groupby%28%28Severity%29%2Caggregate%28%24count%20as%20N%29%29";
+    		request_url +="?%24filter=Status%20eq%20%27Open%27%20or%20Status%20eq%20%27InProgress%27%20or%20Status%20eq%20%27Reopened%27%20or%20Status%20eq%20%27New%27&%24apply=groupby%28%28Status%2CSeverity%29%2Caggregate%28%24count%20as%20N%29%29";
     		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
     		request_headers.put("Content-Type", "application/json; charset=UTF-8");
     		request_headers.put("Accept", "application/json");

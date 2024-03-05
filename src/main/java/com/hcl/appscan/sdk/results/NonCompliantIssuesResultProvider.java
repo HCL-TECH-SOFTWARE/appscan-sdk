@@ -68,23 +68,23 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 					
 					switch (sev.toLowerCase()) {
                                         case "critical":
-                                                m_criticalFindings = count;
+                                                m_criticalFindings += count;
                                                 m_totalFindings += count;
                                                 break;
 					case "high":
-						m_highFindings = count;
+						m_highFindings += count;
 						m_totalFindings += count;
 						break;
 					case "medium":
-						m_mediumFindings = count;
+						m_mediumFindings += count;
 						m_totalFindings += count;
 						break;
 					case "low":
-						m_lowFindings = count;
+						m_lowFindings += count;
 						m_totalFindings += count;
 						break;
 					case "informational":
-						m_infoFindings = count;
+						m_infoFindings += count;
 						m_totalFindings += count;
 						break;
 					default:

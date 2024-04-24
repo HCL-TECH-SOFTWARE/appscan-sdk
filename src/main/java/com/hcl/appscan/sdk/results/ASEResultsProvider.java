@@ -161,9 +161,9 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
 		try {
 			m_status = getScanStatus(m_scanId);
 //			m_status = getStatisticsStatus(m_scanId);
-			if(m_status == null) {// In case of internet disconnect Status is set to null.
+            if(m_status == null) {// In case of internet disconnect Status is set to null.
                 m_status = FAILED;
-			}
+            }
             if (m_status.equalsIgnoreCase("Ready")) {
                 m_message = "";
                 m_status=getReportPackStatus(m_scanId);

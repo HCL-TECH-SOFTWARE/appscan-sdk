@@ -51,7 +51,7 @@ public class ServiceUtil implements CoreConstants {
 	 */
 	public static void getSAClientUtil(File destination, Proxy proxy, String serverURL, String acceptInvalidCerts) throws IOException {
         String request_url = requiredServerURL(serverURL);
-        request_url += String.format(API_SACLIENT_DOWNLOAD, API_SCX, SystemUtil.getOS());
+        request_url += String.format(API_SACLIENT_DOWNLOAD, SystemUtil.getOS());
 
         HttpClient client = new HttpClient(proxy,acceptInvalidCerts.equals("true"));
         HttpResponse response = client.get(request_url, null, null);
@@ -97,7 +97,7 @@ public class ServiceUtil implements CoreConstants {
 	 */
 	public static String getSAClientVersion(Proxy proxy, String serverURL) throws IOException {
         String request_url = requiredServerURL(serverURL);
-        request_url += String.format(API_SACLIENT_VERSION, API_SCX, SystemUtil.getOS(), "true"); 
+        request_url += String.format(API_SACLIENT_VERSION, SystemUtil.getOS(), "true");
 		
 		HttpClient client = new HttpClient(proxy);
 		HttpResponse response = client.get(request_url, null, null);

@@ -160,25 +160,4 @@ public class ServiceUtil implements CoreConstants {
 		
 		return false;
 	}
-
-    public static String getA360Version(IAuthenticationProvider provider) throws IOException {
-        String request_url = provider.getServer();
-        request_url += "/assets/versions.json";
-
-        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
-        HttpResponse response = client.get(request_url, null, null);
-
-        if (response.getResponseCode() == HttpsURLConnection.HTTP_OK || response.getResponseCode() == HttpsURLConnection.HTTP_CREATED) {
-            try {
-                JSONArtifact responseContent = response.getResponseBodyAsJSON();
-                if (responseContent != null) {
-                    JSONObject object = (JSONObject) responseContent;
-                    return object.getString("MainVersion");
-                }
-            } catch (JSONException e) {
-                return "0"; //$NON-NLS-1$
-            }
-        }
-        return null;
-    }
 }

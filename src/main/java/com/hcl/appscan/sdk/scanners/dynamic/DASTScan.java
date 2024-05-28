@@ -51,7 +51,7 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 		IAuthenticationProvider authProvider = getServiceProvider().getAuthenticationProvider();
 		if(!params.containsKey(PRESENCE_ID) && !ServiceUtil.isValidUrl(target, authProvider, authProvider.getProxy())) {
             if(authProvider.isAppScan360()) {
-                throw new ScannerException("Either you don't have DAST subscription or the starting URL is invalid:"+ target);
+                throw new ScannerException(Messages.getMessage(CoreConstants.ERROR_URL_DYNAMIC_UNSUPPORTED,target));
             }
 			throw new ScannerException(Messages.getMessage(CoreConstants.ERROR_URL_VALIDATION, target));
 		}

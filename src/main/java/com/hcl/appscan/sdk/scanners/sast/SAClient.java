@@ -337,17 +337,17 @@ public class SAClient implements SASTConstants {
 		}
 		if(properties.containsKey(SCAN_SPEED)) {
 			args.add(OPT_SCAN_SPEED);
-            if(properties.get(SCAN_SPEED).equals(NORMAL)){
-                args.add(THOROUGH);
-            } else if (properties.get(SCAN_SPEED).equals(FAST)) {
-                args.add(DEEP);
-            } else if (properties.get(SCAN_SPEED).equals(FASTER)) {
-                args.add(BALANCED);
-            } else if (properties.get(SCAN_SPEED).equals(FASTEST)) {
-                args.add(SIMPLE);
-            } else {
-                args.add(properties.get(SCAN_SPEED));
-            }
+			if(properties.get(SCAN_SPEED).equals(NORMAL)){
+				args.add(THOROUGH);
+			} else if (properties.get(SCAN_SPEED).equals(FAST)) {
+				args.add(DEEP);
+			} else if (properties.get(SCAN_SPEED).equals(FASTER)) {
+				args.add(BALANCED);
+			} else if (properties.get(SCAN_SPEED).equals(FASTEST)) {
+				args.add(SIMPLE);
+			} else {
+				args.add(properties.get(SCAN_SPEED));
+			}
 		}
 		if(properties.containsKey(SECRETS_ENABLED) || System.getProperty(SECRETS_ENABLED) != null) {
 			args.add(OPT_SECRETS_ENABLED);

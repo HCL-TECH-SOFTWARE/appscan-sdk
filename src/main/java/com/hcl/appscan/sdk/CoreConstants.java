@@ -132,7 +132,6 @@ public interface CoreConstants {
 	String ERROR_UPLOADING_FILE			= "error.upload.file";									//$NON-NLS-1$
 	String ERROR_GETTING_INFO			= "error.getting.info";									//$NON-NLS-1$
     String ERROR_URL_VALIDATION			= "error.url.validation";								//$NON-NLS-1$
-    String ERROR_URL_DYNAMIC_UNSUPPORTED           = "error.url.dynamic.unsupported";                     //$NON-NLS-1$
     String FORMAT_PARAMS			        = "FormatParams";								        //$NON-NLS-1$
 
 	String ERROR_GETTING_SCANLOG		= "error.getting.scanlog";								//$NON-NLS-1$

@@ -47,5 +47,4 @@ public interface IAuthenticationProvider {
 	public Proxy getProxy();
 
     	public boolean getacceptInvalidCerts();
-        public boolean isAppScan360();
 }

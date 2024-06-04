@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2020, 2023.
+ * © Copyright HCL Technologies Ltd. 2017, 2020, 2024.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -142,9 +142,9 @@ public class ServiceUtil implements CoreConstants {
 			JSONObject body = new JSONObject();
 			body.put(URL, url);
 
-			HttpClient client = new HttpClient(proxy);
-            		Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);
-            		requestHeaders.put("Content-Type", "application/json");
+			HttpClient client = new HttpClient(proxy, provider.getacceptInvalidCerts());
+			Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);
+			requestHeaders.put("Content-Type", "application/json");
 			HttpResponse response = client.post(request_url, requestHeaders, body.toString());
 
 			if (response.isSuccess()) {

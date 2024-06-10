@@ -33,7 +33,7 @@ public abstract class ASoCScan implements IScan, ScanConstants, Serializable {
 	}
 	
 	public ASoCScan(Map<String, String> properties, IProgress progress, IScanServiceProvider provider) {
-		m_target = properties.get(CoreConstants.TARGET);
+		m_target = properties.remove(CoreConstants.TARGET);
 		m_properties = properties;
 		if(!m_properties.containsKey(CoreConstants.SCAN_NAME))
 			m_properties.put(CoreConstants.SCAN_NAME, getType() + SystemUtil.getTimeStamp());

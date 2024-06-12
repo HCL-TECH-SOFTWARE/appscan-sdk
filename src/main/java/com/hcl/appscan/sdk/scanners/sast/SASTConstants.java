@@ -53,7 +53,8 @@ public interface SASTConstants {
 	String OPT_VERBOSE					= "-v";								//$NON-NLS-1$
 	String OPT_DEBUG					= "-X";								//$NON-NLS-1$
         String OPT_OPEN_SOURCE_ONLY                             = "-oso";                                                       //$NON-NLS-1$
-		String OPT_SOURCE_CODE_ONLY                             = "-sco"; 												   //$NON-NLS-1$
+        String OPT_SOURCE_CODE_ONLY                             = "-sco";                                                       //$NON-NLS-1$
+        String OPT_STATIC_ANALYSIS_ONLY                         = "-sao";                                                       //$NON-NLS-1$
 	String OPT_SECRETS_ENABLED                              = "-es";                                                       //$NON-NLS-1$
 	String OPT_SECRETS_ONLY                                 = "-so";                                                       //$NON-NLS-1$
 

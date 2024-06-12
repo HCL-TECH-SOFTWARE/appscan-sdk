@@ -1,5 +1,5 @@
 /**
- * © Copyright HCL Technologies Ltd. 2023.
+ * © Copyright HCL Technologies Ltd. 2023, 2024.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -34,8 +34,12 @@ public class SCAScan extends SASTScan implements SASTConstants {
             throw new InvalidTargetException(Messages.getMessage(TARGET_INVALID, target));
 
         try {
-            generateIR();
-            analyzeIR();
+            if(getProperties().containsKey(CoreConstants.INCLUDE_SCA) && getProperties().containsKey("ApplicationFileId")) {
+                submitScan();
+            } else {
+                generateIR();
+                analyzeIR();
+            }
         } catch(IOException e) {
             throw new ScannerException(Messages.getMessage(SCAN_FAILED, e.getLocalizedMessage()));
         }

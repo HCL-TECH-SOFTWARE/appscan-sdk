@@ -333,7 +333,7 @@ public class SAClient implements SASTConstants {
 			args.add(OPT_OPEN_SOURCE_ONLY);
 		}
 		if (properties.containsKey(SOURCE_CODE_ONLY) || System.getProperty(SOURCE_CODE_ONLY) != null) {
-            args.add(OPT_SOURCE_CODE_ONLY);
+			args.add(OPT_SOURCE_CODE_ONLY);
 		}
 		if (!properties.containsKey(CoreConstants.INCLUDE_SCA) && properties.get(CoreConstants.SCANNER_TYPE).equals(SAST)) {
 			args.add(OPT_STATIC_ANALYSIS_ONLY);

@@ -161,43 +161,37 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
 		try {
 			m_status = getScanStatus(m_scanId);
 //			m_status = getStatisticsStatus(m_scanId);
-            if(m_status == null) {// In case of internet disconnect Status is set to null.
-                m_status = FAILED;
-            }
-            if (m_status.equalsIgnoreCase("Ready")) {
-                m_message = "";
-                m_status=getReportPackStatus(m_scanId);
-            }
-			if(m_status != null && m_status.equalsIgnoreCase("Ready")) {
-                JSONObject obj = m_scanProvider.getScanDetails(m_scanId);
-                if (obj == null) {
+			if(m_status == null) {// In case of internet disconnect Status is set to null.
+				m_status = FAILED;
+			} else if (m_status.equalsIgnoreCase("Ready")) {
+				m_message = "";
+				m_status=getReportPackStatus(m_scanId);
+				JSONObject obj = m_scanProvider.getScanDetails(m_scanId);
+				if (obj == null) {
                     m_message = Messages.getMessage(RESULTS_UNAVAILABLE);
                     throw new NullPointerException(Messages.getMessage(RESULTS_UNAVAILABLE));
-                }
-
+				}
 				m_totalFindings = obj.getInt(TOTAL_ISSUES);
-                                m_criticalFindings = obj.getInt(CRITICAL_ISSUES);
+				m_criticalFindings = obj.getInt(CRITICAL_ISSUES);
 				m_highFindings = obj.getInt(HIGH_ISSUES);
 				m_mediumFindings = obj.getInt(MEDIUM_ISSUES);
 				m_lowFindings = obj.getInt(LOW_ISSUES);
 				m_infoFindings = obj.getInt(INFO_ISSUES);
 				m_hasResults = true;
 				m_message = "";
-			}
-			if (RUNNING.equalsIgnoreCase(m_status)) {
+			} else if (RUNNING.equalsIgnoreCase(m_status)) {
 				m_message = "";
-			} else if (m_status != null && m_status.startsWith(SUSPENDED)) {    // In case of Scan Failure ASE returns Suspended (With Reason) in Status
+			} else if (m_status.startsWith(SUSPENDED)) {  // In case of Scan Failure ASE returns Suspended (With Reason) in Status
 				this.m_message = m_status;
-
 				String description = "";
 				boolean isSuspendedByUser = false;
 				if (m_status.contains("(") && m_status.contains(")")) {
 					description = m_status.substring(m_status.indexOf("(") + 1, m_status.indexOf(")"));
 					// If User Suspends(Pause) Job in ASE then it returns Suspended(By User) status message, Scan status is not set to FAILED
 					if ("by user".equals(description.toLowerCase())) {
-						m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Name: "  + m_scanName)));
-						m_message = Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Name: "  + m_scanName);
-						isSuspendedByUser = true;
+					    m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Name: "  + m_scanName)));
+					    m_message = Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Name: "  + m_scanName);
+					    isSuspendedByUser = true;
 					}
 				}
 				// If Scan is not Paused by User and we get Suspended state from ASE, Job status is set to FAILED to determine Scan has FAILED in Jenkins

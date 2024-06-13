@@ -34,7 +34,7 @@ public class SCAScan extends SASTScan implements SASTConstants {
             throw new InvalidTargetException(Messages.getMessage(TARGET_INVALID, target));
 
         try {
-            if(getProperties().containsKey(CoreConstants.INCLUDE_SCA) && getProperties().containsKey("ApplicationFileId")) {
+            if(getProperties().containsKey("ApplicationFileId")) {
                 submitScan();
             } else {
                 generateIR();

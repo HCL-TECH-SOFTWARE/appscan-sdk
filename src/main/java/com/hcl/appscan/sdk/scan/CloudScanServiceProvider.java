@@ -71,6 +71,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
                 m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXECUTING_SCAN, params.get(CoreConstants.SCANNER_TYPE))));
                 request_url = m_authProvider.getServer() + String.format(API_SCANNER, type);
             }
+          
                 response = client.post(request_url,request_headers,params);
 
             int status = response.getResponseCode();

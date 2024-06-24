@@ -329,7 +329,7 @@ public class SAClient implements SASTConstants {
 		if(properties.containsKey(THIRD_PARTY) || System.getProperty(THIRD_PARTY) != null) {
 			args.add(OPT_THIRD_PARTY);
 		}
-		if (properties.containsKey(OPEN_SOURCE_ONLY) || System.getProperty(OPEN_SOURCE_ONLY) != null) {
+		if (properties.containsKey(OPEN_SOURCE_ONLY) || System.getProperty(OPEN_SOURCE_ONLY) != null || properties.getOrDefault(CoreConstants.SCANNER_TYPE, "").equals(CoreConstants.SOFTWARE_COMPOSITION_ANALYZER)) {
 			args.add(OPT_OPEN_SOURCE_ONLY);
 		}
 		if (properties.containsKey(SOURCE_CODE_ONLY) || System.getProperty(SOURCE_CODE_ONLY) != null) {

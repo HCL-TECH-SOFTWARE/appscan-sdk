@@ -160,4 +160,33 @@ public class ServiceUtil implements CoreConstants {
 		
 		return false;
 	}
+
+	public static boolean activeSubscriptionsCheck(String scanType, IAuthenticationProvider provider) {
+		if(provider.isTokenExpired()) {
+			return true;
+		}
+
+		String request_url = provider.getServer() + API_TENANT_INFO;
+
+		try {
+			HttpClient client = new HttpClient(provider.getProxy(), false);
+			Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);
+			requestHeaders.put("Content-Type", "application/json");
+			requestHeaders.put("accept", "application/json");
+			HttpResponse response = client.get(request_url, requestHeaders, null);
+
+			if (response.isSuccess()) {
+				JSONArtifact responseContent = response.getResponseBodyAsJSON();
+				if (responseContent != null) {
+					JSONObject object = (JSONObject) responseContent;
+					String activeTechnologies = object.getString("ActiveTechnologies");
+					return activeTechnologies.contains(scanType);
+				}
+			}
+		} catch (IOException | JSONException e) {
+			// Ignore and return false.
+		}
+
+		return false;
+	}
 }

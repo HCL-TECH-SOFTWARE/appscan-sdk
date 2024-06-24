@@ -83,6 +83,7 @@ public interface CoreConstants {
 	String API_REGIONS					= API_ENV_LATEST + "/Utils/Regions";								//$NON-NLS-1$
 	String API_IS_VALID_URL				= API_ENV_LATEST + "/Scans/IsValidUrl";							//$NON-NLS-1$
 	String API_AUTHENTICATION		        = API_ENV_LATEST + "/Account/IsAuthenticated";					//$NON-NLS-1$
+	String API_TENANT_INFO		                = API_ENV_LATEST + "/Account/TenantInfo";					//$NON-NLS-1$
 
 	String DEFAULT_RESULT_NAME			= "asoc_results";										//$NON-NLS-1$
 	String SACLIENT_INSTALL_DIR			= "SAClientInstall";									//$NON-NLS-1$

@@ -165,11 +165,13 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
 				m_status = FAILED;
 			} else if (m_status.equalsIgnoreCase("Ready")) {
 				m_message = "";
-				m_status=getReportPackStatus(m_scanId);
+				m_status = getReportPackStatus(m_scanId);
+			}
+			if(m_status!=null && m_status.equals("Ready")) {
 				JSONObject obj = m_scanProvider.getScanDetails(m_scanId);
 				if (obj == null) {
-                    m_message = Messages.getMessage(RESULTS_UNAVAILABLE);
-                    throw new NullPointerException(Messages.getMessage(RESULTS_UNAVAILABLE));
+				    m_message = Messages.getMessage(RESULTS_UNAVAILABLE);
+				    throw new NullPointerException(Messages.getMessage(RESULTS_UNAVAILABLE));
 				}
 				m_totalFindings = obj.getInt(TOTAL_ISSUES);
 				m_criticalFindings = obj.getInt(CRITICAL_ISSUES);

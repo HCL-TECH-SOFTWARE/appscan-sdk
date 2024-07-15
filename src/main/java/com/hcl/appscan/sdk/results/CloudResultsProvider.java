@@ -31,8 +31,6 @@ import com.hcl.appscan.sdk.utils.SystemUtil;
 public class CloudResultsProvider implements IResultsProvider, Serializable, CoreConstants {
 
 	private static final long serialVersionUID = 1L;
-
-	private static String DEFAULT_REPORT_FORMAT = "html"; //$NON-NLS-1$
 	
 	protected String m_type;
 	protected String m_scanId;

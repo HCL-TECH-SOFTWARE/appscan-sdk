@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2022. 
+ * © Copyright HCL Technologies Ltd. 2017, 2024. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -26,6 +26,7 @@ import com.hcl.appscan.sdk.scan.ITarget;
 import com.hcl.appscan.sdk.scanners.sast.targets.ISASTTarget;
 import com.hcl.appscan.sdk.scanners.sast.xml.ModelWriter;
 import com.hcl.appscan.sdk.scanners.sast.xml.XmlWriter;
+import com.hcl.appscan.sdk.scanners.sca.SCAScan;
 import com.hcl.appscan.sdk.utils.SystemUtil;
 
 public class SASTScanManager implements IScanManager{
@@ -94,7 +95,7 @@ public class SASTScanManager implements IScanManager{
 	
 	private void run(IProgress progress,Map<String, String> properties, IScanServiceProvider provider) throws AppScanException {
 		try {
-			m_scan = new SASTScan(properties, progress, provider);
+			createScan(properties, progress, provider);
 			m_scan.run();
 		} catch (InvalidTargetException | ScannerException e) {
 			throw new AppScanException(e.getLocalizedMessage());
@@ -168,5 +169,17 @@ public class SASTScanManager implements IScanManager{
 	
 	private String getDefaultScanName() {
 		return new File(m_workingDirectory).getName() + SystemUtil.getTimeStamp();
+	}
+	
+	private void createScan(Map<String, String> properties, IProgress progress, IScanServiceProvider provider) {
+		if(m_isStaticAnalysisOnlyEnabled) {
+			m_scan = new SASTScan(properties, progress, provider);
+		}
+		else if(m_isOpenSourceOnlyEnabled ) {
+			m_scan = new SCAScan(properties, progress, provider);
+		}
+		else {
+			m_scan = new SAST_SCA_Scan(properties, progress, provider);
+		}
 	}
 }

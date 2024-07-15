@@ -27,19 +27,27 @@ public class SAST_SCA_Scan extends SASTScan {
 	public SAST_SCA_Scan(Map<String, String> properties, IScanServiceProvider provider) {
 		super(properties, new DefaultProgress(), provider);
 		m_scaScan = new SCAScan(properties, new DefaultProgress(), provider);
+		m_scaScan.setTarget(getTarget()); //Need to explicitly set the target since it's removed when the SAST scan was created.
 	}
 	
 	public SAST_SCA_Scan(Map<String, String> properties, IProgress progress, IScanServiceProvider provider) {
 		super(properties, progress, provider);
 		m_scaScan = new SCAScan(properties, progress, provider);
+		m_scaScan.setTarget(getTarget()); //Need to explicitly set the target since it's removed when the SAST scan was created.
 	}
 
 	@Override
 	public void run() throws ScannerException, InvalidTargetException {
 		super.run();
-		m_sastScanId = getScanId();
-		m_scaScan.run();
-		m_scaScanId = m_scaScan.getScanId();
+		if(getProperties().containsKey(PREPARE_ONLY)) {
+			//Avoid generating 2 .irx files.
+			return;
+		}
+		else {
+			m_sastScanId = getScanId();
+			m_scaScan.run();
+			m_scaScanId = m_scaScan.getScanId();
+		}
 	}
 	
 	@Override

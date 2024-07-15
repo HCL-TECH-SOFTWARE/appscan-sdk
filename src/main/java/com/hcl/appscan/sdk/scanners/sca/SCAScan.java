@@ -20,7 +20,6 @@ import java.util.Map;
 
 public class SCAScan extends SASTScan implements SASTConstants {
     private static final long serialVersionUID = 1L;
-    private static final String REPORT_FORMAT = "html"; //$NON-NLS-1$
 
     public SCAScan(Map<String, String> properties, IProgress progress, IScanServiceProvider provider) {
         super(properties, progress, provider);
@@ -34,7 +33,7 @@ public class SCAScan extends SASTScan implements SASTConstants {
             throw new InvalidTargetException(Messages.getMessage(TARGET_INVALID, target));
 
         try {
-            if(getProperties().containsKey("ApplicationFileId")) {
+            if(getProperties().containsKey(SASTConstants.FILE_ID)) {
                 submitScan();
             } else {
                 generateIR();

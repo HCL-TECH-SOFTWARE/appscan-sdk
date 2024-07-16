@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017. 
+ * © Copyright HCL Technologies Ltd. 2017, 2024. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -42,6 +42,13 @@ public interface IScan {
 	 */
 	public IResultsProvider getResultsProvider();
     
+	/**
+	 * Gets a provider for accessing the scan results.
+	 * 
+	 * @param nonCompliantIssues Only include noncompliant issues in the results.
+	 * @return The {@link IResultsProvider}.
+	 */
+	public IResultsProvider getResultsProvider(boolean nonCompliantIssues);
 	
 	/**
 	 * Gets the name of the scan.

@@ -13,6 +13,7 @@ import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.results.CloudCombinedResultsProvider;
 import com.hcl.appscan.sdk.results.IResultsProvider;
+import com.hcl.appscan.sdk.results.NonCompliantIssuesResultProvider;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
 import com.hcl.appscan.sdk.scanners.sca.SCAScan;
 
@@ -52,9 +53,19 @@ public class SAST_SCA_Scan extends SASTScan {
 	
 	@Override
 	public IResultsProvider getResultsProvider() {
-		CloudCombinedResultsProvider provider = new CloudCombinedResultsProvider(getResultsProvider(), m_scaScan.getResultsProvider());
-		provider.setReportFormat(getReportFormat());
-		return provider;
+		return getProvider(getResultsProvider(), m_scaScan.getResultsProvider());
+	}
+	
+	@Override
+	public IResultsProvider getResultsProvider(boolean nonCompliantIssues) {
+		if(nonCompliantIssues) {
+			NonCompliantIssuesResultProvider provider1 = new NonCompliantIssuesResultProvider(getScanId(), getType(), getServiceProvider(), getProgress());
+			NonCompliantIssuesResultProvider provider2 = new NonCompliantIssuesResultProvider(m_scaScan.getScanId(), m_scaScan.getType(), m_scaScan.getServiceProvider(), m_scaScan.getProgress());
+			return getProvider(provider1, provider2);
+		}
+		else {
+			return getResultsProvider();
+		}
 	}
 	
 	public String getSastScanId() {
@@ -63,5 +74,11 @@ public class SAST_SCA_Scan extends SASTScan {
 	
 	public String getScaScanId() {
 		return m_scaScanId;
+	}
+	
+	private IResultsProvider getProvider(IResultsProvider provider1, IResultsProvider provider2) {
+		IResultsProvider combinedProvider = new CloudCombinedResultsProvider(provider1, provider2);
+		combinedProvider.setReportFormat(getReportFormat());
+		return combinedProvider;
 	}
 }

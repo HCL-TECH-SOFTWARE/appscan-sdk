@@ -189,19 +189,4 @@ public class ServiceUtil implements CoreConstants {
 
 		return false;
 	}
-
-    /**
-     * Returns the updated name of the scan type.
-     * @param scanType The type of scan running.
-     * @return Updated scan type name.
-     */
-    public static String updatedScanType(String scanType) {
-        if(scanType.equals("Sast")) {
-            return "SAST";
-        } else if (scanType.equals("Sca")) {
-            return "SCA";
-        } else {
-            return "DAST";
-        }
-    }
 }

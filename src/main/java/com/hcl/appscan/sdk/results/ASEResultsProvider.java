@@ -167,7 +167,8 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
 				m_message = "";
 				m_status = getReportPackStatus(m_scanId);
 			}
-			if(m_status!=null && m_status.equals("Ready")) {
+			
+			if(m_status!=null && m_status.equals("Ready")) {// to check whether the report generation is completed or not
 				JSONObject obj = m_scanProvider.getScanDetails(m_scanId);
 				if (obj == null) {
 				    m_message = Messages.getMessage(RESULTS_UNAVAILABLE);

@@ -32,9 +32,6 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 
 	@Override
 	public String getStatus() {
-		/* This could possibly be improved. For now, if either scan failed, the overall status is FAILED. If both scans
-		 *  are READY, the overall status is READY. Otherwise, the overall status is RUNNING.
-		 */
 		String combinedStatus = CoreConstants.RUNNING;
 		String status1 = m_resultsProvider1.getStatus();
 		String status2 = m_resultsProvider2.getStatus();
@@ -94,8 +91,8 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 		//Append the technology type to the end of the file name.
 		String name = destination.getName();
 		File directory = destination.getParentFile();
-		m_resultsProvider1.getResultsFile(new File(directory, name + "_" + m_resultsProvider1.getType()), format);
-		m_resultsProvider2.getResultsFile(new File(directory, name + "_" + m_resultsProvider2.getType()), format);
+		m_resultsProvider1.getResultsFile(new File(directory, name), format);
+		m_resultsProvider2.getResultsFile(new File(directory, name), format);
 	}
 
 	@Override
@@ -105,8 +102,11 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 
 	@Override
 	public String getMessage() {
-		return m_resultsProvider1.getType() + ": " + m_resultsProvider1.getMessage() + "\n" +
-				m_resultsProvider2.getType() + ": " + m_resultsProvider2.getMessage();
+        if(m_resultsProvider1.getMessage() != null  && m_resultsProvider2.getMessage() != null) {
+            return m_resultsProvider1.getType() + ": " + m_resultsProvider1.getMessage() + "\n" +
+                    m_resultsProvider2.getType() + ": " + m_resultsProvider2.getMessage();
+        }
+        return null;
 	}
 
 	@Override

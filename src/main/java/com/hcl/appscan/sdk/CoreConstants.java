@@ -111,6 +111,7 @@ public interface CoreConstants {
     	String ITEMS					    = "Items";										        //$NON-NLS-1$
 
 	String CREATE_SCAN_SUCCESS			= "message.created.scan";								//$NON-NLS-1$
+	String SCAN_OVERVIEW				= "message.scan.overview";								//$NON-NLS-1$
 	String DOWNLOADING_CLIENT			= "message.downloading.client";							//$NON-NLS-1$
 	String EXECUTING_SCAN				= "message.running.scan";								//$NON-NLS-1$
 	String UPLOADING_FILE				= "message.uploading.file";								//$NON-NLS-1$
@@ -123,6 +124,7 @@ public interface CoreConstants {
 	String ERROR_AUTHENTICATING			= "error.authenticating";								//$NON-NLS-1$
 	String ERROR_DOWNLOADING_CLIENT 	= "error.download.client";								//$NON-NLS-1$
 	String ERROR_GETTING_DETAILS		= "error.getting.details";								//$NON-NLS-1$
+	String ERROR_GETTING_DETAILS_SCAN_ID		= "error.getting.details.scan.id";								//$NON-NLS-1$
 	String ERROR_GETTING_RESULT			= "error.getting.result";								//$NON-NLS-1$
 	String ERROR_GENERATING_REPORT      = "error.generating.report";                            //$NON-NLS-1$
 	String ERROR_INVALID_APP			= "error.invalid.app";									//$NON-NLS-1$

@@ -35,67 +35,71 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 
 	@Override
 	protected void loadResults() {
-		try {
-			JSONObject items = m_scanProvider.getScanDetails(m_scanId);
-			JSONObject obj = items == null ? null : items.getJSONObject(LATEST_EXECUTION);
-			if (obj == null) {
-				m_status = FAILED;
-				return;
-			} else if (items.has(KEY) && items.get(KEY).equals(UNAUTHORIZED_ACTION)) {
-				m_status = FAILED;
-				return;
-			} else if (obj.has(STATUS) && obj.get(STATUS).equals(UNKNOWN)) {
-                m_status = UNKNOWN;
-                return;
-			}
+        try {
+            if (m_scanId == null) {
+                m_status = FAILED;
+            } else {
+                JSONObject items = m_scanProvider.getScanDetails(m_scanId);
+                JSONObject obj = items == null ? null : items.getJSONObject(LATEST_EXECUTION);
+                if (obj == null) {
+                    m_status = FAILED;
+                    return;
+                } else if (items.has(KEY) && items.get(KEY).equals(UNAUTHORIZED_ACTION)) {
+                    m_status = FAILED;
+                    return;
+                } else if (obj.has(STATUS) && obj.get(STATUS).equals(UNKNOWN)) {
+                    m_status = UNKNOWN;
+                    return;
+                }
 
 
-			m_status = obj.getString(STATUS);
-			if (FAILED.equalsIgnoreCase(m_status) && obj.has(USER_MESSAGE)) {
-				m_progress.setStatus(new Message(Message.ERROR, obj.getString(USER_MESSAGE)));
-				m_message = obj.getString(USER_MESSAGE);
-			} else if (PAUSED.equalsIgnoreCase(m_status)) {
-				m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId)));
-				m_message = Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId);
-			} else if (m_status != null && !(m_status.equalsIgnoreCase(INQUEUE) || m_status.equalsIgnoreCase(RUNNING) || m_status.equalsIgnoreCase(PAUSING))) {
-				JSONArray array = m_scanProvider.getNonCompliantIssues(m_scanId);
-				m_totalFindings = 0;
-				
-				for (int i = 0; i < array.length(); i++) {
-					JSONObject jobj = array.getJSONObject(i);
-					String sev = jobj.getString("Severity");
-					int count = jobj.getInt("N");
-					
-					switch (sev.toLowerCase()) {
-                                        case "critical":
-                                                m_criticalFindings += count;
-                                                m_totalFindings += count;
-                                                break;
-					case "high":
-						m_highFindings += count;
-						m_totalFindings += count;
-						break;
-					case "medium":
-						m_mediumFindings += count;
-						m_totalFindings += count;
-						break;
-					case "low":
-						m_lowFindings += count;
-						m_totalFindings += count;
-						break;
-					case "informational":
-						m_infoFindings += count;
-						m_totalFindings += count;
-						break;
-					default:
-						m_totalFindings += count;
-						break;
-					}
-				}
-				setHasResult(true);
-				m_message = "";
-			} else if (RUNNING.equalsIgnoreCase(m_status)) m_message = "";
-		} catch (IOException | JSONException | NullPointerException e) {
+                m_status = obj.getString(STATUS);
+                if (FAILED.equalsIgnoreCase(m_status) && obj.has(USER_MESSAGE)) {
+                    m_progress.setStatus(new Message(Message.ERROR, obj.getString(USER_MESSAGE)));
+                    m_message = obj.getString(USER_MESSAGE);
+                } else if (PAUSED.equalsIgnoreCase(m_status)) {
+                    m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId)));
+                    m_message = Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId);
+                } else if (m_status != null && !(m_status.equalsIgnoreCase(INQUEUE) || m_status.equalsIgnoreCase(RUNNING) || m_status.equalsIgnoreCase(PAUSING))) {
+                    JSONArray array = m_scanProvider.getNonCompliantIssues(m_scanId);
+                    m_totalFindings = 0;
+
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jobj = array.getJSONObject(i);
+                        String sev = jobj.getString("Severity");
+                        int count = jobj.getInt("N");
+
+                        switch (sev.toLowerCase()) {
+                            case "critical":
+                                m_criticalFindings += count;
+                                m_totalFindings += count;
+                                break;
+                            case "high":
+                                m_highFindings += count;
+                                m_totalFindings += count;
+                                break;
+                            case "medium":
+                                m_mediumFindings += count;
+                                m_totalFindings += count;
+                                break;
+                            case "low":
+                                m_lowFindings += count;
+                                m_totalFindings += count;
+                                break;
+                            case "informational":
+                                m_infoFindings += count;
+                                m_totalFindings += count;
+                                break;
+                            default:
+                                m_totalFindings += count;
+                                break;
+                        }
+                    }
+                    setHasResult(true);
+                    m_message = "";
+                } else if (RUNNING.equalsIgnoreCase(m_status)) m_message = "";
+            }
+        } catch (IOException | JSONException | NullPointerException e) {
 			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS, e.getMessage())),
 					e);
 			m_status = FAILED;

@@ -19,6 +19,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import com.hcl.appscan.sdk.scanners.dynamic.DASTConstants;
 import com.hcl.appscan.sdk.utils.FileUtil;
+import com.hcl.appscan.sdk.utils.ServiceUtil;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -42,6 +43,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 
 	private IProgress m_progress;
 	private IAuthenticationProvider m_authProvider;
+	public String scanName;
     private static final String[] DAST_FILES_EXTENSIONS = {DASTConstants.SCAN_EXTENSION, DASTConstants.SCANT_EXTENSION, DASTConstants.CONFIG_EXTENSION};
 	
 	public CloudScanServiceProvider(IProgress progress, IAuthenticationProvider authProvider) {
@@ -58,6 +60,12 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
         Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
         HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
 
+        if(scanName == null) {
+            scanName = params.get(CoreConstants.SCAN_NAME);
+        }
+        params.put(CoreConstants.SCAN_NAME, ServiceUtil.updatedScanType(type) +"_"+ scanName);
+
+
         try {
             request_headers.put("Content-Type", "application/json");
             request_headers.put("accept", "application/json");
@@ -70,7 +78,9 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 
             if (status == HttpsURLConnection.HTTP_CREATED || status == HttpsURLConnection.HTTP_OK) {
             	String scanId = json.getString(ID);
-                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS, type, scanId)));
+                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS, ServiceUtil.updatedScanType(type), scanId)));
+                String scanOverviewUrl = m_authProvider.getServer() + "/main/myapps/" + params.get(CoreConstants.APP_ID) + "/scans/" + scanId;
+                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SCAN_OVERVIEW, ServiceUtil.updatedScanType(type), scanOverviewUrl)));
                 return scanId;
             } else if (json != null && json.has(MESSAGE)) {
                 String errorResponse = json.getString(MESSAGE);
@@ -142,12 +152,12 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 			JSONObject obj = (JSONObject) response.getResponseBodyAsJSON();
 			JSONArray array = (JSONArray) obj.get(ITEMS);
 			if(array.isEmpty()) {
-				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS, scanId)));
+				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS_SCAN_ID,  scanId)));
 			} else {
 				return (JSONObject) array.getJSONObject(0);
 			}
 		} else if (response.getResponseCode() == -1) {
-			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS, scanId)));
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS_SCAN_ID, scanId)));
 		} else if (response.getResponseCode() != HttpsURLConnection.HTTP_BAD_REQUEST) {
 			JSONArtifact json = response.getResponseBodyAsJSON();
 			if (json != null && ((JSONObject)json).has(MESSAGE))

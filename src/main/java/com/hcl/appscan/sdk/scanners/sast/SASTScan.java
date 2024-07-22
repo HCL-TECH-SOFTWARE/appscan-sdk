@@ -94,19 +94,19 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 			throw new ScannerException(Messages.getMessage(ERROR_GENERATING_IRX, getScanLogs().getAbsolutePath()));
 	}
 
-	private void generateZip() throws IOException,ScannerException {
-		File targetFile = new File(getTarget());
-		if(targetFile.isFile()){
-			m_irx = targetFile;
-		} else if (targetFile.isDirectory()) {
-			String validatedZipName = FileUtil.getValidFilename(getName());
-			String zipLocation = System.getProperty("java.io.tmpdir")+File.separator+validatedZipName+ZIP_EXTENSION;
-			ArchiveUtil.zipFileOrFolder(targetFile, new File(zipLocation));
-			m_irx = new File(zipLocation);
-		}
-		if(!m_irx.isFile())
-			throw new ScannerException(Messages.getMessage(ERROR_GENERATING_ZIP, getScanLogs().getAbsolutePath()));
-	}
+    private void generateZip() throws IOException,ScannerException {
+        File targetFile = new File(getTarget());
+        if(targetFile.isFile()){
+            m_irx = targetFile;
+        } else if (targetFile.isDirectory()) {
+            String validatedZipName = FileUtil.getValidFilename(getName());
+            String zipLocation = System.getProperty("java.io.tmpdir")+File.separator+validatedZipName+ZIP_EXTENSION;
+            ArchiveUtil.zipFileOrFolder(targetFile, new File(zipLocation));
+            m_irx = new File(zipLocation);
+        }
+        if(!m_irx.isFile())
+            throw new ScannerException(Messages.getMessage(ERROR_GENERATING_ZIP, getScanLogs().getAbsolutePath()));
+    }
 	
 	protected void analyzeIR() throws IOException, ScannerException {
 		if(getProperties().containsKey(PREPARE_ONLY))
@@ -119,14 +119,14 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 		Map<String, String> params = getProperties();
 		params.put(FILE_ID, fileId);
 
-		submitScan();
+        	submitScan();
 		if(getScanId() == null)
 			throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
 	}
 
-	protected void submitScan() {
-		setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, getProperties()));
-	}
+    	protected void submitScan() {
+        	setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, getProperties()));
+    	}
 	
 	private File getScanLogs() {
 		if(m_irx == null) {

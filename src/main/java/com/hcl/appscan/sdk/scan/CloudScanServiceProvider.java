@@ -43,7 +43,6 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 
 	private IProgress m_progress;
 	private IAuthenticationProvider m_authProvider;
-	public String scanName;
     private static final String[] DAST_FILES_EXTENSIONS = {DASTConstants.SCAN_EXTENSION, DASTConstants.SCANT_EXTENSION, DASTConstants.CONFIG_EXTENSION};
 	
 	public CloudScanServiceProvider(IProgress progress, IAuthenticationProvider authProvider) {
@@ -59,12 +58,6 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 
         Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
         HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
-
-        if(scanName == null) {
-            scanName = params.get(CoreConstants.SCAN_NAME);
-        }
-        params.put(CoreConstants.SCAN_NAME, ServiceUtil.updatedScanType(type) +"_"+ scanName);
-
 
         try {
             request_headers.put("Content-Type", "application/json");

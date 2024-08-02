@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2023. 
+ * © Copyright HCL Technologies Ltd. 2017, 2024. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -14,14 +14,14 @@ public interface SASTConstants {
 	String APPSCAN_CLIENT_VERSION       = "APPSCAN_CLIENT_VERSION";			//$NON-NLS-1$
 	String IRGEN_CLIENT_PLUGIN_VERSION  = "IRGEN_CLIENT_PLUGIN_VERSION";	//$NON-NLS-1$
 	String ARSA_FILE_ID					= "ARSAFileId";						//$NON-NLS-1$
-    	String FILE_ID						= "ApplicationFileId";						//$NON-NLS-1$
-    	String WIN_SCRIPT					= "appscan.bat";					//$NON-NLS-1$
+    String FILE_ID						= "ApplicationFileId";				//$NON-NLS-1$
+    String WIN_SCRIPT					= "appscan.bat";					//$NON-NLS-1$
 	String UNIX_SCRIPT					= "appscan.sh";						//$NON-NLS-1$
 
 	String IRX_EXTENSION				= ".irx";							//$NON-NLS-1$
     String ZIP_EXTENSION                = ".zip";                           //$NON-NLS-1$
 	String SAST							= "Static Analyzer";				//$NON-NLS-1$
-	String STATIC_ANALYZER				= "Sast";					//$NON-NLS-1$
+	String STATIC_ANALYZER				= "Sast";							//$NON-NLS-1$
 
 	String PREPARE						= "prepare";						//$NON-NLS-1$
 	String PREPARE_ONLY					= "prepareOnly";					//$NON-NLS-1$
@@ -31,33 +31,33 @@ public interface SASTConstants {
 	String DEBUG						= "debug";							//$NON-NLS-1$
 	String VERBOSE						= "verbose";						//$NON-NLS-1$
 	String THIRD_PARTY					= "thirdParty";						//$NON-NLS-1$
-        String OPEN_SOURCE_ONLY                                  = "openSourceOnly";                                     //$NON-NLS-1$
-        String SOURCE_CODE_ONLY                                  = "sourceCodeOnly";                                     //$NON-NLS-1$
-		String SECRETS_ENABLED                                   = "enableSecrets";                                     //$NON-NLS-1$
-		String SECRETS_ONLY                                      = "secretsOnly";                                     //$NON-NLS-1$
-    	String SCAN_SPEED                                        = "scanSpeed";                                          //$NON-NLS-1$
-    	String OPT_SCAN_SPEED                                    = "-s";                                                 //$NON-NLS-1$
-    	String OPT_NAME						= "-n";								//$NON-NLS-1$
-    	String NORMAL						= "normal";								//$NON-NLS-1$
-    	String FAST						= "fast";								//$NON-NLS-1$
-    	String FASTER						= "faster";								//$NON-NLS-1$
-    	String FASTEST						= "fastest";								//$NON-NLS-1$
-    	String SIMPLE						= "simple";								//$NON-NLS-1$
-    	String BALANCED						= "balanced";								//$NON-NLS-1$
-    	String DEEP						= "deep";								//$NON-NLS-1$
-    	String THOROUGH						= "thorough";								//$NON-NLS-1$
+	String OPEN_SOURCE_ONLY				= "openSourceOnly";					//$NON-NLS-1$
+	String SOURCE_CODE_ONLY				= "sourceCodeOnly";					//$NON-NLS-1$
+	String SECRETS_ENABLED				= "enableSecrets";					//$NON-NLS-1$
+	String SECRETS_ONLY					= "secretsOnly";					//$NON-NLS-1$
+	String SCAN_SPEED					= "scanSpeed";						//$NON-NLS-1$
+	String OPT_SCAN_SPEED				= "-s";								//$NON-NLS-1$
+	String OPT_NAME						= "-n";								//$NON-NLS-1$
+	String NORMAL						= "normal";							//$NON-NLS-1$
+	String FAST							= "fast";							//$NON-NLS-1$
+	String FASTER						= "faster";							//$NON-NLS-1$
+	String FASTEST						= "fastest";						//$NON-NLS-1$
+	String SIMPLE						= "simple";							//$NON-NLS-1$
+	String BALANCED						= "balanced";						//$NON-NLS-1$
+	String DEEP							= "deep";							//$NON-NLS-1$
+	String THOROUGH						= "thorough";						//$NON-NLS-1$
 	String OPT_SAVE_LOCATION			= "-d";								//$NON-NLS-1$
 	String OPT_LOG_LOCATION				= "-l";								//$NON-NLS-1$
 	String OPT_CONFIG					= "-c";								//$NON-NLS-1$
 	String OPT_THIRD_PARTY				= "-t";								//$NON-NLS-1$
 	String OPT_VERBOSE					= "-v";								//$NON-NLS-1$
 	String OPT_DEBUG					= "-X";								//$NON-NLS-1$
-        String OPT_OPEN_SOURCE_ONLY                             = "-oso";                                                       //$NON-NLS-1$
-        String OPT_SOURCE_CODE_ONLY                             = "-sco";                                                       //$NON-NLS-1$
-        String OPT_STATIC_ANALYSIS_ONLY                         = "-sao";                                                       //$NON-NLS-1$
-	String OPT_SECRETS_ENABLED                              = "-es";                                                       //$NON-NLS-1$
-	String OPT_SECRETS_ONLY                                 = "-so";                                                       //$NON-NLS-1$
-
+	String OPT_OPEN_SOURCE_ONLY			= "-oso";							//$NON-NLS-1$
+	String OPT_SOURCE_CODE_ONLY			= "-sco";							//$NON-NLS-1$
+	String OPT_STATIC_ANALYSIS_ONLY		= "-sao";							//$NON-NLS-1$
+	String OPT_SECRETS_ENABLED			= "-es";							//$NON-NLS-1$
+	String OPT_SECRETS_ONLY				= "-so";							//$NON-NLS-1$
+	String OPT_ACCEPTS_SSL				= "-acceptssl";						//$NON-NLS-1$
 
 	//Messages
 	String DONE							= "message.done";					//$NON-NLS-1$

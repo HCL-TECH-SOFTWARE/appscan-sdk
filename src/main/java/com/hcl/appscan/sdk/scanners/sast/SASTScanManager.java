@@ -27,6 +27,7 @@ import com.hcl.appscan.sdk.scanners.sast.targets.ISASTTarget;
 import com.hcl.appscan.sdk.scanners.sast.xml.ModelWriter;
 import com.hcl.appscan.sdk.scanners.sast.xml.XmlWriter;
 import com.hcl.appscan.sdk.scanners.sca.SCAScan;
+import com.hcl.appscan.sdk.utils.ServiceUtil;
 import com.hcl.appscan.sdk.utils.SystemUtil;
 
 public class SASTScanManager implements IScanManager{
@@ -172,14 +173,14 @@ public class SASTScanManager implements IScanManager{
 	}
 	
 	private void createScan(Map<String, String> properties, IProgress progress, IScanServiceProvider provider) {
-		if(m_isStaticAnalysisOnlyEnabled) {
-			m_scan = new SASTScan(properties, progress, provider);
-		}
-		else if(m_isOpenSourceOnlyEnabled ) {
+		if(m_isOpenSourceOnlyEnabled ) {
 			m_scan = new SCAScan(properties, progress, provider);
 		}
-		else {
+		else if(!m_isStaticAnalysisOnlyEnabled && ServiceUtil.hasScaEntitlement(provider.getAuthenticationProvider())) {
 			m_scan = new SAST_SCA_Scan(properties, progress, provider);
+		}
+		else {
+			m_scan = new SASTScan(properties, progress, provider);
 		}
 	}
 }

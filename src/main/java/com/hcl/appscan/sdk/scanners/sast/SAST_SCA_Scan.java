@@ -44,11 +44,10 @@ public class SAST_SCA_Scan extends SASTScan {
 			//Avoid generating 2 .irx files.
 			return;
 		}
-		else {
-			m_sastScanId = getScanId();
-			m_scaScan.run();
-			m_scaScanId = m_scaScan.getScanId();
-		}
+
+		m_sastScanId = getScanId();
+		m_scaScan.run();
+		m_scaScanId = m_scaScan.getScanId();
 	}
 	
 	@Override

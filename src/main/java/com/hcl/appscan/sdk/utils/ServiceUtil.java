@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2020, 2024.
+ * © Copyright HCL Technologies Ltd. 2017, 2024.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -13,7 +13,6 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import com.hcl.appscan.sdk.http.HttpsClient;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
@@ -160,8 +159,38 @@ public class ServiceUtil implements CoreConstants {
 		
 		return false;
 	}
+	
+	/**
+	 * Checks if the user has entitlement to run SCA scans.
+	 * 
+	 * @param provider The IAuthenticationProvider for authentication.
+	 * @return true if the user has SCA entitlement.
+	 */
+	public static boolean hasScaEntitlement(IAuthenticationProvider provider) {
+		return hasEntitlement(SCA_TECH, provider);
+	}
+	
+	/**
+	 * Checks if the user has entitlement to run SAST scans.
+	 * 
+	 * @param provider The IAuthenticationProvider for authentication.
+	 * @return true if the user has SAST entitlement.
+	 */
+	public static boolean hasSastEntitlement(IAuthenticationProvider provider) {
+		return hasEntitlement(STATIC_TECH, provider);
+	}
+	
+	/**
+	 * Checks if the user has entitlement to run DAST scans.
+	 * 
+	 * @param provider The IAuthenticationProvider for authentication.
+	 * @return true if the user has DAST entitlement.
+	 */
+	public static boolean hasDastEntitlement(IAuthenticationProvider provider) {
+		return hasEntitlement(DYNAMIC_TECH, provider);
+	}
 
-	public static boolean activeSubscriptionsCheck(String scanType, IAuthenticationProvider provider) {
+	private static boolean hasEntitlement(String scanType, IAuthenticationProvider provider) {
 		if(provider.isTokenExpired()) {
 			return true;
 		}

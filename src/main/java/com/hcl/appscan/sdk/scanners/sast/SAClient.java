@@ -19,6 +19,7 @@ import java.util.Map;
 
 import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.Messages;
+import com.hcl.appscan.sdk.auth.IAuthenticationProvider;
 import com.hcl.appscan.sdk.error.ScannerException;
 import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
@@ -38,6 +39,7 @@ public class SAClient implements SASTConstants {
 	private ProcessBuilder m_builder;
 	private File m_installDir;
 	private Proxy m_proxy;
+	private IAuthenticationProvider m_authProvider = null;
 	
 	public SAClient() {
 		this(new DefaultProgress(), Proxy.NO_PROXY);
@@ -56,6 +58,11 @@ public class SAClient implements SASTConstants {
 		String install = System.getProperty(CoreConstants.SACLIENT_INSTALL_DIR);
 		m_installDir = install == null ? DEFAULT_INSTALL_DIR : new File(install);
 		m_proxy = proxy;
+	}
+	
+	public SAClient(IProgress progress, IAuthenticationProvider provider) {
+		this(progress, provider.getProxy());
+		m_authProvider = provider;
 	}
 	
 	/**
@@ -358,6 +365,15 @@ public class SAClient implements SASTConstants {
 		if(properties.containsKey(SECRETS_ONLY) || System.getProperty(SECRETS_ONLY) != null) {
 			args.add(OPT_SECRETS_ONLY);
 		}
+		//For AppScan 360 support.
+		if(m_authProvider != null) {
+			if(m_authProvider.getacceptInvalidCerts()) {
+				args.add(OPT_ACCEPTS_SSL);
+			}
+			
+			args.add("-D" + CoreConstants.BLUEMIX_SERVER + "=" + m_authProvider.getServer()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		
 
 		return args;
 	}

@@ -358,6 +358,13 @@ public class SAClient implements SASTConstants {
 		if(properties.containsKey(SECRETS_ONLY) || System.getProperty(SECRETS_ONLY) != null) {
 			args.add(OPT_SECRETS_ONLY);
 		}
+		//For AppScan 360 support.
+		if(Boolean.parseBoolean(properties.getOrDefault(CoreConstants.ACCEPT_INVALID_CERTS, Boolean.toString(false)))) {
+			args.add(OPT_ACCEPTS_SSL);
+		}
+		if(properties.getOrDefault(CoreConstants.SERVER_URL, "").trim() != "") { //$NON-NLS-1$ //$NON-NLS-2$
+			args.add("-D" + CoreConstants.BLUEMIX_SERVER + "=" + properties.get(CoreConstants.SERVER_URL)); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 
 		return args;
 	}

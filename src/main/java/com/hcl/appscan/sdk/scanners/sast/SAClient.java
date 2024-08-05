@@ -362,7 +362,7 @@ public class SAClient implements SASTConstants {
 		if(Boolean.parseBoolean(properties.getOrDefault(CoreConstants.ACCEPT_INVALID_CERTS, Boolean.toString(false)))) {
 			args.add(OPT_ACCEPTS_SSL);
 		}
-		if(properties.getOrDefault(CoreConstants.SERVER_URL, "").trim() != "") { //$NON-NLS-1$ //$NON-NLS-2$
+		if(properties.get(CoreConstants.SERVER_URL) != null && properties.get(CoreConstants.SERVER_URL).trim() != "") { //$NON-NLS-1$
 			args.add("-D" + CoreConstants.BLUEMIX_SERVER + "=" + properties.get(CoreConstants.SERVER_URL)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 

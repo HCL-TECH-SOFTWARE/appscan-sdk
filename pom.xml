@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.hcl</groupId>
   <artifactId>appscan.sdk</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.5-SNAPSHOT</version>
 
   <name>HCL AppScan on Cloud SDK</name>
   <description>SDK for interacting with HCL AppScan on Cloud</description>
@@ -136,7 +136,7 @@
   	<connection>scm:git:ssh://github.com/hclproducts/appscan-sdk.git</connection>
   	<developerConnection>scm:git:ssh://git@github.com/hclproducts/appscan-sdk.git</developerConnection>
   	<url>https://github.com/hclproducts/appscan-sdk</url>
-    <tag>appscan.sdk-1.1.4</tag>
+    <tag>HEAD</tag>
   </scm>
   
 </project>

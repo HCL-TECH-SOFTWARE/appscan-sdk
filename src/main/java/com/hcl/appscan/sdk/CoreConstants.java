@@ -22,6 +22,7 @@ public interface CoreConstants {
 	String FILE_TO_UPLOAD 				= "fileToUpload";										//$NON-NLS-1$
 	String UPLOADED_FILE 				= "uploadedFile";										//$NON-NLS-1$
 	String ID							= "Id";													//$NON-NLS-1$
+        String SCAN_ID                                                  = "ScanId";                                                                                             //$NON-NLS-1$
 	String KEY							= "Key";												//$NON-NLS-1$
 	String LATEST_EXECUTION				= "LatestExecution";									//$NON-NLS-1$
 	String LOCALE						= "Locale";												//$NON-NLS-1$
@@ -75,6 +76,7 @@ public interface CoreConstants {
 	String API_FILE_UPLOAD				= API_ENV_LATEST + "/FileUpload";						//$NON-NLS-1$
 	String API_SCAN						= API_ENV + "/%s";										//$NON-NLS-1$
 	String API_SCANNER					= API_ENV_LATEST + "/Scans/%s";							//$NON-NLS-1$
+        String API_RESCAN					= API_ENV_LATEST + "/Scans/%s/Executions";							//$NON-NLS-1$
 	String API_SCANS					= API_ENV + "/Scans";									//$NON-NLS-1$
 	String API_NONCOMPLIANT_ISSUES 		= API_ENV + "/Scans/%s/NonCompliantIssues";				//$NON-NLS-1$
 	String API_SCANS_REPORT				= API_ENV_LATEST + "/Scans/%s/Report/%s";				//$NON-NLS-1$

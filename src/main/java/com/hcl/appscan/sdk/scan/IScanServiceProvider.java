@@ -32,7 +32,12 @@ public interface IScanServiceProvider {
 	 */
 	public String createAndExecuteScan(String type, Map<String, String> params);
         
-        //TODO 
+        /**
+         * Initiates a Rescan
+         * 
+         * @param params A Map of rescan parameters.
+         * @return The id of the submitted rescan, if successful. Otherwise, returns null.
+         */
         public String rescan(Map<String, String> params);
   
 	/**

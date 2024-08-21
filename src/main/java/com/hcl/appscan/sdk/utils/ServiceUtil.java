@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
@@ -218,4 +219,41 @@ public class ServiceUtil implements CoreConstants {
 
 		return false;
 	}
+
+    /**
+     * Checks if the given scanId is valid for scanning.
+     *
+     * @param scanId The scanId to test.
+     * @param provider The IAuthenticationProvider for authentication.
+     * @param params The map which consist the user inputs.
+     * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
+     */
+    public static boolean isScanId(String scanId, IAuthenticationProvider provider, Map<String, String> params) {
+        String request_url = provider.getServer() + API_BASIC_DETAILS;
+        request_url += "?$filter=Id%20eq%20"+scanId+"&%24select=AppId%2C%20Technology";
+        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+
+        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+        try {
+            HttpResponse response = client.get(request_url, request_headers, null);
+
+            if (response.isSuccess()){
+                JSONObject obj = (JSONObject) response.getResponseBodyAsJSON();
+                JSONArray array = (JSONArray) obj.get(ITEMS);
+                if(array.isEmpty()) {
+                    return false;
+                } else {
+                    JSONObject body = (JSONObject) array.getJSONObject(0);
+                    String appId = body.getString(CoreConstants.APP_ID);
+                    String technologyName = body.getString("Technology").toLowerCase();
+                    return (appId.equals(params.get(CoreConstants.APP_ID))) && (technologyName.equalsIgnoreCase(params.get(CoreConstants.SCANNER_TYPE).replaceAll("\\s", "")));
+                }
+            }
+        }
+        catch(IOException | JSONException e) {
+            // Ignore and return false.
+        }
+
+        return false;
+    }
 }

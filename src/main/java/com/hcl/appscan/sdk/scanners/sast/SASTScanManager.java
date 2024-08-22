@@ -39,7 +39,7 @@ public class SASTScanManager implements IScanManager{
 	private boolean m_isOpenSourceOnlyEnabled = false;
 	private boolean m_isSourceCodeOnlyEnabled = false;
 	private boolean m_isStaticAnalysisOnlyEnabled = false;
-	private boolean m_isSecretsScanningEnabled = false;
+	private boolean m_isSecretsScanningDisabled = false;
 	private boolean m_isSecretsScanningOnlyEnabled = false;
 
 	public SASTScanManager(String workingDir) {
@@ -112,11 +112,11 @@ public class SASTScanManager implements IScanManager{
 	}
 
 	/**
-	 * Enables scanning for secrets.
-	 * @param isSecretsScanningEnabled - True to scan for secrets vulnerabilities.
+	 * Disables scanning for secrets.
+	 * @param isSecretsScanningDisabled - True to skip scanning for secrets vulnerabilities.
 	 */
-	public void setIsSecretsScanningEnabled(boolean isSecretsScanningEnabled) {
-		m_isSecretsScanningEnabled = isSecretsScanningEnabled;
+	public void setIsSecretsScanningDisabled(boolean isSecretsScanningDisabled) {
+		m_isSecretsScanningDisabled = isSecretsScanningDisabled;
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class SASTScanManager implements IScanManager{
 		try {
 			ModelWriter writer = new XmlWriter(useRelativeTargetPaths);
 			writer.initWriters(new File(m_workingDirectory));		
-			writer.visit(m_targets, m_isThirdPartyScanningEnabled, m_isOpenSourceOnlyEnabled, m_isSourceCodeOnlyEnabled, m_isStaticAnalysisOnlyEnabled, m_isSecretsScanningEnabled, m_isSecretsScanningOnlyEnabled);
+			writer.visit(m_targets, m_isThirdPartyScanningEnabled, m_isOpenSourceOnlyEnabled, m_isSourceCodeOnlyEnabled, m_isStaticAnalysisOnlyEnabled, m_isSecretsScanningDisabled, m_isSecretsScanningOnlyEnabled);
 			writer.write();
 		} catch (IOException | TransformerException  e) {
 			throw new AppScanException(e.getLocalizedMessage(), e);

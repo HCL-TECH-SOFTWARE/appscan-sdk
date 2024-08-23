@@ -119,6 +119,8 @@ public interface CoreConstants {
 
 	String CREATE_SCAN_SUCCESS			= "message.created.scan";								//$NON-NLS-1$
 	String SCAN_OVERVIEW				= "message.scan.overview";								//$NON-NLS-1$
+	String RESCAN_SUCCESS				= "message.rescan";								        //$NON-NLS-1$
+	String RESCAN_OVERVIEW				= "message.rescan.overview";								//$NON-NLS-1$
 	String DOWNLOADING_CLIENT			= "message.downloading.client";							//$NON-NLS-1$
 	String EXECUTING_SCAN				= "message.running.scan";								//$NON-NLS-1$
 	String UPLOADING_FILE				= "message.uploading.file";								//$NON-NLS-1$

@@ -120,9 +120,9 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
                 String scanId = json.getString(SCAN_ID);
                 String executionId = json.getString(ID);
                 //todo: 
-                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS,"", scanId)));
+                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(RESCAN_SUCCESS, scanId)));
                 String scanOverviewUrl = m_authProvider.getServer() + "/main/myapps/" + params.get(CoreConstants.APP_ID) + "/scans/" + scanId;
-                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SCAN_OVERVIEW, "", scanOverviewUrl)));
+                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(RESCAN_OVERVIEW, scanOverviewUrl)));
                 return scanId;
             } else if (json != null && json.has(MESSAGE)) {
                 String errorResponse = json.getString(MESSAGE);

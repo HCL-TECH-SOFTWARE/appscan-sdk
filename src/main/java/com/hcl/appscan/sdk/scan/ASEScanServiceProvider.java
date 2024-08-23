@@ -398,6 +398,11 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     public JSONArray getNonCompliantIssues(String scanId) throws IOException, JSONException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public JSONArray getNonCompliantIssues(Map<String, String> properties) throws IOException, JSONException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     @Override
      public String rescan(Map<String, String> params) {

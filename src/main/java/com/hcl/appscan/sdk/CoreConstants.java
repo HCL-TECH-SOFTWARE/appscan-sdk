@@ -23,6 +23,7 @@ public interface CoreConstants {
 	String UPLOADED_FILE 				= "uploadedFile";										//$NON-NLS-1$
 	String ID							= "Id";													//$NON-NLS-1$
         String SCAN_ID                                                  = "ScanId";                                                                                             //$NON-NLS-1$
+	String EXECUTION_ID						= "ExecutionId";									//$NON-NLS-1$
 	String KEY							= "Key";												//$NON-NLS-1$
 	String LATEST_EXECUTION				= "LatestExecution";									//$NON-NLS-1$
 	String LOCALE						= "Locale";												//$NON-NLS-1$

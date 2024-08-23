@@ -229,6 +229,10 @@ public class ServiceUtil implements CoreConstants {
      * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
      */
     public static boolean isScanId(String scanId, IAuthenticationProvider provider, Map<String, String> params) {
+        if(provider.isTokenExpired()) {
+            return true;
+        }
+
         String request_url = provider.getServer() + API_BASIC_DETAILS;
         request_url += "?$filter=Id%20eq%20"+scanId+"&%24select=AppId%2C%20Technology";
         Map<String, String> request_headers = provider.getAuthorizationHeader(true);

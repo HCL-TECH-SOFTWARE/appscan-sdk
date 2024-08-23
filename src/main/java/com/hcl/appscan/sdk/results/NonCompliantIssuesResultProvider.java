@@ -3,6 +3,7 @@
  */
 package com.hcl.appscan.sdk.results;
 
+import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.Messages;
 import com.hcl.appscan.sdk.auth.IAuthenticationProvider;
 import com.hcl.appscan.sdk.http.HttpClient;
@@ -33,6 +34,10 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 		super(scanId, type, provider, progress);
 	}
 
+	public NonCompliantIssuesResultProvider(String scanId, Map<String, String> properties, String type,  IScanServiceProvider provider, IProgress progress) {
+		super(scanId, properties, type, provider, progress);
+	}
+
 	@Override
 	protected void loadResults() {
         try {
@@ -61,7 +66,12 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId)));
                     m_message = Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId);
                 } else if (m_status != null && !(m_status.equalsIgnoreCase(INQUEUE) || m_status.equalsIgnoreCase(RUNNING) || m_status.equalsIgnoreCase(PAUSING))) {
-                    JSONArray array = m_scanProvider.getNonCompliantIssues(m_scanId);
+                    JSONArray array;
+                    if(m_properties.containsKey(CoreConstants.EXECUTION_ID)) {
+                        array = m_scanProvider.getNonCompliantIssues(m_properties);
+                    } else {
+                        array = m_scanProvider.getNonCompliantIssues(m_scanId);
+                    }
                     m_totalFindings = 0;
 
                     for (int i = 0; i < array.length(); i++) {

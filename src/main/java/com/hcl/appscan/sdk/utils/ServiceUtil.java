@@ -224,11 +224,12 @@ public class ServiceUtil implements CoreConstants {
      * Checks if the given scanId is valid for scanning.
      *
      * @param scanId The scanId to test.
+     * @param applicationId The applicationId to verify.
+     * @param type The scanType to verify.
      * @param provider The IAuthenticationProvider for authentication.
-     * @param params The map which consist the user inputs.
      * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
      */
-    public static boolean isScanId(String scanId, IAuthenticationProvider provider, Map<String, String> params) {
+    public static boolean isScanId(String scanId, String applicationId, String type, IAuthenticationProvider provider) {
         if(provider.isTokenExpired()) {
             return true;
         }
@@ -250,7 +251,7 @@ public class ServiceUtil implements CoreConstants {
                     JSONObject body = (JSONObject) array.getJSONObject(0);
                     String appId = body.getString(CoreConstants.APP_ID);
                     String technologyName = body.getString("Technology").toLowerCase();
-                    return (appId.equals(params.get(CoreConstants.APP_ID))) && (technologyName.equalsIgnoreCase(params.get(CoreConstants.SCANNER_TYPE).replaceAll("\\s", "")));
+                    return (appId.equals(applicationId)) && (technologyName.equalsIgnoreCase(type.replaceAll("\\s", "")));
                 }
             }
         }

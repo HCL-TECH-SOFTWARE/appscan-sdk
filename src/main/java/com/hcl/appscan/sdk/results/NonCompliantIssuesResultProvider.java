@@ -67,7 +67,7 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     m_message = Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId);
                 } else if (m_status != null && !(m_status.equalsIgnoreCase(INQUEUE) || m_status.equalsIgnoreCase(RUNNING) || m_status.equalsIgnoreCase(PAUSING))) {
                     JSONArray array;
-                    if(m_properties.containsKey(CoreConstants.EXECUTION_ID)) {
+                    if(m_properties != null && m_properties.containsKey(CoreConstants.EXECUTION_ID)) {
                         array = m_scanProvider.getNonCompliantIssues(m_properties);
                     } else {
                         array = m_scanProvider.getNonCompliantIssues(m_scanId);

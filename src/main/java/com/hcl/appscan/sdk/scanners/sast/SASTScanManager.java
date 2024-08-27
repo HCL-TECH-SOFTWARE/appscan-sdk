@@ -116,6 +116,7 @@ public class SASTScanManager implements IScanManager{
 	 * @param isSecretsScanningDisabled - True to skip scanning for secrets vulnerabilities.
 	 */
 	public void setIsSecretsScanningDisabled(boolean isSecretsScanningDisabled) {
+		System.out.println("inside sdk, setting to " + String.valueOf(isSecretsScanningDisabled));
 		m_isSecretsScanningDisabled = isSecretsScanningDisabled;
 	}
 

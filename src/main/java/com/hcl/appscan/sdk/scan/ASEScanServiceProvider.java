@@ -405,7 +405,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     }
     
     @Override
-     public String rescan(Map<String, String> params) {
+     public String rescan(String scanId, Map<String, String> params) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

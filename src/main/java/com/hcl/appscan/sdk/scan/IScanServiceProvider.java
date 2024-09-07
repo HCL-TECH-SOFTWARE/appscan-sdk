@@ -35,10 +35,11 @@ public interface IScanServiceProvider {
         /**
          * Initiates a Rescan
          * 
+         * @param scanId The ID of the parent scan on which the rescan will be executed.
          * @param params A Map of rescan parameters.
          * @return The id of the submitted rescan, if successful. Otherwise, returns null.
          */
-        public String rescan(Map<String, String> params);
+        public String rescan(String scanId, Map<String, String> params);
   
 	/**
 	 * Submits a file for scanning.

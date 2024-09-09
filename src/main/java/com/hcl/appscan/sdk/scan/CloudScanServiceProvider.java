@@ -96,8 +96,9 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
         }
         return null;
 	  }
+    
     @Override
-    public String rescan(Map<String, String> params) {
+    public String rescan(String scanId, Map<String, String> params) {
 
         if (loginExpired() || (params.containsKey(APP_ID) && !verifyApplication(params.get(APP_ID).toString()))) {
             return null;
@@ -117,13 +118,12 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
             JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
 
             if (status == HttpsURLConnection.HTTP_CREATED || status == HttpsURLConnection.HTTP_OK) {
-                String scanId = json.getString(SCAN_ID);
                 String executionId = json.getString(ID);
-                params.put(CoreConstants.EXECUTION_ID,executionId);
+                params.put(CoreConstants.EXECUTION_ID,executionId); //not required. Split CreateExecute Rescan to Three methods. 
                 m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(RESCAN_SUCCESS, scanId)));
                 String scanOverviewUrl = m_authProvider.getServer() + "/main/myapps/" + params.get(CoreConstants.APP_ID) + "/scans/" + scanId;
                 m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(RESCAN_OVERVIEW, scanOverviewUrl)));
-                return scanId;
+                return executionId;
             } else if (json != null && json.has(MESSAGE)) {
                 String errorResponse = json.getString(MESSAGE);
                 if (json.has(FORMAT_PARAMS) && !json.isNull(FORMAT_PARAMS)) {

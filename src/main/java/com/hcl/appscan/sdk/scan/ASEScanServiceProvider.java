@@ -400,7 +400,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     }
 
     @Override
-    public JSONArray getNonCompliantIssues(Map<String, String> properties) throws IOException, JSONException {
+    public JSONArray getNonCompliantIssuesUsingExecutionId(String executionId) throws IOException, JSONException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

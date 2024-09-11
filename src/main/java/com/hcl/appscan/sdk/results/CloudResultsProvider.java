@@ -47,7 +47,7 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
 	protected int m_mediumFindings;
 	protected int m_lowFindings;
 	protected int m_infoFindings;
-	protected Map<String, String> m_properties;
+	protected String m_executionId;
 	
 	public CloudResultsProvider(String scanId, String type, IScanServiceProvider provider, IProgress progress) {
 		m_type = type;
@@ -58,10 +58,10 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
 		m_reportFormat = DEFAULT_REPORT_FORMAT;
 	}
 
-	public CloudResultsProvider(String scanId, Map<String, String> properties, String type, IScanServiceProvider provider, IProgress progress) {
+	public CloudResultsProvider(String scanId, String executionId, String type, IScanServiceProvider provider, IProgress progress) {
 		m_type = type;
 		m_scanId = scanId;
-		m_properties = properties;
+		m_executionId = executionId;
 		m_hasResults = false;
 		m_scanProvider = provider;
 		m_progress = progress;

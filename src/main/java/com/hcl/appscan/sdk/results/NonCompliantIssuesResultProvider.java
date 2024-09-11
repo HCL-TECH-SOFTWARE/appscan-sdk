@@ -11,6 +11,7 @@ import com.hcl.appscan.sdk.http.HttpResponse;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.logging.Message;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
+import com.hcl.appscan.sdk.scanners.ASoCScan;
 import com.hcl.appscan.sdk.utils.SystemUtil;
 import java.io.File;
 import java.io.IOException;
@@ -34,8 +35,8 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 		super(scanId, type, provider, progress);
 	}
 
-	public NonCompliantIssuesResultProvider(String scanId, Map<String, String> properties, String type,  IScanServiceProvider provider, IProgress progress) {
-		super(scanId, properties, type, provider, progress);
+	public NonCompliantIssuesResultProvider(String scanId, String executionId, String type,  IScanServiceProvider provider, IProgress progress) {
+		super(scanId, executionId, type, provider, progress);
 	}
 
 	@Override
@@ -67,8 +68,8 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     m_message = Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId);
                 } else if (m_status != null && !(m_status.equalsIgnoreCase(INQUEUE) || m_status.equalsIgnoreCase(RUNNING) || m_status.equalsIgnoreCase(PAUSING))) {
                     JSONArray array;
-                    if(m_properties != null && m_properties.containsKey(CoreConstants.EXECUTION_ID)) {
-                        array = m_scanProvider.getNonCompliantIssues(m_properties);
+                    if(m_executionId != null && !m_executionId.isEmpty()) {
+                        array = m_scanProvider.getNonCompliantIssuesUsingExecutionId(m_executionId);
                     } else {
                         array = m_scanProvider.getNonCompliantIssues(m_scanId);
                     }

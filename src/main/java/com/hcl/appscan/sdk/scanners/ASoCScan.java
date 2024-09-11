@@ -72,7 +72,7 @@ public abstract class ASoCScan implements IScan, ScanConstants, Serializable {
 	@Override
 	public IResultsProvider getResultsProvider(boolean nonCompliantIssues) {
 		if(nonCompliantIssues) {
-			IResultsProvider provider = new NonCompliantIssuesResultProvider(m_scanId, m_properties, getType(), m_serviceProvider, m_progress);
+			IResultsProvider provider = new NonCompliantIssuesResultProvider(m_scanId, m_executionId, getType(), m_serviceProvider, m_progress);
 			provider.setReportFormat(getReportFormat());
 			return provider;
 		}

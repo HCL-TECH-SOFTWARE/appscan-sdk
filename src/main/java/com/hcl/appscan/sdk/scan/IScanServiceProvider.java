@@ -73,13 +73,12 @@ public interface IScanServiceProvider {
 	 /**
 	 * Gets the non compliant issues in JSON format.
 	 *
-	 * @param properties The properties map of the scan to retrieve all the non compliant issues.
+	 * @param executionId The id of the scan execution to retrieve all the non compliant issues
 	 * @return JSONArray containing the issues as JSON objects.
 	 * @throws IOException If an error occurs.
 	 * @throws JSONException If an error occurs.
 	 */
-	public JSONArray getNonCompliantIssues(Map<String, String> properties) throws IOException, JSONException;
-	
+	public JSONArray getNonCompliantIssuesUsingExecutionId(String executionId) throws IOException, JSONException;
 	/**
 	 * Gets the {@link IAuthenticationProvider} used to authenticate with a scanning service.
 	 * 

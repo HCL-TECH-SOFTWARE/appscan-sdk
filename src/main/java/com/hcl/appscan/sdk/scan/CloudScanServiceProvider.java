@@ -53,8 +53,8 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
     @Override
     public String createAndExecuteScan(String type, Map<String, String> params) {
         String requestUrl = m_authProvider.getServer() + String.format(API_SCANNER, type);
-        String progressMessage = Messages.getMessage(CREATE_SCAN_SUCCESS,type);
-        String overviewMessage = Messages.getMessage(SCAN_OVERVIEW,type);
+        String progressMessage = Messages.getMessage(CREATE_SCAN_SUCCESS,type.toUpperCase());
+        String overviewMessage = Messages.getMessage(SCAN_OVERVIEW,type.toUpperCase());
         return executeScan(requestUrl, params, progressMessage, overviewMessage);
 	  }
     

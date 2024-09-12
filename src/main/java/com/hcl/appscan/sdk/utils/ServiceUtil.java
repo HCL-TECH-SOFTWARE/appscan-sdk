@@ -198,7 +198,7 @@ public class ServiceUtil implements CoreConstants {
 		String request_url = provider.getServer() + API_TENANT_INFO;
 
 		try {
-			HttpClient client = new HttpClient(provider.getProxy(), false);
+			HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
 			Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);
 			requestHeaders.put("Content-Type", "application/json");
 			requestHeaders.put("accept", "application/json");

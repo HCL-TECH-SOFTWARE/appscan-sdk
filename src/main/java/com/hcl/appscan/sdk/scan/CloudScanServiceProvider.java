@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -61,6 +62,13 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
     @Override
     public String rescan(String scanId, Map<String, String> params) {
         String requestUrl = m_authProvider.getServer() + String.format(API_RESCAN, scanId);
+
+        Map<String, String> updateParams = new HashMap<>();
+        updateParams.put("Name", params.remove(CoreConstants.SCAN_NAME));
+        updateParams.put("EnableMailNotifications", params.remove(CoreConstants.EMAIL_NOTIFICATION));
+        updateParams.put("FullyAutomatic", params.remove("FullyAutomatic"));
+        ServiceUtil.updateScanData(updateParams, scanId, m_authProvider);
+
         String progressMessage = Messages.getMessage(RESCAN_SUCCESS);
         String overviewMessage = Messages.getMessage(RESCAN_OVERVIEW);
         return executeScan(requestUrl, params, progressMessage, overviewMessage);

@@ -190,7 +190,12 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 			return null;
 		}
 
-		String request_url = authProvider.getServer() + String.format(API_REPORT_SELECTED_ISSUES, SCOPE, scanId);
+		String request_url;
+		if(m_executionId != null && !m_executionId.isEmpty()) {
+			request_url = authProvider.getServer() + String.format(API_REPORT_SELECTED_ISSUES, "ScanExecution", m_executionId);
+		} else {
+			request_url = authProvider.getServer() + String.format(API_REPORT_SELECTED_ISSUES, SCOPE, scanId);
+		}
 		Map<String, String> request_headers = authProvider.getAuthorizationHeader(true);
 		request_headers.put("Content-Type", "application/json; charset=UTF-8");
 		request_headers.put("Accept", "application/json");

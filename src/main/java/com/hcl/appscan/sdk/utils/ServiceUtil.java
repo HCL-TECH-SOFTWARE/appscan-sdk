@@ -272,4 +272,23 @@ public class ServiceUtil implements CoreConstants {
         }
         return type;
     }
+
+    public static void updateScanData(Map<String, String> params, String scanId, IAuthenticationProvider provider) {
+        if (provider.isTokenExpired()) {
+            return;
+        }
+
+        String request_url = provider.getServer() + String.format(API_SCANNER,scanId);
+        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+
+        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+        try {
+            HttpResponse response = client.put(request_url, request_headers, params);
+            if (response.isSuccess()) {
+                return;
+            }
+        } catch (IOException | JSONException e) {
+            // Ignore and return false.
+        }
+    }
 }

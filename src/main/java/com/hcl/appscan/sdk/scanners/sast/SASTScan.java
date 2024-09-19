@@ -118,7 +118,7 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 				
 		Map<String, String> params = getProperties();
                 
-                if (isRescan()) {
+                if (getRescan()) {
                     setScanId(params.get(CoreConstants.SCAN_ID));
                     params.put(CoreConstants.FILE_ID, fileId);
                     submitRescan();

@@ -26,7 +26,7 @@ public abstract class ASoCScan implements IScan, ScanConstants, Serializable {
 	private String m_target;
 	private String m_scanId;
         private String m_executionId;
-        private Boolean m_rescan;
+        private boolean m_rescan;
 	private IProgress m_progress;
 	private IScanServiceProvider m_serviceProvider;
 	private Map<String, String> m_properties;
@@ -42,6 +42,7 @@ public abstract class ASoCScan implements IScan, ScanConstants, Serializable {
 			m_properties.put(CoreConstants.SCAN_NAME, getType() + SystemUtil.getTimeStamp());
 		m_progress = progress;
 		m_serviceProvider = provider;
+        m_rescan = m_properties.containsKey(CoreConstants.SCAN_ID);
 	}
 
 	@Override
@@ -51,10 +52,6 @@ public abstract class ASoCScan implements IScan, ScanConstants, Serializable {
         
         public String getExecutionId() {
 		return m_executionId;
-	}
-        
-        public Boolean isRescan() {
-		return m_properties.containsKey(CoreConstants.SCAN_ID);
 	}
 
 	@Override
@@ -89,9 +86,13 @@ public abstract class ASoCScan implements IScan, ScanConstants, Serializable {
 		m_executionId = id;
 	}
         
-        public void setRescan(Boolean rescan){
+        public void setRescan(boolean rescan){
                 m_rescan = rescan;
 	}
+
+    public boolean getRescan() {
+        return m_rescan;
+    }
 	
 	protected String getAppId() {
 		return m_properties.get(CoreConstants.APP_ID);

@@ -280,6 +280,7 @@ public class ServiceUtil implements CoreConstants {
 
         String request_url = provider.getServer() + String.format(API_SCANNER,scanId);
         Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+        request_headers.put("accept", "*/*");
 
         HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
         try {

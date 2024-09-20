@@ -169,23 +169,17 @@ public class HttpClient {
      */
     public HttpResponse put(String url, Map<String, String> headerProperties, Map<String, String> parameters)
             throws IOException, JSONException {
-        JSONObject params = new JSONObject(parameters);
         JSONObject objectMap = new JSONObject();
-        for (Object key : params.keySet()) {
-            if (params.get(key) != null){
-                String value = params.get(key).toString();
-                if (value != null) {
-                    if (value.equalsIgnoreCase("true")) {
-                        objectMap.put(key.toString(), true);
-                    } else if (value.equalsIgnoreCase("false")) {
-                        objectMap.put(key.toString(), false);
-                    } else {
-                        // If the string is not "true" or "false," keep it as is
-                        objectMap.put(key.toString(), params.get(key));
-                    }
+        for (String key : parameters.keySet()) {
+            if (parameters.get(key) != null){
+                String value = parameters.get(key);
+                if (value.equalsIgnoreCase("true")) {
+                    objectMap.put(key, true);
+                } else if (value.equalsIgnoreCase("false")) {
+                    objectMap.put(key, false);
                 } else {
-                    // If the value is not a string, keep it as is
-                    objectMap.put(key.toString(), value);
+                    // If the string is not "true" or "false," keep it as is
+                    objectMap.put(key, parameters.get(key));
                 }
             }
         }

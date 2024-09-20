@@ -290,7 +290,7 @@ public class ServiceUtil implements CoreConstants {
         try {
             HttpResponse response = client.put(request_url, request_headers, params);
             if (response.getResponseCode() == HttpsURLConnection.HTTP_NO_CONTENT) {
-                progress.setStatus(new Message(Message.INFO, "Updating the scan parameters."));
+                progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPDATE_JOB)));
             }
         } catch (IOException | JSONException e) {
             progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));

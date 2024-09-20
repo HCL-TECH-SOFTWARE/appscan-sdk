@@ -152,6 +152,7 @@ public interface CoreConstants {
 	String CREATING_JOB                 = "message.creating.job";                               //$NON-NLS-1$
 	String CREATE_JOB_SUCCESS			= "message.created.job";								//$NON-NLS-1$
 	String ERROR_CREATE_JOB  			= "error.create.job";									//$NON-NLS-1$
+	String UPDATE_JOB				= "message.update.job";								//$NON-NLS-1$
 	String ERROR_UPDATE_JOB  			= "error.update.job";									//$NON-NLS-1$
 	String EXECUTING_JOB				= "message.running.job";								//$NON-NLS-1$
 	String EXECUTE_JOB_SUCCESS    		= "message.executed.job";								//$NON-NLS-1$

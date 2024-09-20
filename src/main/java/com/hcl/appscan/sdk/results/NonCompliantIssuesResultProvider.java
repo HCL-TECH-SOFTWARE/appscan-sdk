@@ -75,35 +75,39 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     }
                     m_totalFindings = 0;
 
-                    for (int i = 0; i < array.length(); i++) {
-                        JSONObject jobj = array.getJSONObject(i);
-                        String sev = jobj.getString("Severity");
-                        int count = jobj.getInt("N");
+                    if(array == null) {
+                        m_status = FAILED;
+                    } else {
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject jobj = array.getJSONObject(i);
+                            String sev = jobj.getString("Severity");
+                            int count = jobj.getInt("N");
 
-                        switch (sev.toLowerCase()) {
-                            case "critical":
-                                m_criticalFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            case "high":
-                                m_highFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            case "medium":
-                                m_mediumFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            case "low":
-                                m_lowFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            case "informational":
-                                m_infoFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            default:
-                                m_totalFindings += count;
-                                break;
+                            switch (sev.toLowerCase()) {
+                                case "critical":
+                                    m_criticalFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                case "high":
+                                    m_highFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                case "medium":
+                                    m_mediumFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                case "low":
+                                    m_lowFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                case "informational":
+                                    m_infoFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                default:
+                                    m_totalFindings += count;
+                                    break;
+                            }
                         }
                     }
                     setHasResult(true);

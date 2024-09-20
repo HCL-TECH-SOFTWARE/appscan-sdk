@@ -67,7 +67,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
         updateParams.put("Name", params.remove(CoreConstants.SCAN_NAME));
         updateParams.put("EnableMailNotifications", params.remove(CoreConstants.EMAIL_NOTIFICATION));
         updateParams.put("FullyAutomatic", params.remove("FullyAutomatic"));
-        ServiceUtil.updateScanData(updateParams, scanId, m_authProvider);
+        ServiceUtil.updateScanData(updateParams, scanId, m_authProvider, m_progress);
 
         String progressMessage = Messages.getMessage(RESCAN_SUCCESS);
         String overviewMessage = Messages.getMessage(RESCAN_OVERVIEW);

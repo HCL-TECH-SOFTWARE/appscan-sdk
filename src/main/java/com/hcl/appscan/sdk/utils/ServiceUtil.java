@@ -13,6 +13,9 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.hcl.appscan.sdk.Messages;
+import com.hcl.appscan.sdk.logging.IProgress;
+import com.hcl.appscan.sdk.logging.Message;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -273,23 +276,24 @@ public class ServiceUtil implements CoreConstants {
         return type;
     }
 
-    public static void updateScanData(Map<String, String> params, String scanId, IAuthenticationProvider provider) {
+    public static void updateScanData(Map<String, String> params, String scanId, IAuthenticationProvider provider, IProgress progress) {
         if (provider.isTokenExpired()) {
             return;
         }
 
         String request_url = provider.getServer() + String.format(API_SCANNER,scanId);
         Map<String, String> request_headers = provider.getAuthorizationHeader(true);
-        request_headers.put("accept", "*/*");
+        request_headers.put("accept", "application/json");
+        request_headers.put("Content-Type", "application/json");
 
         HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
         try {
             HttpResponse response = client.put(request_url, request_headers, params);
-            if (response.isSuccess()) {
-                return;
+            if (response.getResponseCode() == HttpsURLConnection.HTTP_NO_CONTENT) {
+                progress.setStatus(new Message(Message.INFO, "Updating the scan parameters."));
             }
         } catch (IOException | JSONException e) {
-            // Ignore and return false.
+            progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
         }
     }
 }

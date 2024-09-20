@@ -179,7 +179,7 @@ public class HttpClient {
                     objectMap.put(key, false);
                 } else {
                     // If the string is not "true" or "false," keep it as is
-                    objectMap.put(key, parameters.get(key));
+                    objectMap.put(key, value);
                 }
             }
         }

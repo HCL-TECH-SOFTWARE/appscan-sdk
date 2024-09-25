@@ -3,6 +3,7 @@
  */
 package com.hcl.appscan.sdk.results;
 
+import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.Messages;
 import com.hcl.appscan.sdk.auth.IAuthenticationProvider;
 import com.hcl.appscan.sdk.http.HttpClient;
@@ -10,6 +11,7 @@ import com.hcl.appscan.sdk.http.HttpResponse;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.logging.Message;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
+import com.hcl.appscan.sdk.scanners.ASoCScan;
 import com.hcl.appscan.sdk.utils.SystemUtil;
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +33,10 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 	public NonCompliantIssuesResultProvider(String scanId, String type, IScanServiceProvider provider,
 			IProgress progress) {
 		super(scanId, type, provider, progress);
+	}
+
+	public NonCompliantIssuesResultProvider(String scanId, String executionId, String type,  IScanServiceProvider provider, IProgress progress) {
+		super(scanId, executionId, type, provider, progress);
 	}
 
 	@Override
@@ -61,38 +67,47 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId)));
                     m_message = Messages.getMessage(SUSPEND_JOB_BYUSER, "Scan Id: " + m_scanId);
                 } else if (m_status != null && !(m_status.equalsIgnoreCase(INQUEUE) || m_status.equalsIgnoreCase(RUNNING) || m_status.equalsIgnoreCase(PAUSING))) {
-                    JSONArray array = m_scanProvider.getNonCompliantIssues(m_scanId);
+                    JSONArray array;
+                    if(m_executionId != null && !m_executionId.isEmpty()) {
+                        array = m_scanProvider.getNonCompliantIssuesUsingExecutionId(m_executionId);
+                    } else {
+                        array = m_scanProvider.getNonCompliantIssues(m_scanId);
+                    }
                     m_totalFindings = 0;
 
-                    for (int i = 0; i < array.length(); i++) {
-                        JSONObject jobj = array.getJSONObject(i);
-                        String sev = jobj.getString("Severity");
-                        int count = jobj.getInt("N");
+                    if(array == null) {
+                        m_status = FAILED;
+                    } else {
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject jobj = array.getJSONObject(i);
+                            String sev = jobj.getString("Severity");
+                            int count = jobj.getInt("N");
 
-                        switch (sev.toLowerCase()) {
-                            case "critical":
-                                m_criticalFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            case "high":
-                                m_highFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            case "medium":
-                                m_mediumFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            case "low":
-                                m_lowFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            case "informational":
-                                m_infoFindings += count;
-                                m_totalFindings += count;
-                                break;
-                            default:
-                                m_totalFindings += count;
-                                break;
+                            switch (sev.toLowerCase()) {
+                                case "critical":
+                                    m_criticalFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                case "high":
+                                    m_highFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                case "medium":
+                                    m_mediumFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                case "low":
+                                    m_lowFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                case "informational":
+                                    m_infoFindings += count;
+                                    m_totalFindings += count;
+                                    break;
+                                default:
+                                    m_totalFindings += count;
+                                    break;
+                            }
                         }
                     }
                     setHasResult(true);
@@ -179,7 +194,12 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 			return null;
 		}
 
-		String request_url = authProvider.getServer() + String.format(API_REPORT_SELECTED_ISSUES, SCOPE, scanId);
+		String request_url;
+		if(m_executionId != null && !m_executionId.isEmpty()) {
+			request_url = authProvider.getServer() + String.format(API_REPORT_SELECTED_ISSUES, "ScanExecution", m_executionId);
+		} else {
+			request_url = authProvider.getServer() + String.format(API_REPORT_SELECTED_ISSUES, SCOPE, scanId);
+		}
 		Map<String, String> request_headers = authProvider.getAuthorizationHeader(true);
 		request_headers.put("Content-Type", "application/json; charset=UTF-8");
 		request_headers.put("Accept", "application/json");

@@ -158,6 +158,35 @@ public class HttpClient {
 		return makeRequest(Method.PUT, url, headerProperties, body);
 	}
 
+    /**
+     * Submit a put request.
+     *
+     * @param url The URL string.
+     * @param headerProperties An optional Map of header properties.
+     * @param parameters An optional Map of properties.
+     * @return The response as a byte array.
+     * @throws IOException If an error occurs.
+     */
+    public HttpResponse put(String url, Map<String, String> headerProperties, Map<String, String> parameters)
+            throws IOException, JSONException {
+        JSONObject objectMap = new JSONObject();
+        for (String key : parameters.keySet()) {
+            if (parameters.get(key) != null){
+                String value = parameters.get(key);
+                if (value.equalsIgnoreCase("true")) {
+                    objectMap.put(key, true);
+                } else if (value.equalsIgnoreCase("false")) {
+                    objectMap.put(key, false);
+                } else {
+                    // If the string is not "true" or "false," keep it as is
+                    objectMap.put(key, value);
+                }
+            }
+        }
+        String body = objectMap.toString();
+        return put(url, headerProperties, body);
+    }
+
 	/**
 	 * Submit a delete request.
 	 * 

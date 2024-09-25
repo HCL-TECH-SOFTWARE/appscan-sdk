@@ -47,10 +47,16 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
 	protected int m_mediumFindings;
 	protected int m_lowFindings;
 	protected int m_infoFindings;
+	protected String m_executionId;
 	
 	public CloudResultsProvider(String scanId, String type, IScanServiceProvider provider, IProgress progress) {
+		this(scanId, null, type, provider, progress);
+	}
+
+	public CloudResultsProvider(String scanId, String executionId, String type, IScanServiceProvider provider, IProgress progress) {
 		m_type = type;
 		m_scanId = scanId;
+		m_executionId = executionId;
 		m_hasResults = false;
 		m_scanProvider = provider;
 		m_progress = progress;

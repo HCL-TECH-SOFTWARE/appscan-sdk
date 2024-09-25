@@ -117,13 +117,19 @@ public class SASTScan extends ASoCScan implements SASTConstants {
 			throw new ScannerException(Messages.getMessage(ERROR_FILE_UPLOAD, m_irx.getName()));		
 				
 		Map<String, String> params = getProperties();
-		params.put(FILE_ID, fileId);
-
-        	submitScan();
+                
+                if (getRescan()) {
+                    setScanId(params.get(CoreConstants.SCAN_ID));
+                    params.put(CoreConstants.FILE_ID, fileId);
+                    submitRescan();
+                } else {
+                    params.put(FILE_ID, fileId);
+                    submitScan();
+                }
 		if(getScanId() == null)
 			throw new ScannerException(Messages.getMessage(ERROR_SUBMITTING_IRX));
 	}
-
+        
     	protected void submitScan() {
         	setScanId(getServiceProvider().createAndExecuteScan(STATIC_ANALYZER, getProperties()));
     	}

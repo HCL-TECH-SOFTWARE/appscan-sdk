@@ -400,6 +400,16 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     }
 
     @Override
+    public JSONArray getNonCompliantIssuesUsingExecutionId(String executionId) throws IOException, JSONException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+     public String rescan(String scanId, Map<String, String> params) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public IAuthenticationProvider getAuthenticationProvider() {
         return m_authProvider;
     }

@@ -22,6 +22,7 @@ public interface CoreConstants {
 	String FILE_TO_UPLOAD 				= "fileToUpload";										//$NON-NLS-1$
 	String UPLOADED_FILE 				= "uploadedFile";										//$NON-NLS-1$
 	String ID							= "Id";													//$NON-NLS-1$
+        String SCAN_ID                                                  = "ScanId";                                                                                             //$NON-NLS-1$
 	String KEY							= "Key";												//$NON-NLS-1$
 	String LATEST_EXECUTION				= "LatestExecution";									//$NON-NLS-1$
 	String LOCALE						= "Locale";												//$NON-NLS-1$
@@ -75,6 +76,7 @@ public interface CoreConstants {
 	String API_FILE_UPLOAD				= API_ENV_LATEST + "/FileUpload";						//$NON-NLS-1$
 	String API_SCAN						= API_ENV + "/%s";										//$NON-NLS-1$
 	String API_SCANNER					= API_ENV_LATEST + "/Scans/%s";							//$NON-NLS-1$
+        String API_RESCAN					= API_ENV_LATEST + "/Scans/%s/Executions";							//$NON-NLS-1$
 	String API_SCANS					= API_ENV + "/Scans";									//$NON-NLS-1$
 	String API_NONCOMPLIANT_ISSUES 		= API_ENV + "/Scans/%s/NonCompliantIssues";				//$NON-NLS-1$
 	String API_SCANS_REPORT				= API_ENV_LATEST + "/Scans/%s/Report/%s";				//$NON-NLS-1$
@@ -117,6 +119,8 @@ public interface CoreConstants {
 
 	String CREATE_SCAN_SUCCESS			= "message.created.scan";								//$NON-NLS-1$
 	String SCAN_OVERVIEW				= "message.scan.overview";								//$NON-NLS-1$
+	String RESCAN_SUCCESS				= "message.rescan";								        //$NON-NLS-1$
+	String RESCAN_OVERVIEW				= "message.rescan.overview";								//$NON-NLS-1$
 	String DOWNLOADING_CLIENT			= "message.downloading.client";							//$NON-NLS-1$
 	String EXECUTING_SCAN				= "message.running.scan";								//$NON-NLS-1$
 	String UPLOADING_FILE				= "message.uploading.file";								//$NON-NLS-1$
@@ -148,6 +152,7 @@ public interface CoreConstants {
 	String CREATING_JOB                 = "message.creating.job";                               //$NON-NLS-1$
 	String CREATE_JOB_SUCCESS			= "message.created.job";								//$NON-NLS-1$
 	String ERROR_CREATE_JOB  			= "error.create.job";									//$NON-NLS-1$
+	String UPDATE_JOB				= "message.update.job";								//$NON-NLS-1$
 	String ERROR_UPDATE_JOB  			= "error.update.job";									//$NON-NLS-1$
 	String EXECUTING_JOB				= "message.running.job";								//$NON-NLS-1$
 	String EXECUTE_JOB_SUCCESS    		= "message.executed.job";								//$NON-NLS-1$

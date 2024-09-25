@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -52,51 +53,78 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
   
     @Override
     public String createAndExecuteScan(String type, Map<String, String> params) {
-        if(loginExpired() || (params.containsKey(APP_ID) && !verifyApplication(params.get(APP_ID).toString()))) {
+        String requestUrl = m_authProvider.getServer() + String.format(API_SCANNER, type);
+        String progressMessage = Messages.getMessage(CREATE_SCAN_SUCCESS,type.toUpperCase());
+        String overviewMessage = Messages.getMessage(SCAN_OVERVIEW,type.toUpperCase());
+        return executeScan(requestUrl, params, progressMessage, overviewMessage);
+	  }
+    
+    @Override
+    public String rescan(String scanId, Map<String, String> params) {
+        String requestUrl = m_authProvider.getServer() + String.format(API_RESCAN, scanId);
+
+        Map<String, String> updateParams = new HashMap<>();
+        updateParams.put("Name", params.remove(CoreConstants.SCAN_NAME));
+        updateParams.put("EnableMailNotifications", params.remove(CoreConstants.EMAIL_NOTIFICATION));
+        updateParams.put("FullyAutomatic", params.remove("FullyAutomatic"));
+        ServiceUtil.updateScanData(updateParams, scanId, m_authProvider, m_progress);
+
+        String progressMessage = Messages.getMessage(RESCAN_SUCCESS);
+        String overviewMessage = Messages.getMessage(RESCAN_OVERVIEW);
+        return executeScan(requestUrl, params, progressMessage, overviewMessage);
+    }
+
+    //private method to handle common logic
+    private String executeScan(String requestUrl, Map<String, String> params, String successMessageKey, String overviewMessageKey) {
+        if (loginExpired() || (params.containsKey(APP_ID) && !verifyApplication(params.get(APP_ID).toString()))) {
             return null;
         }
 
-        Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+        Map<String, String> requestHeaders = m_authProvider.getAuthorizationHeader(true);
         HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
 
         try {
-            request_headers.put("Content-Type", "application/json");
-            request_headers.put("accept", "application/json");
-            String request_url = m_authProvider.getServer() + String.format(API_SCANNER, type);
-            
-            HttpResponse response = client.post(request_url,request_headers,params);
-            int status = response.getResponseCode();
+            requestHeaders.put("Content-Type", "application/json");
+            requestHeaders.put("accept", "application/json");
 
+            HttpResponse response = client.post(requestUrl, requestHeaders, params);
+            int status = response.getResponseCode();
             JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
 
             if (status == HttpsURLConnection.HTTP_CREATED || status == HttpsURLConnection.HTTP_OK) {
-            	String scanId = json.getString(ID);
-                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_SCAN_SUCCESS, type.toUpperCase(), scanId)));
-                String scanOverviewUrl = m_authProvider.getServer() + "/main/myapps/" + params.get(CoreConstants.APP_ID) + "/scans/" + scanId;
-                m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(SCAN_OVERVIEW, type.toUpperCase(), scanOverviewUrl)));
-                return scanId;
+                String id = json.getString(ID);
+                String scanOverviewUrl;
+                if(params.containsKey(SCAN_ID)) {
+                    String scanId= params.get(SCAN_ID);
+                    scanOverviewUrl = m_authProvider.getServer() + "/main/myapps/" + params.get(CoreConstants.APP_ID) + "/scans/" + scanId;
+                } else {
+                    scanOverviewUrl = m_authProvider.getServer() + "/main/myapps/" + params.get(CoreConstants.APP_ID) + "/scans/" + id;
+                }
+                m_progress.setStatus(new Message(Message.INFO, successMessageKey + " " + id));
+                m_progress.setStatus(new Message(Message.INFO, overviewMessageKey + " " + scanOverviewUrl));
+                return id;
             } else if (json != null && json.has(MESSAGE)) {
                 String errorResponse = json.getString(MESSAGE);
-                if(json.has(FORMAT_PARAMS) && !json.isNull(FORMAT_PARAMS)) {
+                if (json.has(FORMAT_PARAMS) && !json.isNull(FORMAT_PARAMS)) {
                     JSONArray jsonArray = json.getJSONArray(FORMAT_PARAMS);
-                    if(jsonArray != null){
+                    if (jsonArray != null) {
                         String[] messageParams = new String[jsonArray.size()];
                         for (int i = 0; i < jsonArray.size(); i++) {
-                            messageParams[i] = (String)jsonArray.get(i);
+                            messageParams[i] = (String) jsonArray.get(i);
                         }
                         errorResponse = MessageFormat.format(errorResponse, (Object[]) messageParams);
                     }
                 }
                 m_progress.setStatus(new Message(Message.ERROR, errorResponse));
-            }
-            else
+            } else {
                 m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, status)));
-        } catch(IOException | JSONException e) {
+            }
+        } catch (IOException | JSONException e) {
             m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_SUBMITTING_SCAN, e.getLocalizedMessage())));
         }
         return null;
-	  }
-  
+    }
+
     @Override
 	  public String submitFile(File file) throws IOException {
 		  if(loginExpired())
@@ -172,37 +200,47 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 	
 	@Override
 	public JSONArray getNonCompliantIssues(String scanId) throws IOException, JSONException {
-        	if(loginExpired())
-    			return null;
-    		
-    		String request_url = m_authProvider.getServer() + String.format(API_ISSUES_COUNT, "Scan", scanId);
-    		request_url +="?applyPolicies=All&%24filter=Status%20eq%20%27Open%27%20or%20Status%20eq%20%27InProgress%27%20or%20Status%20eq%20%27Reopened%27&%24apply=groupby%28%28Status%2CSeverity%29%2Caggregate%28%24count%20as%20N%29%29";
-    		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-    		request_headers.put("Content-Type", "application/json; charset=UTF-8");
-    		request_headers.put("Accept", "application/json");
-    		
-    		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
-    		HttpResponse response = client.get(request_url, request_headers, null);
-    		
-    		if (response.isSuccess()) {
-    			JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
-    			return (JSONArray) json.getJSONArray("Items");
-                }
-
-    		if (response.getResponseCode() == HttpsURLConnection.HTTP_BAD_REQUEST)
-    			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_INFO, "Scan", scanId)));
-            else {
-                JSONObject obj=(JSONObject)response.getResponseBodyAsJSON();
-                if (obj!=null && obj.has(MESSAGE)){
-                    m_progress.setStatus(new Message(Message.ERROR, obj.getString(MESSAGE)));
-                }
-                else {
-                    m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS, response.getResponseCode())));
-                }
-            }
-                            
-    		return null;
+        return getNonCompliantIssues("Scan", scanId);
 	}
+
+	@Override
+	public JSONArray getNonCompliantIssuesUsingExecutionId(String executionId) throws IOException, JSONException {
+        return getNonCompliantIssues("ScanExecution", executionId);
+	}
+
+    //private method to handle common logic
+    private JSONArray getNonCompliantIssues(String idType, String id) throws IOException, JSONException {
+        if (loginExpired())
+            return null;
+
+        String requestUrl = m_authProvider.getServer() + String.format(API_ISSUES_COUNT, idType, id);
+        requestUrl += "?applyPolicies=All&%24filter=Status%20eq%20%27Open%27%20or%20Status%20eq%20%27InProgress%27%20or%20Status%20eq%20%27Reopened%27&%24apply=groupby%28%28Status%2CSeverity%29%2Caggregate%28%24count%20as%20N%29%29";
+
+        Map<String, String> requestHeaders = m_authProvider.getAuthorizationHeader(true);
+        requestHeaders.put("Content-Type", "application/json; charset=UTF-8");
+        requestHeaders.put("Accept", "application/json");
+
+        HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
+        HttpResponse response = client.get(requestUrl, requestHeaders, null);
+
+        if (response.isSuccess()) {
+            JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
+            return (JSONArray) json.getJSONArray("Items");
+        }
+
+        if (response.getResponseCode() == HttpsURLConnection.HTTP_BAD_REQUEST) {
+            m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_INFO, idType, id)));
+        } else {
+            JSONObject obj = (JSONObject) response.getResponseBodyAsJSON();
+            if (obj != null && obj.has(MESSAGE)) {
+                m_progress.setStatus(new Message(Message.ERROR, obj.getString(MESSAGE)));
+            } else {
+                m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_DETAILS, response.getResponseCode())));
+            }
+        }
+
+        return null;
+    }
 	
 	@Override
 	public IAuthenticationProvider getAuthenticationProvider() {

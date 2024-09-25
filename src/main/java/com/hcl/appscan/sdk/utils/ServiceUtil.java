@@ -13,6 +13,10 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.hcl.appscan.sdk.Messages;
+import com.hcl.appscan.sdk.logging.IProgress;
+import com.hcl.appscan.sdk.logging.Message;
+import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
@@ -218,4 +222,78 @@ public class ServiceUtil implements CoreConstants {
 
 		return false;
 	}
+
+    /**
+     * Checks if the given scanId is valid for scanning.
+     *
+     * @param scanId The scanId to test.
+     * @param applicationId The applicationId to verify.
+     * @param type The scanType to verify.
+     * @param provider The IAuthenticationProvider for authentication.
+     * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
+     */
+    public static boolean isScanId(String scanId, String applicationId, String type, IAuthenticationProvider provider) {
+        if (provider.isTokenExpired()) {
+            return true;
+        }
+
+        String request_url = provider.getServer() + API_BASIC_DETAILS;
+        request_url += "?$filter=Id%20eq%20" + scanId + "&%24select=AppId%2C%20Technology";
+        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+
+        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+        try {
+            HttpResponse response = client.get(request_url, request_headers, null);
+
+            if (response.isSuccess()) {
+                JSONObject obj = (JSONObject) response.getResponseBodyAsJSON();
+                JSONArray array = (JSONArray) obj.get(ITEMS);
+                if (array.isEmpty()) {
+                    return false;
+                } else {
+                    JSONObject body = (JSONObject) array.getJSONObject(0);
+                    String appId = body.getString(CoreConstants.APP_ID);
+                    String technologyName = body.getString("Technology");
+                    return appId.equals(applicationId) && technologyName.equals(updatedScanType(type));
+                }
+            }
+        } catch (IOException | JSONException e) {
+            // Ignore and return false.
+        }
+
+        return false;
+    }
+
+    public static String updatedScanType(String type) {
+        switch (type) {
+            case "Static Analyzer":
+                return STATIC_TECH;
+            case "Dynamic Analyzer":
+                return DYNAMIC_TECH;
+            case CoreConstants.SOFTWARE_COMPOSITION_ANALYZER:
+                return SCA_TECH;
+        }
+        return type;
+    }
+
+    public static void updateScanData(Map<String, String> params, String scanId, IAuthenticationProvider provider, IProgress progress) {
+        if (provider.isTokenExpired()) {
+            return;
+        }
+
+        String request_url = provider.getServer() + String.format(API_SCANNER,scanId);
+        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+        request_headers.put("accept", "application/json");
+        request_headers.put("Content-Type", "application/json");
+
+        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+        try {
+            HttpResponse response = client.put(request_url, request_headers, params);
+            if (response.getResponseCode() == HttpsURLConnection.HTTP_NO_CONTENT) {
+                progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPDATE_JOB)));
+            }
+        } catch (IOException | JSONException e) {
+            progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
+        }
+    }
 }

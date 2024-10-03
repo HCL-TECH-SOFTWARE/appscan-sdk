@@ -1,5 +1,5 @@
 # appscan-sdk
-SDK for interacting with HCL AppScan on Cloud and HCL AppScan Enterprise ADAC Jobs
+SDK for interacting with HCL AppScan on Cloud, HCL AppScan 360&deg; and HCL AppScan Enterprise ADAC Jobs.
 
 # JavaDoc
 https://www.javadoc.io/doc/com.hcl/appscan.sdk/latest/index.html

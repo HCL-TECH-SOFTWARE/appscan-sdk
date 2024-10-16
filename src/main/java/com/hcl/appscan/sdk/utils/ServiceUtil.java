@@ -296,4 +296,62 @@ public class ServiceUtil implements CoreConstants {
             progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
         }
     }
+
+    /**
+     * Checks if the given scanId is valid for scanning.
+     *
+     * @param scanId The scanId to test
+     * @param provider The IAuthenticationProvider for authentication.
+     * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
+     */
+    public static JSONObject sastScanDetails(String scanId, IAuthenticationProvider provider) {
+        if (provider.isTokenExpired()) {
+            return null;
+        }
+
+        String request_url = provider.getServer() + String.format(API_SAST_DETAILS, scanId);
+        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+
+        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+        try {
+            HttpResponse response = client.get(request_url, request_headers, null);
+
+            if (response.isSuccess()) {
+                return (JSONObject) response.getResponseBodyAsJSON();
+            }
+        } catch (IOException | JSONException e) {
+            // Ignore and return false.
+        }
+
+        return null;
+    }
+
+    /**
+     * Checks if the given scanId is valid for scanning.
+     *
+     * @param scanId The scanId to test
+     * @param provider The IAuthenticationProvider for authentication.
+     * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
+     */
+    public static JSONArray getExecutionDetails(String scanId, IAuthenticationProvider provider) {
+        if (provider.isTokenExpired()) {
+            return null;
+        }
+
+        String request_url = provider.getServer() + String.format(API_EXECUTION_DETAILS, scanId);
+        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+
+        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+        try {
+            HttpResponse response = client.get(request_url, request_headers, null);
+
+            if (response.isSuccess()) {
+                return (JSONArray) response.getResponseBodyAsJSON();
+            }
+        } catch (IOException | JSONException e) {
+            // Ignore and return false.
+        }
+
+        return null;
+    }
 }

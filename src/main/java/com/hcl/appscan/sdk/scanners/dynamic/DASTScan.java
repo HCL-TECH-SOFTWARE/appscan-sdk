@@ -94,13 +94,19 @@ public class DASTScan extends ASoCScan implements DASTConstants {
 
         try {
             JSONObject propertiesJSON = createJSONForProperties(params);
-            setScanId(getServiceProvider().createAndExecuteScan(type, propertiesJSON));
+            if (getRescan()) {
+                setScanId(params.get(CoreConstants.SCAN_ID));
+                setExecutionId(getServiceProvider().rescan(getScanId(), propertiesJSON));
+                if(getExecutionId() == null)
+                    throw new ScannerException(Messages.getMessage(ERROR_CREATING_SCAN));
+            } else {
+                setScanId(getServiceProvider().createAndExecuteScan(type, propertiesJSON));
+                if(getScanId() == null)
+                    throw new ScannerException(Messages.getMessage(ERROR_CREATING_SCAN));
+            }
         } catch (JSONException e) {
             throw new ScannerException(Messages.getMessage(ERROR_RUNNING_SCAN, e.getLocalizedMessage()));
         }
-
-		if(getScanId() == null)
-			throw new ScannerException(Messages.getMessage(ERROR_CREATING_SCAN));
 	}
 
     private JSONObject createJSONForProperties(Map<String, String> params) throws JSONException {

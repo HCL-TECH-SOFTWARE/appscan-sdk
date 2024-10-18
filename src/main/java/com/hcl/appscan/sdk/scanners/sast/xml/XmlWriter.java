@@ -74,6 +74,9 @@ implements	IModelXMLConstants
 		if (isSecretsScanningDisabled) {
 			m_config.setAttribute(A_SECRETS_DISABLED, "true");
 		}
+		else {
+			m_config.setAttribute(A_SECRETS_ENABLED, "true");
+		}
 
 		if (isSecretsScanningOnlyEnabled) {
 			m_config.setAttribute(A_SECRETS_ONLY, "true");

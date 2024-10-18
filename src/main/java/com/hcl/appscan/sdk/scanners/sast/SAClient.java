@@ -355,6 +355,9 @@ public class SAClient implements SASTConstants {
 		if(properties.containsKey(SECRETS_DISABLED) || System.getProperty(SECRETS_DISABLED) != null) {
 			args.add(OPT_SECRETS_DISABLED);
 		}
+		if(properties.containsKey(SECRETS_ENABLED) || System.getProperty(SECRETS_ENABLED) != null) {
+			args.add(OPT_SECRETS_ENABLED);
+		}
 		if(properties.containsKey(SECRETS_ONLY) || System.getProperty(SECRETS_ONLY) != null) {
 			args.add(OPT_SECRETS_ONLY);
 		}

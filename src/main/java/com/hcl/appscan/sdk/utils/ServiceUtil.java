@@ -311,6 +311,8 @@ public class ServiceUtil implements CoreConstants {
 
         String request_url = provider.getServer() + String.format(API_SAST_DETAILS, scanId);
         Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+        request_headers.put("accept", "application/json");
+        request_headers.put("Content-Type", "application/json");
 
         HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
         try {
@@ -340,6 +342,8 @@ public class ServiceUtil implements CoreConstants {
 
         String request_url = provider.getServer() + String.format(API_EXECUTION_DETAILS, scanId);
         Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+        request_headers.put("accept", "application/json");
+        request_headers.put("Content-Type", "application/json");
 
         HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
         try {

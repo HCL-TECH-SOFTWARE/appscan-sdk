@@ -92,7 +92,7 @@ public interface CoreConstants {
 	String API_AUTHENTICATION			= API_ENV_LATEST + "/Account/IsAuthenticated";			//$NON-NLS-1$
 	String API_TENANT_INFO				= API_ENV_LATEST + "/Account/TenantInfo";				//$NON-NLS-1$
 	String API_SAST_DETAILS				= API_ENV_LATEST + "/Sast/%s";				            //$NON-NLS-1$
-	String API_EXECUTION_DETAILS		        = API_ENV_LATEST + "/%s/Executions";				    //$NON-NLS-1$
+	String API_EXECUTION_DETAILS		        = API_ENV_LATEST + "/Scans/%s/Executions";				    //$NON-NLS-1$
 
 	String DEFAULT_RESULT_NAME			= "asoc_results";										//$NON-NLS-1$
 	String SACLIENT_INSTALL_DIR			= "SAClientInstall";									//$NON-NLS-1$

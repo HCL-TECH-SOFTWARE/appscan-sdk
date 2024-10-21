@@ -27,7 +27,7 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	
 	@Override
 	public boolean hasResults() {
-		return m_resultsProvider1.hasResults() || m_resultsProvider2.hasResults();
+		return m_resultsProvider1.hasResults() && m_resultsProvider2.hasResults();
 	}
 
 	@Override

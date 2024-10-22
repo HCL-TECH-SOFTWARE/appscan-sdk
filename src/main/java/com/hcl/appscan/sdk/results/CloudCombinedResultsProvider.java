@@ -27,7 +27,11 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	
 	@Override
 	public boolean hasResults() {
-		return m_resultsProvider1.hasResults() || m_resultsProvider2.hasResults();
+		if(getStatus().equalsIgnoreCase(CoreConstants.UNSTABLE)) {
+			return m_resultsProvider1.hasResults() || m_resultsProvider2.hasResults();
+		} else {
+			return m_resultsProvider1.hasResults() && m_resultsProvider2.hasResults();
+		}
 	}
 
 	@Override
@@ -36,10 +40,11 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 		String status1 = m_resultsProvider1.getStatus();
 		String status2 = m_resultsProvider2.getStatus();
 		
-		if(status1.equalsIgnoreCase(CoreConstants.FAILED) || status2.equalsIgnoreCase(CoreConstants.FAILED)) {
+		if(status1.equalsIgnoreCase(CoreConstants.FAILED) && status2.equalsIgnoreCase(CoreConstants.FAILED)) {
 			combinedStatus = CoreConstants.FAILED;
-		}
-		else if(status1.equalsIgnoreCase(CoreConstants.READY) && status2.equalsIgnoreCase(CoreConstants.READY)) {
+		} else if (status1.equalsIgnoreCase(CoreConstants.FAILED) || status2.equalsIgnoreCase(CoreConstants.FAILED)) {
+			combinedStatus = CoreConstants.UNSTABLE;
+		} else if (status1.equalsIgnoreCase(CoreConstants.READY) && status2.equalsIgnoreCase(CoreConstants.READY)) {
 			combinedStatus = CoreConstants.READY;
 		}
 		

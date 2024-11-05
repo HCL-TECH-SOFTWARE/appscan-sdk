@@ -341,6 +341,7 @@ public class ServiceUtil implements CoreConstants {
         }
 
         String request_url = provider.getServer() + String.format(API_EXECUTION_DETAILS, scanId);
+        request_url += "?$filter=IsValidForIncremental%20eq%20true&%24select=Id%2C%20CreatedAt%2C%20IsValidForIncremental&%24orderby=CreatedAt%20desc";
         Map<String, String> request_headers = provider.getAuthorizationHeader(true);
         request_headers.put("accept", "application/json");
         request_headers.put("Content-Type", "application/json");

@@ -52,7 +52,7 @@ implements	IModelXMLConstants
 
 	@Override
 	public void visit(List<ISASTTarget> targets, boolean isThirdPartyScanningEnabled,
-	                  boolean isOpenSourceOnlyEnabled, boolean isSourceCodeOnlyEnabled, boolean isStaticAnalysisOnlyEnabled, boolean isSecretsScanningDisabled, boolean isSecretsScanningOnlyEnabled) {
+	                  boolean isOpenSourceOnlyEnabled, boolean isSourceCodeOnlyEnabled, boolean isStaticAnalysisOnlyEnabled, boolean isSecretsScanningDisabled, boolean isSecretsScanningEnabled, boolean isSecretsScanningOnlyEnabled) {
 		m_config.beginElement(E_CONFIGURATION);
 
 		if (isThirdPartyScanningEnabled) {
@@ -72,12 +72,11 @@ implements	IModelXMLConstants
 		}
 
 		if (isSecretsScanningDisabled) {
-			m_config.setAttribute(A_SECRETS_DISABLED, "true");
-		}
-		else {
-			m_config.setAttribute(A_SECRETS_ENABLED, "true");
-		}
-
+            m_config.setAttribute(A_SECRETS_DISABLED, "true");
+        }
+        if (isSecretsScanningEnabled) {{
+            m_config.setAttribute(A_SECRETS_ENABLED, "true");
+        }
 		if (isSecretsScanningOnlyEnabled) {
 			m_config.setAttribute(A_SECRETS_ONLY, "true");
 		}

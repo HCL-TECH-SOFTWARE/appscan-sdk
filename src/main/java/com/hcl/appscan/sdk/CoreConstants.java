@@ -72,7 +72,7 @@ public interface CoreConstants {
 	String API_PRESENCES_ID				= API_ENV_LATEST + "/Presences/%s";						//$NON-NLS-1$
 	String API_PRESENCES_NEW_KEY		= API_ENV_LATEST + "/Presences/%s/NewKey";				//$NON-NLS-1$
 	String API_BASIC_DETAILS			= API_ENV_LATEST + "/Scans";							//$NON-NLS-1$
-	String API_SCANNER_DETAILS			= API_ENV + "/Scans/&s/&s";								//$NON-NLS-1$
+	String API_SCANNER_DETAILS			= API_ENV_LATEST + "/Scans/&s/&s";								//$NON-NLS-1$
 	String API_FILE_UPLOAD				= API_ENV_LATEST + "/FileUpload";						//$NON-NLS-1$
 	String API_SCAN						= API_ENV + "/%s";										//$NON-NLS-1$
 	String API_SCANNER					= API_ENV_LATEST + "/Scans/%s";							//$NON-NLS-1$

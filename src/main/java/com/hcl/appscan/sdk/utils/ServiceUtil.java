@@ -297,6 +297,18 @@ public class ServiceUtil implements CoreConstants {
         }
     }
 
+    public static String scanTypeShortForm(String type) {
+        switch (type) {
+            case "Static Analyzer":
+                return "Sast";
+            case "Dynamic Analyzer":
+                return "Dast";
+            case CoreConstants.SOFTWARE_COMPOSITION_ANALYZER:
+                return "Sca";
+        }
+        return type;
+    }
+
     /**
      * Checks if the given scanId is valid for scanning.
      *
@@ -304,12 +316,12 @@ public class ServiceUtil implements CoreConstants {
      * @param provider The IAuthenticationProvider for authentication.
      * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
      */
-    public static JSONObject sastScanDetails(String scanId, IAuthenticationProvider provider) {
+    public static JSONObject scanSpecificDetails(String type, String scanId, IAuthenticationProvider provider) {
         if (provider.isTokenExpired()) {
             return null;
         }
 
-        String request_url = provider.getServer() + String.format(API_SAST_DETAILS, scanId);
+        String request_url = provider.getServer() + String.format(API_SCANNER_DETAILS, scanTypeShortForm(type), scanId);
         Map<String, String> request_headers = provider.getAuthorizationHeader(true);
         request_headers.put("accept", "application/json");
         request_headers.put("Content-Type", "application/json");

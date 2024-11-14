@@ -40,7 +40,7 @@ public class SASTScanManager implements IScanManager{
 	private boolean m_isSourceCodeOnlyEnabled = false;
 	private boolean m_isStaticAnalysisOnlyEnabled = false;
 	private boolean m_isSecretsScanningDisabled = false;
-	private boolean m_isSecretsScanningEnabled  = true;
+	private boolean m_isSecretsScanningEnabled  = false;
 	private boolean m_isSecretsScanningOnlyEnabled = false;
 
 	public SASTScanManager(String workingDir) {

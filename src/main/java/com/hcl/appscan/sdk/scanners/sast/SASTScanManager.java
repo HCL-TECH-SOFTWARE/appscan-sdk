@@ -42,7 +42,6 @@ public class SASTScanManager implements IScanManager{
 	private boolean m_isSecretsScanningDisabled = false;
 	private boolean m_isSecretsScanningEnabled  = true;
 	private boolean m_isSecretsScanningOnlyEnabled = false;
-	private boolean m_isNoSecrets = false;
 
 	public SASTScanManager(String workingDir) {
 		m_workingDirectory = workingDir;
@@ -132,13 +131,6 @@ public class SASTScanManager implements IScanManager{
 	}
 
 	/**
-	 * For compatibility with older versions of SAClient being used with AppScan Go!
-	 */
-	public void setIsNoSecrets(boolean isNoSecrets) {
-		m_isNoSecrets = isNoSecrets;
-	}
-
-	/**
 	 * Only scan for secrets.
 	 * @param isSecretsScanningOnlyEnabled - True to only scan for secrets vulnerabilities.
 	 */
@@ -180,7 +172,7 @@ public class SASTScanManager implements IScanManager{
 		try {
 			ModelWriter writer = new XmlWriter(useRelativeTargetPaths);
 			writer.initWriters(new File(m_workingDirectory));		
-			writer.visit(m_targets, m_isThirdPartyScanningEnabled, m_isOpenSourceOnlyEnabled, m_isSourceCodeOnlyEnabled, m_isStaticAnalysisOnlyEnabled, m_isSecretsScanningDisabled, m_isNoSecrets, m_isSecretsScanningEnabled, m_isSecretsScanningOnlyEnabled);
+			writer.visit(m_targets, m_isThirdPartyScanningEnabled, m_isOpenSourceOnlyEnabled, m_isSourceCodeOnlyEnabled, m_isStaticAnalysisOnlyEnabled, m_isSecretsScanningDisabled, m_isSecretsScanningEnabled, m_isSecretsScanningOnlyEnabled);
 			writer.write();
 		} catch (IOException | TransformerException  e) {
 			throw new AppScanException(e.getLocalizedMessage(), e);

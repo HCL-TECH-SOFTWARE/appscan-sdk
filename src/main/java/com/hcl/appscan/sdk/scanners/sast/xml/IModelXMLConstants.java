@@ -25,8 +25,7 @@ public interface IModelXMLConstants {
 	String A_SOURCE_CODE_ONLY		= "sourceCodeOnly";         //$NON-NLS-1$
 	String A_STATIC_ANALYSIS_ONLY	= "staticAnalysisOnly";     //$NON-NLS-1$
 	String A_SECRETS_ENABLED        = "enableSecrets";			//$NON-NLS-1$
-	String A_SECRETS_DISABLED       = "disableSecrets";			//$NON-NLS-1$
-	String A_NO_SECRETS				= "noSecrets";				//$NON-NLS-1$
+	String A_SECRETS_DISABLED       = "noSecrets";				//$NON-NLS-1$
 	String A_SECRETS_ONLY           = "secretsOnly";			//$NON-NLS-1$
 
 	//Java

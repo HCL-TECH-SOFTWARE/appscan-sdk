@@ -34,7 +34,7 @@ public interface SASTConstants {
 	String OPEN_SOURCE_ONLY				= "openSourceOnly";					//$NON-NLS-1$
 	String SOURCE_CODE_ONLY				= "sourceCodeOnly";					//$NON-NLS-1$
 	String SECRETS_ENABLED				= "enableSecrets";					//$NON-NLS-1$
-	String SECRETS_DISABLED				= "disableSecrets";					//$NON-NLS-1$
+	String SECRETS_DISABLED				= "noSecrets";						//$NON-NLS-1$
 	String SECRETS_ONLY					= "secretsOnly";					//$NON-NLS-1$
 	String SCAN_SPEED					= "scanSpeed";						//$NON-NLS-1$
 	String OPT_SCAN_SPEED				= "-s";								//$NON-NLS-1$
@@ -57,7 +57,7 @@ public interface SASTConstants {
 	String OPT_SOURCE_CODE_ONLY			= "-sco";							//$NON-NLS-1$
 	String OPT_STATIC_ANALYSIS_ONLY		= "-sao";							//$NON-NLS-1$
 	String OPT_SECRETS_ENABLED			= "-es";							//$NON-NLS-1$
-	String OPT_SECRETS_DISABLED			= "-ds";							//$NON-NLS-1$
+	String OPT_SECRETS_DISABLED			= "-ns";							//$NON-NLS-1$
 	String OPT_SECRETS_ONLY				= "-so";							//$NON-NLS-1$
 	String OPT_ACCEPTS_SSL				= "-acceptssl";						//$NON-NLS-1$
 

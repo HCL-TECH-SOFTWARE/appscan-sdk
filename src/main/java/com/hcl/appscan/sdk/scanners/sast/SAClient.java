@@ -32,6 +32,7 @@ public class SAClient implements SASTConstants {
 
 	private static final File DEFAULT_INSTALL_DIR = new File(System.getProperty("user.home"), ".appscan"); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String SACLIENT = "SAClientUtil"; //$NON-NLS-1$
+	private static final String SACLIENT_SUBDIR_MAC = "Contents" + File.separator + "Home" + File.separator; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String VERSION_INFO = "version.info"; //$NON-NLS-1$
 	
 	private IProgress m_progress;
@@ -164,7 +165,12 @@ public class SAClient implements SASTConstants {
         public String getClientScript(String serverURL, String acceptInvalidCerts) throws IOException, ScannerException {
 		//See if we already have the client package.
 		String scriptPath = "bin" + File.separator + getScriptName(); //$NON-NLS-1$
+		String scriptPathMac= SACLIENT_SUBDIR_MAC + scriptPath;
 		File install = findClientInstall();
+
+		// Handle Mac bundle
+		if (SystemUtil.isMac() && new File(install, scriptPathMac).isFile() && !shouldUpdateClient(serverURL))
+			return new File(install, scriptPathMac).getAbsolutePath();
 		
 		if(install != null && new File(install, scriptPath).isFile() && !shouldUpdateClient(serverURL))
 			return new File(install, scriptPath).getAbsolutePath();
@@ -193,6 +199,10 @@ public class SAClient implements SASTConstants {
 			m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(DONE)));
 		}
 
+		// Handle Mac bundle
+		if (SystemUtil.isMac() && new File(install, scriptPathMac).isFile())
+			return new File(install, scriptPathMac).getAbsolutePath();
+		
 		return new File(findClientInstall(), scriptPath).getAbsolutePath();
 	}
 	
@@ -264,6 +274,11 @@ public class SAClient implements SASTConstants {
 	
 	private String getLocalClientVersion() {
 		File versionInfo = new File(findClientInstall(), VERSION_INFO);
+
+		// Handle Mac bundle
+		if (SystemUtil.isMac() && ! versionInfo.isFile()) {
+			versionInfo = new File(findClientInstall(), SACLIENT_SUBDIR_MAC + VERSION_INFO);
+		}
 		String version = null;
 		BufferedReader reader = null;
 		
@@ -351,9 +366,6 @@ public class SAClient implements SASTConstants {
 			} else {
 				args.add(properties.get(SCAN_SPEED));
 			}
-		}
-		if(properties.containsKey(SECRETS_DISABLED) || System.getProperty(SECRETS_DISABLED) != null) {
-			args.add(OPT_SECRETS_DISABLED);
 		}
 		if(properties.containsKey(SECRETS_ENABLED) || System.getProperty(SECRETS_ENABLED) != null) {
 			args.add(OPT_SECRETS_ENABLED);

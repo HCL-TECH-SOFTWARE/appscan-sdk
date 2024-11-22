@@ -148,8 +148,8 @@ public interface CoreConstants {
 	String ERROR_GETTING_INFO			= "error.getting.info";									//$NON-NLS-1$
     String ERROR_URL_VALIDATION			= "error.url.validation";								//$NON-NLS-1$
     String FORMAT_PARAMS				= "FormatParams";								        //$NON-NLS-1$
-	String ERROR_GETTING_SCANLOG		= "error.getting.scanlog";								//$NON-NLS-1$
-	
+    String ERROR_GETTING_SCANLOG		= "error.getting.scanlog";								//$NON-NLS-1$
+    String ERROR_CANCEL_RESCAN  		= "error.cancel.rescan";								//$NON-NLS-1$
 	// ASE Status Messages
 	String CREATING_JOB                 = "message.creating.job";                               //$NON-NLS-1$
 	String CREATE_JOB_SUCCESS			= "message.created.job";								//$NON-NLS-1$

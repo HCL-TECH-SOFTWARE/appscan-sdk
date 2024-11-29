@@ -339,4 +339,35 @@ public class ServiceUtil implements CoreConstants {
 
         return null;
     }
+
+    /**
+     * Fetch the details of all the executions of a scan.
+     *
+     * @param provider The IAuthenticationProvider for authentication.
+     * @return String.
+     */
+    public static String getA360Version(IAuthenticationProvider provider) {
+        if (provider.isTokenExpired()) {
+            return null;
+        }
+
+        String request_url = provider.getServer() + "/assets/versions.json";
+        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+        request_headers.put("accept", "application/json");
+        request_headers.put("Content-Type", "application/json");
+
+        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+        try {
+            HttpResponse response = client.get(request_url, request_headers, null);
+
+            if (response.isSuccess()) {
+                JSONObject body = (JSONObject) response.getResponseBodyAsJSON();
+                return (String) body.get("MainVersion");
+            }
+        } catch (IOException | JSONException e) {
+            // Ignore and return false.
+        }
+
+        return null;
+    }
 }

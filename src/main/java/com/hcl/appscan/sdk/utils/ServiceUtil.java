@@ -284,7 +284,7 @@ public class ServiceUtil implements CoreConstants {
      * @param provider The IAuthenticationProvider for authentication.
      * @return JSONObject.
      */
-    public static JSONObject scanSpecificDetails(String type, String scanId, IAuthenticationProvider provider) {
+    public static JSONObject getScanDetails(String type, String scanId, IAuthenticationProvider provider) {
         if (provider.isTokenExpired()) {
             return null;
         }
@@ -315,7 +315,7 @@ public class ServiceUtil implements CoreConstants {
      * @param provider The IAuthenticationProvider for authentication.
      * @return JSONArray.
      */
-    public static JSONArray getExecutionDetails(String scanId, IAuthenticationProvider provider) {
+    public static JSONArray getBaseScanDetails(String scanId, IAuthenticationProvider provider) {
         if (provider.isTokenExpired()) {
             return null;
         }
@@ -334,40 +334,30 @@ public class ServiceUtil implements CoreConstants {
                 return (JSONArray) response.getResponseBodyAsJSON();
             }
         } catch (IOException | JSONException e) {
-            // Ignore and return false.
+            // Ignore and move on.
         }
 
         return null;
     }
 
     /**
-     * Fetch the details of all the executions of a scan.
+     * Fetch the build version of the A360 server.
      *
      * @param provider The IAuthenticationProvider for authentication.
-     * @return String.
+     * @return The build server of the server.
      */
-    public static String getA360Version(IAuthenticationProvider provider) {
-        if (provider.isTokenExpired()) {
-            return null;
-        }
-
+    public static String getServiceVersion(IAuthenticationProvider provider) {
         String request_url = provider.getServer() + "/assets/versions.json";
-        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
-        request_headers.put("accept", "application/json");
-        request_headers.put("Content-Type", "application/json");
-
         HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
         try {
-            HttpResponse response = client.get(request_url, request_headers, null);
-
+            HttpResponse response = client.get(request_url, null, null);
             if (response.isSuccess()) {
                 JSONObject body = (JSONObject) response.getResponseBodyAsJSON();
-                return (String) body.get("MainVersion");
+                return body.getString("MainVersion");
             }
         } catch (IOException | JSONException e) {
-            // Ignore and return false.
+            return "0"; //$NON-NLS-1$
         }
-
         return null;
     }
 }

@@ -18,6 +18,7 @@ import java.util.HashMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.scanners.dynamic.DASTConstants;
 import com.hcl.appscan.sdk.utils.FileUtil;
 import com.hcl.appscan.sdk.utils.ServiceUtil;
@@ -49,6 +50,10 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 	public CloudScanServiceProvider(IProgress progress, IAuthenticationProvider authProvider) {
 		m_progress = progress;
 		m_authProvider = authProvider;
+	}
+
+	public CloudScanServiceProvider(IAuthenticationProvider authProvider) {
+		this(new DefaultProgress(), authProvider);
 	}
   
     @Override

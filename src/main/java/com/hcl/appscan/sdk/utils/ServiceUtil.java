@@ -235,35 +235,6 @@ public class ServiceUtil implements CoreConstants {
         return type;
     }
 
-    /**
-     * Update the scan data.
-     *
-     * @param scanId The scanId of the scan whose configuration has to update.
-     * @param params The map of properties which has to update .
-     * @param provider The IAuthenticationProvider for authentication.
-     * @param progress The IProgress for setting the status messages.
-     */
-    public static void updateScanData(Map<String, String> params, String scanId, IAuthenticationProvider provider, IProgress progress) {
-        if (provider.isTokenExpired()) {
-            return;
-        }
-
-        String request_url = provider.getServer() + String.format(API_SCANNER,scanId);
-        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
-        request_headers.put("accept", "application/json");
-        request_headers.put("Content-Type", "application/json");
-
-        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
-        try {
-            HttpResponse response = client.put(request_url, request_headers, params);
-            if (response.getResponseCode() == HttpsURLConnection.HTTP_NO_CONTENT) {
-                progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPDATE_JOB)));
-            }
-        } catch (IOException | JSONException e) {
-            progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
-        }
-    }
-
     public static String scanTypeShortForm(String type) {
         switch (type) {
             case "Static Analyzer":
@@ -303,38 +274,6 @@ public class ServiceUtil implements CoreConstants {
             }
         } catch (IOException | JSONException e) {
             // Ignore and return false.
-        }
-
-        return null;
-    }
-
-    /**
-     * Fetch the details of all the executions of a scan.
-     *
-     * @param scanId The scanId to test
-     * @param provider The IAuthenticationProvider for authentication.
-     * @return JSONArray.
-     */
-    public static JSONArray getBaseScanDetails(String scanId, IAuthenticationProvider provider) {
-        if (provider.isTokenExpired()) {
-            return null;
-        }
-
-        String request_url = provider.getServer() + String.format(API_EXECUTION_DETAILS, scanId);
-        request_url += "?$filter=IsValidForIncremental%20eq%20true&%24select=Id%2C%20CreatedAt%2C%20IsValidForIncremental&%24orderby=CreatedAt%20desc";
-        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
-        request_headers.put("accept", "application/json");
-        request_headers.put("Content-Type", "application/json");
-
-        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
-        try {
-            HttpResponse response = client.get(request_url, request_headers, null);
-
-            if (response.isSuccess()) {
-                return (JSONArray) response.getResponseBodyAsJSON();
-            }
-        } catch (IOException | JSONException e) {
-            // Ignore and move on.
         }
 
         return null;

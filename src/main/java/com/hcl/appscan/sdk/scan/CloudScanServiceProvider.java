@@ -67,7 +67,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
         updateParams.put("Name", params.remove(CoreConstants.SCAN_NAME));
         updateParams.put("EnableMailNotifications", params.remove(CoreConstants.EMAIL_NOTIFICATION));
         updateParams.put("FullyAutomatic", params.remove("FullyAutomatic"));
-        ServiceUtil.updateScanData(updateParams, scanId, m_authProvider, m_progress);
+        updateScanData(updateParams, scanId, m_authProvider, m_progress);
 
         String progressMessage = Messages.getMessage(RESCAN_SUCCESS);
         String overviewMessage = Messages.getMessage(RESCAN_OVERVIEW);
@@ -268,5 +268,52 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 	@Override
 	public void setProgress(IProgress progress) {
 		m_progress = progress;
+	}
+
+	@Override
+	public JSONArray getBaseScanDetails(String scanId, IAuthenticationProvider provider) {
+		if (provider.isTokenExpired()) {
+			return null;
+		}
+
+		String request_url = provider.getServer() + String.format(API_EXECUTION_DETAILS, scanId);
+		request_url += "?$filter=IsValidForIncremental%20eq%20true&%24select=Id%2C%20CreatedAt%2C%20IsValidForIncremental&%24orderby=CreatedAt%20desc";
+		Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+		request_headers.put("accept", "application/json");
+		request_headers.put("Content-Type", "application/json");
+
+		HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+		try {
+			HttpResponse response = client.get(request_url, request_headers, null);
+
+			if (response.isSuccess()) {
+				return (JSONArray) response.getResponseBodyAsJSON();
+			}
+		} catch (IOException | JSONException e) {
+			// Ignore and move on.
+		}
+
+		return null;
+	}
+
+	public void updateScanData(Map<String, String> params, String scanId, IAuthenticationProvider provider, IProgress progress) {
+		if (provider.isTokenExpired()) {
+			return;
+		}
+
+		String request_url = provider.getServer() + String.format(API_SCANNER,scanId);
+		Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+		request_headers.put("accept", "application/json");
+		request_headers.put("Content-Type", "application/json");
+
+		HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+		try {
+			HttpResponse response = client.put(request_url, request_headers, params);
+			if (response.getResponseCode() == HttpsURLConnection.HTTP_NO_CONTENT) {
+				progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPDATE_JOB)));
+			}
+		} catch (IOException | JSONException e) {
+			progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
+		}
 	}
 }

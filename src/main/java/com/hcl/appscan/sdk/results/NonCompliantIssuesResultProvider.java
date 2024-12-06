@@ -63,7 +63,7 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     if (executionId.equals(m_executionId)) {
                         m_status = obj.getString(STATUS);
                     } else {
-                        m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(ERROR_CANCEL_RESCAN)));
+                        m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(ERROR_CANCEL_RESCAN, m_executionId)));
                         m_status = FAILED;
                     }
                 }

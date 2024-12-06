@@ -92,4 +92,13 @@ public interface IScanServiceProvider {
 	 * @param progress The {@link IProgress}.
 	 */
 	public void setProgress(IProgress progress);
+
+	/**
+	 * Fetch the details of all the executions of a scan.
+	 *
+	 * @param scanId The scanId to test
+	 * @param provider The IAuthenticationProvider for authentication.
+	 * @return JSONArray.
+	 */
+	public JSONArray getBaseScanDetails(String scanId, IAuthenticationProvider provider);
 }

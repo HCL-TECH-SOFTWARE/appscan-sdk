@@ -66,6 +66,8 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                         m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(ERROR_CANCEL_RESCAN, m_executionId)));
                         m_status = FAILED;
                     }
+                } else {
+                    m_status = obj.getString(STATUS);
                 }
 
                 if (FAILED.equalsIgnoreCase(m_status) && obj.has(USER_MESSAGE)) {

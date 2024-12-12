@@ -202,6 +202,30 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		
 		return null;
 	}
+
+	public JSONObject getScanDetails(String type, String scanId) {
+		if (loginExpired()) {
+			return null;
+		}
+
+		String request_url = m_authProvider.getServer() + String.format(API_SCANNER_DETAILS, ServiceUtil.scanTypeShortForm(type), scanId);
+		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+		request_headers.put("accept", "application/json");
+		request_headers.put("Content-Type", "application/json");
+
+		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
+		try {
+			HttpResponse response = client.get(request_url, request_headers, null);
+
+			if (response.isSuccess()) {
+				return (JSONObject) response.getResponseBodyAsJSON();
+			}
+		} catch (IOException | JSONException e) {
+			// Ignore and move on.
+		}
+
+		return null;
+	}
 	
 	@Override
 	public JSONArray getNonCompliantIssues(String scanId) throws IOException, JSONException {
@@ -276,18 +300,18 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 	}
 
 	@Override
-	public JSONArray getBaseScanDetails(String scanId, IAuthenticationProvider provider) {
-		if (provider.isTokenExpired()) {
+	public JSONArray getBaseScanDetails(String scanId) {
+		if (loginExpired()) {
 			return null;
 		}
 
-		String request_url = provider.getServer() + String.format(API_EXECUTION_DETAILS, scanId);
+		String request_url = m_authProvider.getServer() + String.format(API_EXECUTION_DETAILS, scanId);
 		request_url += "?$filter=IsValidForIncremental%20eq%20true&%24select=Id%2C%20CreatedAt%2C%20IsValidForIncremental&%24orderby=CreatedAt%20desc";
-		Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
 		request_headers.put("accept", "application/json");
 		request_headers.put("Content-Type", "application/json");
 
-		HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
 		try {
 			HttpResponse response = client.get(request_url, request_headers, null);
 

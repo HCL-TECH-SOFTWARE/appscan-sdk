@@ -248,38 +248,6 @@ public class ServiceUtil implements CoreConstants {
     }
 
     /**
-     * Fetch the detailed description of a scan.
-     *
-     * @param type The selected scan type
-     * @param scanId The scanId to test
-     * @param provider The IAuthenticationProvider for authentication.
-     * @return JSONObject.
-     */
-    public static JSONObject getScanDetails(String type, String scanId, IAuthenticationProvider provider) {
-        if (provider.isTokenExpired()) {
-            return null;
-        }
-
-        String request_url = provider.getServer() + String.format(API_SCANNER_DETAILS, scanTypeShortForm(type), scanId);
-        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
-        request_headers.put("accept", "application/json");
-        request_headers.put("Content-Type", "application/json");
-
-        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
-        try {
-            HttpResponse response = client.get(request_url, request_headers, null);
-
-            if (response.isSuccess()) {
-                return (JSONObject) response.getResponseBodyAsJSON();
-            }
-        } catch (IOException | JSONException e) {
-            // Ignore and return false.
-        }
-
-        return null;
-    }
-
-    /**
      * Fetch the build version of the A360 server.
      *
      * @param provider The IAuthenticationProvider for authentication.

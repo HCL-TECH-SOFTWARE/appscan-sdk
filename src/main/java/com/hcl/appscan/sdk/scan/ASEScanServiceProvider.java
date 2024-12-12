@@ -420,7 +420,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     }
 
     @Override
-    public JSONArray getBaseScanDetails(String scanId, IAuthenticationProvider provider) {
+    public JSONArray getBaseScanDetails(String scanId) {
         return null;
     }
 

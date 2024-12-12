@@ -97,8 +97,7 @@ public interface IScanServiceProvider {
 	 * Fetch the details of all the executions of a scan.
 	 *
 	 * @param scanId The scanId to test
-	 * @param provider The IAuthenticationProvider for authentication.
 	 * @return JSONArray.
 	 */
-	public JSONArray getBaseScanDetails(String scanId, IAuthenticationProvider provider);
+	public JSONArray getBaseScanDetails(String scanId);
 }

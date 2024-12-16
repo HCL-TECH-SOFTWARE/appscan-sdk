@@ -72,7 +72,7 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
         updateParams.put("Name", params.remove(CoreConstants.SCAN_NAME));
         updateParams.put("EnableMailNotifications", params.remove(CoreConstants.EMAIL_NOTIFICATION));
         updateParams.put("FullyAutomatic", params.remove("FullyAutomatic"));
-        updateScanData(updateParams, scanId, m_authProvider, m_progress);
+        updateScanData(updateParams, scanId);
 
         String progressMessage = Messages.getMessage(RESCAN_SUCCESS);
         String overviewMessage = Messages.getMessage(RESCAN_OVERVIEW);
@@ -325,24 +325,24 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 		return null;
 	}
 
-	public void updateScanData(Map<String, String> params, String scanId, IAuthenticationProvider provider, IProgress progress) {
-		if (provider.isTokenExpired()) {
+	public void updateScanData(Map<String, String> params, String scanId) {
+		if (loginExpired()) {
 			return;
 		}
 
-		String request_url = provider.getServer() + String.format(API_SCANNER,scanId);
-		Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+		String request_url = m_authProvider.getServer() + String.format(API_SCANNER,scanId);
+		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
 		request_headers.put("accept", "application/json");
 		request_headers.put("Content-Type", "application/json");
 
-		HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+		HttpClient client = new HttpClient(m_authProvider.getProxy(), m_authProvider.getacceptInvalidCerts());
 		try {
 			HttpResponse response = client.put(request_url, request_headers, params);
 			if (response.getResponseCode() == HttpsURLConnection.HTTP_NO_CONTENT) {
-				progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPDATE_JOB)));
+				m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPDATE_JOB)));
 			}
 		} catch (IOException | JSONException e) {
-			progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
 		}
 	}
 }

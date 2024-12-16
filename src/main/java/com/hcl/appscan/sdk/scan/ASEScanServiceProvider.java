@@ -419,6 +419,11 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         m_progress = progress;
     }
 
+    @Override
+    public JSONArray getBaseScanDetails(String scanId) {
+        return null;
+    }
+
     private String getReportPackId(String jobId) {
         return String.valueOf(Integer.parseInt(jobId)+1);
         // Uncomment the below code when you figure out how to parse the reponse.

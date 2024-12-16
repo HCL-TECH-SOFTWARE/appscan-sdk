@@ -72,7 +72,7 @@ public interface CoreConstants {
 	String API_PRESENCES_ID				= API_ENV_LATEST + "/Presences/%s";						//$NON-NLS-1$
 	String API_PRESENCES_NEW_KEY		= API_ENV_LATEST + "/Presences/%s/NewKey";				//$NON-NLS-1$
 	String API_BASIC_DETAILS			= API_ENV_LATEST + "/Scans";							//$NON-NLS-1$
-	String API_SCANNER_DETAILS			= API_ENV + "/Scans/&s/&s";								//$NON-NLS-1$
+	String API_SCANNER_DETAILS			= API_ENV_LATEST + "/Scans/%s/%s";								//$NON-NLS-1$
 	String API_FILE_UPLOAD				= API_ENV_LATEST + "/FileUpload";						//$NON-NLS-1$
 	String API_SCAN						= API_ENV + "/%s";										//$NON-NLS-1$
 	String API_SCANNER					= API_ENV_LATEST + "/Scans/%s";							//$NON-NLS-1$
@@ -91,6 +91,7 @@ public interface CoreConstants {
 	String API_IS_VALID_URL				= API_ENV_LATEST + "/Scans/IsValidUrl";					//$NON-NLS-1$
 	String API_AUTHENTICATION			= API_ENV_LATEST + "/Account/IsAuthenticated";			//$NON-NLS-1$
 	String API_TENANT_INFO				= API_ENV_LATEST + "/Account/TenantInfo";				//$NON-NLS-1$
+	String API_EXECUTION_DETAILS		        = API_ENV_LATEST + "/Scans/%s/Executions";				    //$NON-NLS-1$
 
 	String DEFAULT_RESULT_NAME			= "asoc_results";										//$NON-NLS-1$
 	String SACLIENT_INSTALL_DIR			= "SAClientInstall";									//$NON-NLS-1$
@@ -144,10 +145,10 @@ public interface CoreConstants {
 	String ERROR_SUBMITTING_SCAN		= "error.submit.scan";									//$NON-NLS-1$
 	String ERROR_UPLOADING_FILE			= "error.upload.file";									//$NON-NLS-1$
 	String ERROR_GETTING_INFO			= "error.getting.info";									//$NON-NLS-1$
-    String ERROR_URL_VALIDATION			= "error.url.validation";								//$NON-NLS-1$
-    String FORMAT_PARAMS				= "FormatParams";								        //$NON-NLS-1$
+	String ERROR_URL_VALIDATION			= "error.url.validation";								//$NON-NLS-1$
+	String FORMAT_PARAMS				= "FormatParams";								        //$NON-NLS-1$
 	String ERROR_GETTING_SCANLOG		= "error.getting.scanlog";								//$NON-NLS-1$
-	
+	String ERROR_CANCEL_RESCAN  		= "error.cancel.rescan";								//$NON-NLS-1$
 	// ASE Status Messages
 	String CREATING_JOB                 = "message.creating.job";                               //$NON-NLS-1$
 	String CREATE_JOB_SUCCESS			= "message.created.job";								//$NON-NLS-1$

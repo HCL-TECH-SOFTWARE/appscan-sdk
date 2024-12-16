@@ -58,8 +58,18 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     return;
                 }
 
+                if (m_executionId != null && !m_executionId.isEmpty()) {
+                    String executionId = obj.getString(ID);
+                    if (executionId.equals(m_executionId)) {
+                        m_status = obj.getString(STATUS);
+                    } else {
+                        m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(ERROR_CANCEL_RESCAN, m_executionId)));
+                        m_status = FAILED;
+                    }
+                } else {
+                    m_status = obj.getString(STATUS);
+                }
 
-                m_status = obj.getString(STATUS);
                 if (FAILED.equalsIgnoreCase(m_status) && obj.has(USER_MESSAGE)) {
                     m_progress.setStatus(new Message(Message.ERROR, obj.getString(USER_MESSAGE)));
                     m_message = obj.getString(USER_MESSAGE);

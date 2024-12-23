@@ -154,9 +154,19 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
     @Override
     public void setProgress(IProgress progress) {
         m_progress = progress;
-		m_scanProvider.setProgress(progress);
+        m_scanProvider.setProgress(progress);
     }
-    
+
+    @Override
+    public IResultsProvider getResultProvider1() {
+        return null;
+    }
+
+    @Override
+    public IResultsProvider getResultProvider2() {
+        return null;
+    }
+
     private void loadResults() {
 		try {
 			m_status = getScanStatus(m_scanId);

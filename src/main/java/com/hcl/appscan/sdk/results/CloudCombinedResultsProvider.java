@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.logging.IProgress;
+import com.hcl.appscan.sdk.utils.ServiceUtil;
 
 public class CloudCombinedResultsProvider implements IResultsProvider, Serializable {
 	
@@ -27,7 +28,7 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	
 	@Override
 	public boolean hasResults() {
-		return m_resultsProvider1.hasResults() && m_resultsProvider2.hasResults();
+		return m_resultsProvider1.hasResults() || m_resultsProvider2.hasResults();
 	}
 
 	@Override
@@ -36,13 +37,13 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 		String status1 = m_resultsProvider1.getStatus();
 		String status2 = m_resultsProvider2.getStatus();
 		
-		if(status1.equalsIgnoreCase(CoreConstants.FAILED) || status2.equalsIgnoreCase(CoreConstants.FAILED)) {
+		if(status1.equalsIgnoreCase(CoreConstants.FAILED) && status2.equalsIgnoreCase(CoreConstants.FAILED)) {
 			combinedStatus = CoreConstants.FAILED;
-		}
-		else if(status1.equalsIgnoreCase(CoreConstants.READY) && status2.equalsIgnoreCase(CoreConstants.READY)) {
+		} else if ((status1.equalsIgnoreCase(CoreConstants.READY) || status2.equalsIgnoreCase(CoreConstants.READY)) && (status1.equalsIgnoreCase(CoreConstants.FAILED) || status2.equalsIgnoreCase(CoreConstants.FAILED))) {
+			combinedStatus = CoreConstants.UNSTABLE;
+		} else if(status1.equalsIgnoreCase(CoreConstants.READY) && status2.equalsIgnoreCase(CoreConstants.READY)) {
 			combinedStatus = CoreConstants.READY;
 		}
-		
 		return combinedStatus;
 	}
 
@@ -91,8 +92,8 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 		//Append the technology type to the end of the file name.
 		String name = destination.getName();
 		File directory = destination.getParentFile();
-		m_resultsProvider1.getResultsFile(new File(directory, name), format);
-		m_resultsProvider2.getResultsFile(new File(directory, name), format);
+		m_resultsProvider1.getResultsFile(new File(directory,ServiceUtil.scanTypeShortForm(m_resultsProvider1.getType()).toUpperCase()+"_"+name), format);
+		m_resultsProvider2.getResultsFile(new File(directory,ServiceUtil.scanTypeShortForm(m_resultsProvider2.getType()).toUpperCase()+"_"+name), format);
 	}
 
 	@Override
@@ -120,5 +121,15 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	public void setProgress(IProgress progress) {
 		m_resultsProvider1.setProgress(progress);
 		m_resultsProvider2.setProgress(progress);
+	}
+
+	@Override
+	public IResultsProvider getResultProvider1() {
+		return m_resultsProvider1;
+	}
+
+	@Override
+	public IResultsProvider getResultProvider2() {
+		return m_resultsProvider2;
 	}
 }

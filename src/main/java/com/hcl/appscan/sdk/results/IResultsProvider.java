@@ -73,7 +73,7 @@ public interface IResultsProvider {
 	public int getInfoCount();
 	
 	/**
-	 * The type of results.  For example, SAST or DAST.
+	 * The type of results.  For example, SAST, SCA or DAST.
 	 * @return A string identifying the type of results.
 	 */
 	public String getType();
@@ -109,4 +109,16 @@ public interface IResultsProvider {
 	 * @param progress The IProgress.
 	 */
 	public void setProgress(IProgress progress);
+
+	/**
+	 * Fetch the resultProvider.
+	 * @return The resultProvider of the 1st scan.
+	 */
+	IResultsProvider getResultProvider1();
+
+	/**
+	 * Fetch the resultProvider.
+	 * @return The resultProvider of the 2nd scan.
+	 */
+	IResultsProvider getResultProvider2();
 }

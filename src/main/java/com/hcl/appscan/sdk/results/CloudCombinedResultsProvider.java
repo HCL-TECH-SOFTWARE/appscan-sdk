@@ -96,10 +96,11 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	@Override
 	public void getResultsFile(File destination, String format) {
 		//Append the technology type to the end of the file name.
-		String name = destination.getName();
+		String name1 = ServiceUtil.scanTypeShortForm(m_resultsProvider1.getType()).toUpperCase()+"_"+destination.getName();
+		String name2 = ServiceUtil.scanTypeShortForm(m_resultsProvider2.getType()).toUpperCase()+"_"+destination.getName();
 		File directory = destination.getParentFile();
-		m_resultsProvider1.getResultsFile(new File(directory,ServiceUtil.scanTypeShortForm(m_resultsProvider1.getType()).toUpperCase()+"_"+name), format);
-		m_resultsProvider2.getResultsFile(new File(directory,ServiceUtil.scanTypeShortForm(m_resultsProvider2.getType()).toUpperCase()+"_"+name), format);
+		m_resultsProvider1.getResultsFile(new File(directory, name1), format);
+		m_resultsProvider2.getResultsFile(new File(directory, name2), format);
 	}
 
 	@Override

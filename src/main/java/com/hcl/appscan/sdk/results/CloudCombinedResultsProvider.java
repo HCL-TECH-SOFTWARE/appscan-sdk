@@ -33,6 +33,14 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 		return m_resultsProvider1.hasResults() || m_resultsProvider2.hasResults();
 	}
 
+	public IResultsProvider getResultsProvider1() {
+		return m_resultsProvider1;
+	}
+
+	public IResultsProvider getResultsProvider2() {
+		return m_resultsProvider2;
+	}
+
 	@Override
 	public String getStatus() {
 		String combinedStatus = CoreConstants.RUNNING;
@@ -128,15 +136,5 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	public void setProgress(IProgress progress) {
 		m_resultsProvider1.setProgress(progress);
 		m_resultsProvider2.setProgress(progress);
-	}
-
-	@Override
-	public IResultsProvider getResultProvider1() {
-		return m_resultsProvider1;
-	}
-
-	@Override
-	public IResultsProvider getResultProvider2() {
-		return m_resultsProvider2;
 	}
 }

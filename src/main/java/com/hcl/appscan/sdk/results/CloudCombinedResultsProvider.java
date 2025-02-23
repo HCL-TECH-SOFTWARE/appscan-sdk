@@ -19,8 +19,8 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	
 	private IResultsProvider m_resultsProvider1;
 	private IResultsProvider m_resultsProvider2;
-	private String status1;
-	private String status2;
+	private String m_status1;
+	private String m_status2;
 	private String m_reportFormat = DEFAULT_REPORT_FORMAT;
 	
 	public CloudCombinedResultsProvider(IResultsProvider resultsProvider1, IResultsProvider resultsProvider2) {
@@ -44,18 +44,17 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	@Override
 	public String getStatus() {
 		String combinedStatus = CoreConstants.RUNNING;
-		if(status1 == null || !status1.equalsIgnoreCase(CoreConstants.FAILED)) {
-			status1 = m_resultsProvider1.getStatus();
+		if(m_status1 == null || !m_status1.equalsIgnoreCase(CoreConstants.FAILED)) {
+			m_status1 = m_resultsProvider1.getStatus();
 		}
-		if(status2 == null || !status2.equalsIgnoreCase(CoreConstants.FAILED)) {
-			status2 = m_resultsProvider2.getStatus();
+		if(m_status2 == null || !m_status2.equalsIgnoreCase(CoreConstants.FAILED)) {
+			m_status2 = m_resultsProvider2.getStatus();
 		}
-
-		if(status1.equalsIgnoreCase(CoreConstants.FAILED) && status2.equalsIgnoreCase(CoreConstants.FAILED)) {
+		if(m_status1.equalsIgnoreCase(CoreConstants.FAILED) && m_status2.equalsIgnoreCase(CoreConstants.FAILED)) {
 			combinedStatus = CoreConstants.FAILED;
-		} else if ((status1.equalsIgnoreCase(CoreConstants.READY) || status2.equalsIgnoreCase(CoreConstants.READY)) && (status1.equalsIgnoreCase(CoreConstants.FAILED) || status2.equalsIgnoreCase(CoreConstants.FAILED))) {
+		} else if ((m_status1.equalsIgnoreCase(CoreConstants.READY) || m_status2.equalsIgnoreCase(CoreConstants.READY)) && (m_status1.equalsIgnoreCase(CoreConstants.FAILED) || m_status2.equalsIgnoreCase(CoreConstants.FAILED))) {
 			combinedStatus = CoreConstants.UNSTABLE;
-		} else if(status1.equalsIgnoreCase(CoreConstants.READY) && status2.equalsIgnoreCase(CoreConstants.READY)) {
+		} else if(m_status1.equalsIgnoreCase(CoreConstants.READY) && m_status2.equalsIgnoreCase(CoreConstants.READY)) {
 			combinedStatus = CoreConstants.READY;
 		}
 		return combinedStatus;

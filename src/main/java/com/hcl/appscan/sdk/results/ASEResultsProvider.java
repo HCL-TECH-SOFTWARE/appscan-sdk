@@ -1,5 +1,5 @@
 /**
- * © Copyright HCL Technologies Ltd. 2019, 2020, 2024, 2025.
+ * © Copyright HCL Technologies Ltd. 2019, 2020, 2024.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -154,9 +154,9 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
     @Override
     public void setProgress(IProgress progress) {
         m_progress = progress;
-        m_scanProvider.setProgress(progress);
+		m_scanProvider.setProgress(progress);
     }
-
+    
     private void loadResults() {
 		try {
 			m_status = getScanStatus(m_scanId);

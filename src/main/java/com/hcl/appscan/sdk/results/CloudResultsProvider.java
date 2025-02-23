@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024, 2025.
+ * © Copyright HCL Technologies Ltd. 2017, 2024.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -153,7 +153,7 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
 		m_progress = progress;
 		m_scanProvider.setProgress(progress);
 	}
-
+	
 	/**
 	 * Specifies the format to use for reports.
 	 * 

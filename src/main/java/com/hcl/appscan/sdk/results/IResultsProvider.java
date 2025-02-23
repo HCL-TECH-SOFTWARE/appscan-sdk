@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024, 2025.
+ * © Copyright HCL Technologies Ltd. 2017, 2024.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -73,7 +73,7 @@ public interface IResultsProvider {
 	public int getInfoCount();
 	
 	/**
-	 * The type of results.  For example, SAST, SCA or DAST.
+	 * The type of results.  For example, SAST or DAST.
 	 * @return A string identifying the type of results.
 	 */
 	public String getType();

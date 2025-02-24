@@ -10,12 +10,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import com.hcl.appscan.sdk.Messages;
-import com.hcl.appscan.sdk.logging.IProgress;
-import com.hcl.appscan.sdk.logging.Message;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -232,7 +231,7 @@ public class ServiceUtil implements CoreConstants {
      * @param provider The IAuthenticationProvider for authentication.
      * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
      */
-	public static boolean isScanId(String scanId, String applicationId, String type, IAuthenticationProvider provider) {
+	public static boolean isValidScanId(String scanId, String applicationId, String type, IAuthenticationProvider provider) {
         if (provider.isTokenExpired()) {
             return true;
         }
@@ -258,7 +257,7 @@ public class ServiceUtil implements CoreConstants {
                 }
             }
         } catch (IOException | JSONException e) {
-            // Ignore and return false.
+            Logger.getLogger(ServiceUtil.class.getName()).log(Level.SEVERE, null, e);
         }
 
         return false;

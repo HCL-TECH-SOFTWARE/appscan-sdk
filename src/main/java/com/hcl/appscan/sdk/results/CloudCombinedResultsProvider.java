@@ -43,18 +43,24 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 
 	@Override
 	public String getStatus() {
+		// Default to RUNNING
 		String combinedStatus = CoreConstants.RUNNING;
-		if(m_status1 == null || !m_status1.equalsIgnoreCase(CoreConstants.FAILED)) {
+
+		// Fetch individual status
+		if (m_status1 == null || !m_status1.equalsIgnoreCase(CoreConstants.FAILED)) {
 			m_status1 = m_resultsProvider1.getStatus();
 		}
-		if(m_status2 == null || !m_status2.equalsIgnoreCase(CoreConstants.FAILED)) {
+		if (m_status2 == null || !m_status2.equalsIgnoreCase(CoreConstants.FAILED)) {
 			m_status2 = m_resultsProvider2.getStatus();
 		}
-		if(m_status1.equalsIgnoreCase(CoreConstants.FAILED) && m_status2.equalsIgnoreCase(CoreConstants.FAILED)) {
+
+		// Handle different status combinations
+		if (CoreConstants.FAILED.equalsIgnoreCase(m_status1) && CoreConstants.FAILED.equalsIgnoreCase(m_status2)) {
 			combinedStatus = CoreConstants.FAILED;
-		} else if ((m_status1.equalsIgnoreCase(CoreConstants.READY) || m_status2.equalsIgnoreCase(CoreConstants.READY)) && (m_status1.equalsIgnoreCase(CoreConstants.FAILED) || m_status2.equalsIgnoreCase(CoreConstants.FAILED))) {
+		} else if ((CoreConstants.READY.equalsIgnoreCase(m_status1) || CoreConstants.READY.equalsIgnoreCase(m_status2)) &&
+					(CoreConstants.FAILED.equalsIgnoreCase(m_status1) || CoreConstants.FAILED.equalsIgnoreCase(m_status2))) {
 			combinedStatus = CoreConstants.UNSTABLE;
-		} else if(m_status1.equalsIgnoreCase(CoreConstants.READY) && m_status2.equalsIgnoreCase(CoreConstants.READY)) {
+		} else if (CoreConstants.READY.equalsIgnoreCase(m_status1) && CoreConstants.READY.equalsIgnoreCase(m_status2)) {
 			combinedStatus = CoreConstants.READY;
 		}
 		return combinedStatus;

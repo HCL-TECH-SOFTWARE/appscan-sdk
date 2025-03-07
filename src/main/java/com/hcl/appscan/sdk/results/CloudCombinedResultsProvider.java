@@ -47,21 +47,19 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 		String combinedStatus = CoreConstants.RUNNING;
 
 		// Fetch individual status
-		if (m_status1 == null || !m_status1.equalsIgnoreCase(CoreConstants.FAILED)) {
+		if (m_status1 == null || m_status1.equalsIgnoreCase(CoreConstants.RUNNING)) {
 			m_status1 = m_resultsProvider1.getStatus();
 		}
-		if (m_status2 == null || !m_status2.equalsIgnoreCase(CoreConstants.FAILED)) {
+		if (m_status2 == null || m_status2.equalsIgnoreCase(CoreConstants.RUNNING)) {
 			m_status2 = m_resultsProvider2.getStatus();
 		}
 
 		// Handle different status combinations
-		if (CoreConstants.FAILED.equalsIgnoreCase(m_status1) && CoreConstants.FAILED.equalsIgnoreCase(m_status2)) {
-			combinedStatus = CoreConstants.FAILED;
+		if (m_status1.equals(m_status2)) {
+			combinedStatus = m_status1;
 		} else if ((CoreConstants.READY.equalsIgnoreCase(m_status1) || CoreConstants.READY.equalsIgnoreCase(m_status2)) &&
 					(CoreConstants.FAILED.equalsIgnoreCase(m_status1) || CoreConstants.FAILED.equalsIgnoreCase(m_status2))) {
-			combinedStatus = CoreConstants.UNSTABLE;
-		} else if (CoreConstants.READY.equalsIgnoreCase(m_status1) && CoreConstants.READY.equalsIgnoreCase(m_status2)) {
-			combinedStatus = CoreConstants.READY;
+			combinedStatus = CoreConstants.INCOMPLETE;
 		}
 		return combinedStatus;
 	}

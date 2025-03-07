@@ -107,7 +107,7 @@ public interface CoreConstants {
 	String PAUSED						= "Paused";												//$NON-NLS-1$
 	String SUSPENDED					= "Suspended";											//$NON-NLS-1$
 	String UNKNOWN						= "Unknown";											//$NON-NLS-1$
-	String UNSTABLE						= "Unstable";											//$NON-NLS-1$
+	String INCOMPLETE					= "Incomplete";											//$NON-NLS-1$
 	String SERVER_URL					= "serverURL";											//$NON-NLS-1$
 	String ACCEPT_INVALID_CERTS			= "acceptInvalidCerts";									//$NON-NLS-1$
 

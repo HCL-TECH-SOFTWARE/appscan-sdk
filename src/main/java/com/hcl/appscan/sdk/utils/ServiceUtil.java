@@ -231,7 +231,7 @@ public class ServiceUtil implements CoreConstants {
      * @param provider The IAuthenticationProvider for authentication.
      * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
      */
-	public static boolean isValidScanId(String scanId, String applicationId, String type, IAuthenticationProvider provider) {
+	public static boolean isValidScanId(String scanId, String applicationId, String type, IAuthenticationProvider provider) throws IOException{
         if (provider.isTokenExpired()) {
             return true;
         }
@@ -256,7 +256,7 @@ public class ServiceUtil implements CoreConstants {
                     return appId.equals(applicationId) && technologyName.equals(updatedScanType(type));
                 }
             }
-        } catch (IOException | JSONException e) {
+        } catch (JSONException e) {
             Logger.getLogger(ServiceUtil.class.getName()).log(Level.SEVERE, null, e);
         }
 

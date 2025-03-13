@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024.
+ * © Copyright HCL Technologies Ltd. 2017, 2024, 2025.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -10,12 +10,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import com.hcl.appscan.sdk.Messages;
-import com.hcl.appscan.sdk.logging.IProgress;
-import com.hcl.appscan.sdk.logging.Message;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONArtifact;
 import org.apache.wink.json4j.JSONException;
@@ -222,6 +221,47 @@ public class ServiceUtil implements CoreConstants {
 
 		return false;
 	}
+
+	/**
+     * Checks if the given scanId is valid for scanning.
+     *
+     * @param scanId The scanId to test.
+     * @param applicationId The applicationId to verify.
+     * @param type The scanType to verify.
+     * @param provider The IAuthenticationProvider for authentication.
+     * @return True if the scanId is valid. False is returned if the scanId is not valid, the request fails, or an exception occurs.
+     */
+	public static boolean isValidScanId(String scanId, String applicationId, String type, IAuthenticationProvider provider) throws IOException{
+        if (provider.isTokenExpired()) {
+            return true;
+        }
+
+        String request_url = provider.getServer() + API_BASIC_DETAILS;
+        request_url += "?$filter=Id%20eq%20" + scanId + "&%24select=AppId%2C%20Technology";
+        Map<String, String> request_headers = provider.getAuthorizationHeader(true);
+
+        HttpClient client = new HttpClient(provider.getProxy(), provider.getacceptInvalidCerts());
+        try {
+            HttpResponse response = client.get(request_url, request_headers, null);
+
+            if (response.isSuccess()) {
+                JSONObject obj = (JSONObject) response.getResponseBodyAsJSON();
+                JSONArray array = (JSONArray) obj.get(ITEMS);
+                if (array.isEmpty()) {
+                    return false;
+                } else {
+                    JSONObject body = (JSONObject) array.getJSONObject(0);
+                    String appId = body.getString(CoreConstants.APP_ID);
+                    String technologyName = body.getString("Technology");
+                    return appId.equals(applicationId) && technologyName.equals(updatedScanType(type));
+                }
+            }
+        } catch (JSONException e) {
+            Logger.getLogger(ServiceUtil.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+        return false;
+    }
 
     public static String updatedScanType(String type) {
         switch (type) {

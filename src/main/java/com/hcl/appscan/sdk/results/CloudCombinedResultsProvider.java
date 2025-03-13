@@ -1,5 +1,5 @@
 /**
- * © Copyright HCL Technologies Ltd. 2024.
+ * © Copyright HCL Technologies Ltd. 2024, 2025.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.logging.IProgress;
+import com.hcl.appscan.sdk.utils.ServiceUtil;
 
 public class CloudCombinedResultsProvider implements IResultsProvider, Serializable {
 	
@@ -18,6 +19,8 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	
 	private IResultsProvider m_resultsProvider1;
 	private IResultsProvider m_resultsProvider2;
+	private String m_status1;
+	private String m_status2;
 	private String m_reportFormat = DEFAULT_REPORT_FORMAT;
 	
 	public CloudCombinedResultsProvider(IResultsProvider resultsProvider1, IResultsProvider resultsProvider2) {
@@ -27,22 +30,37 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	
 	@Override
 	public boolean hasResults() {
-		return m_resultsProvider1.hasResults() && m_resultsProvider2.hasResults();
+		return m_resultsProvider1.hasResults() || m_resultsProvider2.hasResults();
+	}
+
+	public IResultsProvider getResultsProvider1() {
+		return m_resultsProvider1;
+	}
+
+	public IResultsProvider getResultsProvider2() {
+		return m_resultsProvider2;
 	}
 
 	@Override
 	public String getStatus() {
+		// Default to RUNNING
 		String combinedStatus = CoreConstants.RUNNING;
-		String status1 = m_resultsProvider1.getStatus();
-		String status2 = m_resultsProvider2.getStatus();
-		
-		if(status1.equalsIgnoreCase(CoreConstants.FAILED) || status2.equalsIgnoreCase(CoreConstants.FAILED)) {
-			combinedStatus = CoreConstants.FAILED;
+
+		// Fetch individual status
+		if (m_status1 == null || m_status1.equalsIgnoreCase(CoreConstants.RUNNING)) {
+			m_status1 = m_resultsProvider1.getStatus();
 		}
-		else if(status1.equalsIgnoreCase(CoreConstants.READY) && status2.equalsIgnoreCase(CoreConstants.READY)) {
-			combinedStatus = CoreConstants.READY;
+		if (m_status2 == null || m_status2.equalsIgnoreCase(CoreConstants.RUNNING)) {
+			m_status2 = m_resultsProvider2.getStatus();
 		}
-		
+
+		// Handle different status combinations
+		if (m_status1.equals(m_status2)) {
+			combinedStatus = m_status1;
+		} else if ((CoreConstants.READY.equalsIgnoreCase(m_status1) || CoreConstants.READY.equalsIgnoreCase(m_status2)) &&
+					(CoreConstants.FAILED.equalsIgnoreCase(m_status1) || CoreConstants.FAILED.equalsIgnoreCase(m_status2))) {
+			combinedStatus = CoreConstants.PARTIAL_SUCCESS;
+		}
 		return combinedStatus;
 	}
 
@@ -89,10 +107,11 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 	@Override
 	public void getResultsFile(File destination, String format) {
 		//Append the technology type to the end of the file name.
-		String name = destination.getName();
+		String name1 = ServiceUtil.scanTypeShortForm(m_resultsProvider1.getType()).toUpperCase()+"_"+destination.getName();
+		String name2 = ServiceUtil.scanTypeShortForm(m_resultsProvider2.getType()).toUpperCase()+"_"+destination.getName();
 		File directory = destination.getParentFile();
-		m_resultsProvider1.getResultsFile(new File(directory, name), format);
-		m_resultsProvider2.getResultsFile(new File(directory, name), format);
+		m_resultsProvider1.getResultsFile(new File(directory, name1), format);
+		m_resultsProvider2.getResultsFile(new File(directory, name2), format);
 	}
 
 	@Override

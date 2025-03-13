@@ -59,7 +59,7 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 			combinedStatus = m_status1;
 		} else if ((CoreConstants.READY.equalsIgnoreCase(m_status1) || CoreConstants.READY.equalsIgnoreCase(m_status2)) &&
 					(CoreConstants.FAILED.equalsIgnoreCase(m_status1) || CoreConstants.FAILED.equalsIgnoreCase(m_status2))) {
-			combinedStatus = CoreConstants.INCOMPLETE;
+			combinedStatus = CoreConstants.PARTIAL_SUCCESS;
 		}
 		return combinedStatus;
 	}

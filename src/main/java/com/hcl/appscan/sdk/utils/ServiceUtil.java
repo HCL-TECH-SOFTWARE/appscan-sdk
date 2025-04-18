@@ -93,7 +93,7 @@ public class ServiceUtil implements CoreConstants {
 	}
 
 	public static String getSAClientVersion(Proxy proxy, String serverURL) throws IOException {
-		return getSAClientVersion(Proxy.NO_PROXY, serverURL, "");
+		return getSAClientVersion(Proxy.NO_PROXY, serverURL, false);
 	}
 	
 	/**
@@ -105,11 +105,11 @@ public class ServiceUtil implements CoreConstants {
 	 * @return The current version of the package.
 	 * @throws IOException If an error occurs.
 	 */
-	public static String getSAClientVersion(Proxy proxy, String serverURL, String acceptInvalidCerts) throws IOException {
+	public static String getSAClientVersion(Proxy proxy, String serverURL, boolean acceptInvalidCerts) throws IOException {
         String request_url = requiredServerURL(serverURL);
         request_url += String.format(API_SACLIENT_VERSION, SystemUtil.getOS(), "true");
 		
-		HttpClient client = new HttpClient(proxy, acceptInvalidCerts.equals("true"));
+		HttpClient client = new HttpClient(proxy, acceptInvalidCerts);
 		HttpResponse response = client.get(request_url, null, null);
 		
 		if (response.getResponseCode() == HttpsURLConnection.HTTP_OK || response.getResponseCode() == HttpsURLConnection.HTTP_CREATED) {

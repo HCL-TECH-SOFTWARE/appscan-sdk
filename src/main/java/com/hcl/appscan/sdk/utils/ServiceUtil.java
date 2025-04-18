@@ -49,6 +49,8 @@ public class ServiceUtil implements CoreConstants {
 	 * 
 	 * @param destination The file to save the package to.
 	 * @param proxy The proxy for the connection, if required.
+	 * @param serverURL The URL of the server.
+	 * @param acceptInvalidCerts To allow untrusted connection.
 	 * @throws IOException If an error occurs.
 	 */
 	public static void getSAClientUtil(File destination, Proxy proxy, String serverURL, String acceptInvalidCerts) throws IOException {
@@ -86,22 +88,28 @@ public class ServiceUtil implements CoreConstants {
 		return getSAClientVersion(Proxy.NO_PROXY);
 	}
 
-    	public static String getSAClientVersion(Proxy proxy) throws IOException {
-        	return getSAClientVersion(proxy, "");
-    	}
+	public static String getSAClientVersion(Proxy proxy) throws IOException {
+		return getSAClientVersion(proxy, "");
+	}
+
+	public static String getSAClientVersion(Proxy proxy, String serverURL) throws IOException {
+		return getSAClientVersion(Proxy.NO_PROXY, serverURL, false);
+	}
 	
 	/**
 	 * Gets the latest available version of the SAClientUtil package used for running static analysis.
 	 * 
 	 * @param proxy The {@link Proxy} to use.
+	 * @param serverURL The URL of the server.
+	 * @param acceptInvalidCerts To allow the untrusted connection.
 	 * @return The current version of the package.
 	 * @throws IOException If an error occurs.
 	 */
-	public static String getSAClientVersion(Proxy proxy, String serverURL) throws IOException {
+	public static String getSAClientVersion(Proxy proxy, String serverURL, boolean acceptInvalidCerts) throws IOException {
         String request_url = requiredServerURL(serverURL);
         request_url += String.format(API_SACLIENT_VERSION, SystemUtil.getOS(), "true");
 		
-		HttpClient client = new HttpClient(proxy);
+		HttpClient client = new HttpClient(proxy, acceptInvalidCerts);
 		HttpResponse response = client.get(request_url, null, null);
 		
 		if (response.getResponseCode() == HttpsURLConnection.HTTP_OK || response.getResponseCode() == HttpsURLConnection.HTTP_CREATED) {

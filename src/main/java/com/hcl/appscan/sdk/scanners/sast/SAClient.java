@@ -169,10 +169,10 @@ public class SAClient implements SASTConstants {
 		File install = findClientInstall();
 
 		// Handle Mac bundle
-		if (SystemUtil.isMac() && new File(install, scriptPathMac).isFile() && !shouldUpdateClient(serverURL))
+		if (SystemUtil.isMac() && new File(install, scriptPathMac).isFile() && !shouldUpdateClient(serverURL, Boolean.parseBoolean(acceptInvalidCerts)))
 			return new File(install, scriptPathMac).getAbsolutePath();
 		
-		if(install != null && new File(install, scriptPath).isFile() && !shouldUpdateClient(serverURL))
+		if(install != null && new File(install, scriptPath).isFile() && !shouldUpdateClient(serverURL, Boolean.parseBoolean(acceptInvalidCerts)))
 			return new File(install, scriptPath).getAbsolutePath();
 		
 		//Download it.
@@ -225,12 +225,16 @@ public class SAClient implements SASTConstants {
 		}
 	}
 
-    	public boolean shouldUpdateClient() throws IOException {
-            	return shouldUpdateClient("");
-    	}
-	
+	public boolean shouldUpdateClient() throws IOException {
+		return shouldUpdateClient("");
+	}
+
 	public boolean shouldUpdateClient(String serverURL) throws IOException {
-		String serverVersion = ServiceUtil.getSAClientVersion(m_proxy,serverURL);
+		return shouldUpdateClient(serverURL, false);
+	}
+	
+	public boolean shouldUpdateClient(String serverURL, boolean acceptInvalidCerts) throws IOException {
+		String serverVersion = ServiceUtil.getSAClientVersion(m_proxy,serverURL, acceptInvalidCerts);
 		String localVersion = getLocalClientVersion();
 
 		if(compareVersions(localVersion, serverVersion) && System.getProperty(CoreConstants.SKIP_UPDATE) == null) {

@@ -116,7 +116,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 	private String updateJob(Map<String, String> params, String jobId) {
 
 		// Starting URL
-		if(!params.get("startingURL").isEmpty() && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
+		if(!params.get("startingURL").isEmpty() && !params.get("scanType").equals("4") && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
 			return null;
 		}
 
@@ -154,7 +154,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		// Scan Type
-		if(!params.get("scanType").isEmpty() && !scanTypeJob(params, jobId)) {
+		if(!params.get("scanType").isEmpty() && !params.get("scanType").equals("4") && !scanTypeJob(params, jobId)) {
 		    return null;
 		}
 
@@ -164,6 +164,12 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 				params.get("testOptimization"), "false"), jobId)) {
 		   return null;
 		}
+
+		//Web API Scanning
+		if(!params.get("scanType").isEmpty() && params.get("scanType").equals("4") && !createPostmanCollectionJob(params, jobId)) {
+			return null;
+		}
+
 
 		return jobId;
 	}
@@ -291,6 +297,60 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		apiParams.put("encryptNodeValue", encryptNodeValue);
 		//apiParams.put("allowExploreDataUpdate", "0");
 		return apiParams;
+	}
+
+	private boolean createPostmanCollectionJob(Map<String, String> params, String jobId) {
+
+		if(loginExpired() || params == null)
+			return false;
+
+		String request_url = m_authProvider.getServer() + String.format(ASE_POSTMAN_COLLECTION, jobId);
+		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
+		request_headers.put(CHARSET, UTF8);
+		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+
+		List<HttpPart> parts = new ArrayList<HttpPart>();
+
+		try {
+			if(params.containsKey("postmanCollectionFile")) {
+				parts.add(new HttpPart("postmanCollectionFile", getFile(params.get("postmanCollectionFile")), "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if(params.containsKey("environmentalVariablesFile")) {
+				parts.add(new HttpPart("postmanEnvironmentFile", getFile(params.get("environmentalVariablesFile")), "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if(params.containsKey("globalVariablesFile")) {
+				parts.add(new HttpPart("postmanGlobalFile", getFile(params.get("globalVariablesFile")), "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if(params.containsKey("additionalFiles")) {
+				parts.add(new HttpPart("postmanAdditionalFiles", getFile(params.get("additionalFiles")), "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			if(params.containsKey("additionalDomains")) {
+				parts.add(new HttpPart("additionalDomains", params.get("additionalDomains"))); //$NON-NLS-1$
+			}
+			parts.add(new HttpPart("asc_xsrf_token", request_headers.get("asc_xsrf_token"))); //$NON-NLS-1$
+		} catch (IOException e) {
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
+			return false;
+		}
+
+		HttpsClient client = new HttpsClient();
+
+		try {
+			HttpResponse response = client.postMultipart(request_url, request_headers, parts);
+			int status = response.getResponseCode();
+			if (status != HttpsURLConnection.HTTP_OK) {
+				JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
+				if(json != null && json.has("errorMessage")){
+					m_progress.setStatus(new Message(Message.ERROR, json.getString("errorMessage")));
+				}
+				return false;
+			}
+		} catch(IOException | JSONException e) {
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
+			return false;
+		}
+		return true;
 	}
    
 	private File getFile(String fileLocation) {

@@ -161,6 +161,7 @@ public interface CoreConstants {
 	String ERROR_EXECUTE_JOB  			= "error.execute.job";									//$NON-NLS-1$
 	String RESULTS_UNAVAILABLE		    = "message.results.unavailable";						//$NON-NLS-1$
 	String ERROR_INVALID_DETAILS        = "error.invalid.details";                              //$NON-NLS-1$
+	String UPDATE_POSTMAN_COLLECTION_SUCCESS   = "update.postman.collection.success";           //$NON-NLS-1$
 
     // ASE APIs
     String ASE_API                      = "/api";												//$NON-NLS-1$

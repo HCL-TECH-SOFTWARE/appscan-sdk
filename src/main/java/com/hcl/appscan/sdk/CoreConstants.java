@@ -161,6 +161,7 @@ public interface CoreConstants {
 	String ERROR_EXECUTE_JOB  			= "error.execute.job";									//$NON-NLS-1$
 	String RESULTS_UNAVAILABLE		    = "message.results.unavailable";						//$NON-NLS-1$
 	String ERROR_INVALID_DETAILS        = "error.invalid.details";                              //$NON-NLS-1$
+	String UPDATE_POSTMAN_COLLECTION_SUCCESS   = "update.postman.collection.success";           //$NON-NLS-1$
 
     // ASE APIs
     String ASE_API                      = "/api";												//$NON-NLS-1$
@@ -186,6 +187,7 @@ public interface CoreConstants {
     String ASE_UPLOADED_FILE            = "uploadedfile";										//$NON-NLS-1$
     String ASE_CURRENTUSER_V2           = ASE_API + "/currentuser_v2";							//$NON-NLS-1$
     String ASE_GET_FOLDER_ITEMS_STATISTICS	= ASE_API + "/folderitems/%s/statistics";			//$NON-NLS-1$
+    String ASE_POSTMAN_COLLECTION       = ASE_API + "/jobs/%s/dastconfig/postman/create";		//$NON-NLS-1$
 
     String UNAUTHORIZED_ACTION			= "UNAUTHORIZED_ACTION";								//$NON-NLS-1$
 

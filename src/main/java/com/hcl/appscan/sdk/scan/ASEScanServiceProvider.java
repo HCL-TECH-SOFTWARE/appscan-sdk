@@ -64,10 +64,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         createJobParams.remove("templateId");
 		
         String request_url = m_authProvider.getServer() + String.format(ASE_CREATEJOB_TEMPLATE_ID, templateId);
-        Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-        request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-        request_headers.put(CHARSET, UTF8);
-        request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+        Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
 		
@@ -180,10 +177,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return false;
 
 		String request_url = m_authProvider.getServer() + String.format(ASE_UPDSCANT, jobId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 
 		HttpsClient client = new HttpsClient();
 
@@ -206,10 +200,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return false;
 
 		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + params.get("scanType") + "&jobId="+ jobId;
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
 
@@ -232,10 +223,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return false;
 
 		String request_url = m_authProvider.getServer() + String.format(ASE_UPDTRAFFIC, jobId, action);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 		
 		List<HttpPart> parts = new ArrayList<HttpPart>();
 		
@@ -270,10 +258,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return false;
 
 		String request_url = m_authProvider.getServer() + String.format(ASE_UPDTAGENT, jobId, params.get("agentServer"));
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 
 		HttpsClient client = new HttpsClient();
 		 
@@ -305,26 +290,31 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return false;
 
 		String request_url = m_authProvider.getServer() + String.format(ASE_POSTMAN_COLLECTION, jobId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 
 		List<HttpPart> parts = new ArrayList<HttpPart>();
 
 		try {
-			if(params.containsKey("postmanCollectionFile")) {
-				parts.add(new HttpPart("postmanCollectionFile", getFile(params.get("postmanCollectionFile")), "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
+			File postmanCollectionFile = getFile(params.get("postmanCollectionFile")); //$NON-NLS-1$
+			if(params.containsKey("postmanCollectionFile") && postmanCollectionFile != null) {
+				parts.add(new HttpPart("postmanCollectionFile", postmanCollectionFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			if(params.containsKey("environmentalVariablesFile")) {
-				parts.add(new HttpPart("postmanEnvironmentFile", getFile(params.get("environmentalVariablesFile")), "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
+
+			File environmentalVariablesFile = getFile(params.get("environmentalVariablesFile")); //$NON-NLS-1$
+			if(params.containsKey("environmentalVariablesFile") && environmentalVariablesFile != null) {
+				parts.add(new HttpPart("postmanEnvironmentFile", environmentalVariablesFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
+
+			File globalVariablesFile = getFile(params.get("globalVariablesFile")); //$NON-NLS-1$
 			if(params.containsKey("globalVariablesFile")) {
-				parts.add(new HttpPart("postmanGlobalFile", getFile(params.get("globalVariablesFile")), "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
+				parts.add(new HttpPart("postmanGlobalFile", globalVariablesFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
+
+			File additionalFiles = getFile(params.get("additionalFiles")); //$NON-NLS-1$
 			if(params.containsKey("additionalFiles")) {
-				parts.add(new HttpPart("postmanAdditionalFiles", getFile(params.get("additionalFiles")), "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
+				parts.add(new HttpPart("postmanAdditionalFiles", additionalFiles, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
+			
 			if(params.containsKey("additionalDomains")) {
 				parts.add(new HttpPart("additionalDomains", params.get("additionalDomains"))); //$NON-NLS-1$
 			}
@@ -345,6 +335,8 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 				JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
 				if(json != null && json.has("errorMessage")){
 					m_progress.setStatus(new Message(Message.ERROR, json.getString("errorMessage")));
+				} else {
+					m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, status)));
 				}
 				return false;
 			}
@@ -373,10 +365,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         String eTag = "";
         eTag = getEtag(jobId);
 		String request_url = m_authProvider.getServer() + String.format(ASE_RUN_JOB_ACTION, jobId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-        request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-        request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
         request_headers.put("If-Match", eTag);
         Map<String ,String> params= new HashMap<>();
         params.put("type", "run");
@@ -404,10 +393,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return null;
 		
 		String request_url = m_authProvider.getServer() + String.format(ASE_GET_JOB, jobId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
 		
@@ -442,7 +428,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return null;
 		String reportPackId=getReportPackId(jobId);
 		String request_url = m_authProvider.getServer() + String.format(ASE_REPORTS, reportPackId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
 		HttpResponse response = client.get(request_url, request_headers, null);
@@ -578,4 +564,12 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         }
         return null;
     }
+
+	private Map<String, String> getRequestHeaders() {
+		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
+		request_headers.put(CHARSET, UTF8);
+		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		return request_headers;
+	}
 }

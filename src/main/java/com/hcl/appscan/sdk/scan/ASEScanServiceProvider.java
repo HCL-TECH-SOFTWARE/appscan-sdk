@@ -113,7 +113,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 	private String updateJob(Map<String, String> params, String jobId) {
 
 		// Starting URL
-		if(!params.get("startingURL").isEmpty() && !params.get("scanType").equals("4") && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
+		if(!params.get("startingURL").isEmpty() && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
 			return null;
 		}
 
@@ -139,15 +139,21 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
             	if(!status)
             		return null;                
 		    }
-		    
-		    if (loginType.equals("Manual") && !updateTrafficJob(getFile(params.get("trafficFile")),jobId,"login")) {
-			    return null;
-		    }
+
+			File trafficFile = getFile(params.get("trafficFile"));
+			if(loginType.equals("Manual") && trafficFile != null) {
+				if (!updateTrafficJob(trafficFile,jobId,"login")) {
+					return null;
+				}
+			}
 		}
 
 		// Explore Data
-		if(!params.get("exploreData").isEmpty() && !updateTrafficJob(getFile(params.get("exploreData")),jobId,"add")) {
-		    return null;
+		File exploreDataFile = getFile(params.get("exploreData"));
+		if(exploreDataFile != null) {
+			if (!updateTrafficJob(exploreDataFile, jobId, "add")) {
+				return null;
+			}
 		}
 
 		// Scan Type
@@ -314,7 +320,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			if(params.containsKey("additionalFiles")) {
 				parts.add(new HttpPart("postmanAdditionalFiles", additionalFiles, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			
+
 			if(params.containsKey("additionalDomains")) {
 				parts.add(new HttpPart("additionalDomains", params.get("additionalDomains"))); //$NON-NLS-1$
 			}

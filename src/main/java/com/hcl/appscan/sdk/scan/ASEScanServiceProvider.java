@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
+
+import com.hcl.appscan.sdk.utils.ServiceUtil;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
@@ -113,7 +115,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 	private String updateJob(Map<String, String> params, String jobId) {
 
 		// Starting URL
-		if(!params.get("startingURL").isEmpty() && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
+		if(!params.get("scanType").equals("Postman Collection") && !params.get("startingURL").isEmpty() && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
 			return null;
 		}
 
@@ -123,7 +125,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		// Login Management
-		if (!params.get("loginType").isEmpty()) {
+		if (params.containsKey("loginType") && !params.get("loginType").isEmpty()) {
 		    
 		    String loginType = params.get("loginType");
 		    if(!updatescantJob(getUpdatescantJobParams("LoginMethod", loginType, "false"),jobId)) {
@@ -157,7 +159,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		// Scan Type
-		if(!params.get("scanType").isEmpty() && !params.get("scanType").equals("4") && !scanTypeJob(params, jobId)) {
+		if(!ServiceUtil.scanTypeCode(params.get("scanType")).isEmpty() && !scanTypeJob(params, jobId)) {
 		    return null;
 		}
 
@@ -169,10 +171,9 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		//Web API Scanning
-		if(!params.get("scanType").isEmpty() && params.get("scanType").equals("4") && !createPostmanCollectionJob(params, jobId)) {
+		if(params.containsKey("scanType") && !params.get("scanType").isEmpty() && params.get("scanType").equals("Postman Collection") && !createPostmanCollectionJob(params, jobId)) {
 			return null;
 		}
-
 
 		return jobId;
 	}
@@ -205,7 +206,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		if(loginExpired())
 			return false;
 
-		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + params.get("scanType") + "&jobId="+ jobId;
+		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + ServiceUtil.scanTypeCode(params.get("scanType")) + "&jobId="+ jobId;
 		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();

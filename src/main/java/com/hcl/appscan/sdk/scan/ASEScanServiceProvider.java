@@ -159,7 +159,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		// Scan Type
-		if(!ServiceUtil.scanTypeCode(params.get("scanType")).isEmpty() && !scanTypeJob(params, jobId)) {
+		if(!ScanType.scanTypeCode(params.get("scanType")).isEmpty() && !scanTypeJob(params, jobId)) {
 		    return null;
 		}
 
@@ -206,7 +206,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		if(loginExpired())
 			return false;
 
-		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + ServiceUtil.scanTypeCode(params.get("scanType")) + "&jobId="+ jobId;
+		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + ScanType.scanTypeCode(params.get("scanType")) + "&jobId="+ jobId;
 		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
@@ -359,10 +359,43 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			File file = new File(fileLocation);
 			return file;
 		}
+		m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_FILE_NOT_FOUND, fileLocation)));
 		return null;
 	}
-	
-    private boolean runScanJob(String jobId) {
+
+	public enum ScanType {
+		FULL_SCAN("Full Scan", "1"),
+		TEST_ONLY("Test Only", "3"),
+		POSTMAN_COLLECTION("Postman Collection", "");
+
+		private final String type;
+		private final String code;
+
+		ScanType(String type, String code) {
+			this.type = type;
+			this.code = code;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public static String scanTypeCode(String type) {
+			for (ScanType scanType : values()) {
+				if (scanType.getType().equalsIgnoreCase(type)) {
+					return scanType.getCode();
+				}
+			}
+			return type; // fallback for unknown type
+		}
+	}
+
+
+	private boolean runScanJob(String jobId) {
       
        if(loginExpired())
 			return false;

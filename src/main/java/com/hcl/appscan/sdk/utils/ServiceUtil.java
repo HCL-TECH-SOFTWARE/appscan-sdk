@@ -315,16 +315,4 @@ public class ServiceUtil implements CoreConstants {
         }
         return null;
     }
-
-	public static String scanTypeCode(String type) {
-		switch (type) {
-			case "Full Scan":
-				return "1";
-			case "Test Only":
-				return "3";
-			case "Postman Collection":
-				return "";
-		}
-		return type;
-	}
 }

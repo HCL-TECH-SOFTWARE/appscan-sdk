@@ -162,6 +162,7 @@ public interface CoreConstants {
 	String RESULTS_UNAVAILABLE		    = "message.results.unavailable";						//$NON-NLS-1$
 	String ERROR_INVALID_DETAILS        = "error.invalid.details";                              //$NON-NLS-1$
 	String UPDATE_POSTMAN_COLLECTION_SUCCESS   = "update.postman.collection.success";           //$NON-NLS-1$
+	String ERROR_FILE_NOT_FOUND         = "error.file.not.found";                               //$NON-NLS-1$
 
     // ASE APIs
     String ASE_API                      = "/api";												//$NON-NLS-1$

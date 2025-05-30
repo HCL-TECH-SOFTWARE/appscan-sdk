@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 
-import com.hcl.appscan.sdk.utils.ServiceUtil;
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
@@ -142,8 +141,8 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
             		return null;                
 		    }
 
-			File trafficFile = getFile(params.get("trafficFile"));
-			if(loginType.equals("Manual") && trafficFile != null) {
+			File trafficFile = loginType.equals("Manual") ? getFile(params.get("trafficFile")) : null;
+			if(trafficFile != null) {
 				if (!updateTrafficJob(trafficFile,jobId,"login")) {
 					return null;
 				}
@@ -151,15 +150,14 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		// Explore Data
-		File exploreDataFile = getFile(params.get("exploreData"));
-		if(exploreDataFile != null) {
-			if (!updateTrafficJob(exploreDataFile, jobId, "add")) {
+		if(params.containsKey("exploreData") && !params.get("exploreData").isEmpty()) {
+			if (!updateTrafficJob(getFile(params.get("exploreData")), jobId, "add")) {
 				return null;
 			}
 		}
 
 		// Scan Type
-		if(!ScanType.scanTypeCode(params.get("scanType")).isEmpty() && !scanTypeJob(params, jobId)) {
+		if(!ASEScanType.scanTypeCode(params.get("scanType")).isEmpty() && !scanTypeJob(params, jobId)) {
 		    return null;
 		}
 
@@ -206,7 +204,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		if(loginExpired())
 			return false;
 
-		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + ScanType.scanTypeCode(params.get("scanType")) + "&jobId="+ jobId;
+		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + ASEScanType.scanTypeCode(params.get("scanType")) + "&jobId="+ jobId;
 		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
@@ -302,23 +300,23 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		List<HttpPart> parts = new ArrayList<HttpPart>();
 
 		try {
-			File postmanCollectionFile = getFile(params.get("postmanCollectionFile")); //$NON-NLS-1$
-			if(params.containsKey("postmanCollectionFile") && postmanCollectionFile != null) {
+			File postmanCollectionFile = params.containsKey("postmanCollectionFile") ? getFile(params.get("postmanCollectionFile")) : null; //$NON-NLS-1$
+			if(postmanCollectionFile != null) {
 				parts.add(new HttpPart("postmanCollectionFile", postmanCollectionFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			File environmentalVariablesFile = getFile(params.get("environmentalVariablesFile")); //$NON-NLS-1$
-			if(params.containsKey("environmentalVariablesFile") && environmentalVariablesFile != null) {
+			File environmentalVariablesFile = params.containsKey("environmentalVariablesFile") ? getFile(params.get("environmentalVariablesFile")) : null; //$NON-NLS-1$
+			if(environmentalVariablesFile != null) {
 				parts.add(new HttpPart("postmanEnvironmentFile", environmentalVariablesFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			File globalVariablesFile = getFile(params.get("globalVariablesFile")); //$NON-NLS-1$
-			if(params.containsKey("globalVariablesFile")) {
+			File globalVariablesFile = params.containsKey("globalVariablesFile") ? getFile(params.get("globalVariablesFile")) : null; //$NON-NLS-1$
+			if(globalVariablesFile != null) {
 				parts.add(new HttpPart("postmanGlobalFile", globalVariablesFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			File additionalFiles = getFile(params.get("additionalFiles")); //$NON-NLS-1$
-			if(params.containsKey("additionalFiles")) {
+			File additionalFiles = params.containsKey("additionalFiles") ? getFile(params.get("additionalFiles")) : null; //$NON-NLS-1$
+			if(additionalFiles != null) {
 				parts.add(new HttpPart("postmanAdditionalFiles", additionalFiles, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -361,37 +359,6 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 		m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_FILE_NOT_FOUND, fileLocation)));
 		return null;
-	}
-
-	public enum ScanType {
-		FULL_SCAN("Full Scan", "1"),
-		TEST_ONLY("Test Only", "3"),
-		POSTMAN_COLLECTION("Postman Collection", "");
-
-		private final String type;
-		private final String code;
-
-		ScanType(String type, String code) {
-			this.type = type;
-			this.code = code;
-		}
-
-		public String getType() {
-			return type;
-		}
-
-		public String getCode() {
-			return code;
-		}
-
-		public static String scanTypeCode(String type) {
-			for (ScanType scanType : values()) {
-				if (scanType.getType().equalsIgnoreCase(type)) {
-					return scanType.getCode();
-				}
-			}
-			return type; // fallback for unknown type
-		}
 	}
 
 

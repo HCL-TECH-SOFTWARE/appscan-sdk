@@ -157,7 +157,8 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		// Scan Type
-		if(!ASEScanType.scanTypeCode(params.get("scanType")).isEmpty() && !scanTypeJob(params, jobId)) {
+		String scanTypeCode = ASEScanType.scanTypeCode(params.get("scanType"));
+		if(!ASEScanType.scanTypeCode(params.get("scanType")).isEmpty() && !scanTypeCode.equals("4") && !scanTypeJob(params, jobId)) {
 		    return null;
 		}
 

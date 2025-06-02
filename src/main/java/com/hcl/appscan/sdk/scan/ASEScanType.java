@@ -3,7 +3,7 @@ package com.hcl.appscan.sdk.scan;
 public enum ASEScanType {
     FULL_SCAN("Full Scan", "1"),
     TEST_ONLY("Test Only", "3"),
-    POSTMAN_COLLECTION("Postman Collection", "");
+    POSTMAN_COLLECTION("Postman Collection", "4");
 
     private final String type;
     private final String code;
@@ -28,5 +28,14 @@ public enum ASEScanType {
             }
         }
         return type; // fallback for unknown type
+    }
+
+    public static String scanTypeName(String code) {
+        for (ASEScanType scanType : values()) {
+            if (scanType.getCode().equals(code)) {
+                return scanType.getType();
+            }
+        }
+        return ""; // fallback for unknown code
     }
 }

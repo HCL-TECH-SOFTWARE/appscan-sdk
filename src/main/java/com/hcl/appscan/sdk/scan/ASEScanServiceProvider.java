@@ -1,5 +1,5 @@
 /**
- * © Copyright HCL Technologies Ltd. 2019,2020.
+ * © Copyright HCL Technologies Ltd. 2019,2020, 2025.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -113,8 +113,10 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     
 	private String updateJob(Map<String, String> params, String jobId) {
 
+		String scanTypeValue = params.getOrDefault("scanType", "");
+
 		// Starting URL
-		if(!params.get("scanType").equals("Postman Collection") && !params.get("startingURL").isEmpty() && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
+		if(!scanTypeValue.equals(POSTMAN_COLLECTION) && !params.get("startingURL").isEmpty() && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
 			return null;
 		}
 
@@ -157,8 +159,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		// Scan Type
-		String scanTypeCode = ASEScanType.scanTypeCode(params.get("scanType"));
-		if(!ASEScanType.scanTypeCode(params.get("scanType")).isEmpty() && !scanTypeCode.equals("4") && !scanTypeJob(params, jobId)) {
+		if(!scanTypeValue.isEmpty() && !scanTypeValue.equals(POSTMAN_COLLECTION) && !updateScanTypeJob(params, jobId)) {
 		    return null;
 		}
 
@@ -170,14 +171,14 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 
 		//Web API Scanning
-		if(params.containsKey("scanType") && !params.get("scanType").isEmpty() && params.get("scanType").equals("Postman Collection") && !createPostmanCollectionJob(params, jobId)) {
+		if(scanTypeValue.equals(POSTMAN_COLLECTION) && !createPostmanCollectionJob(params, jobId)) {
 			return null;
 		}
 
 		return jobId;
 	}
     
-	private Boolean updatescantJob(Map<String, String> params, String jobId) {
+	private boolean updatescantJob(Map<String, String> params, String jobId) {
 
 		if(loginExpired())
 			return false;
@@ -200,7 +201,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		return true;
 	}
     
-	private Boolean scanTypeJob (Map<String, String> params, String jobId) {
+	private boolean updateScanTypeJob (Map<String, String> params, String jobId) {
 
 		if(loginExpired())
 			return false;
@@ -223,7 +224,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		return true;
 	}
     
-	private Boolean updateTrafficJob(File file, String jobId, String action) {
+	private boolean updateTrafficJob(File file, String jobId, String action) {
 
 		if(loginExpired() || file == null)
 			return false;
@@ -299,40 +300,19 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		Map<String, String> request_headers = getRequestHeaders();
 
 		List<HttpPart> parts = new ArrayList<HttpPart>();
+		HttpsClient client = new HttpsClient();
 
 		try {
-			File postmanCollectionFile = params.containsKey("postmanCollectionFile") ? getFile(params.get("postmanCollectionFile")) : null; //$NON-NLS-1$
-			if(postmanCollectionFile != null) {
-				parts.add(new HttpPart("postmanCollectionFile", postmanCollectionFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-			File environmentalVariablesFile = params.containsKey("environmentalVariablesFile") ? getFile(params.get("environmentalVariablesFile")) : null; //$NON-NLS-1$
-			if(environmentalVariablesFile != null) {
-				parts.add(new HttpPart("postmanEnvironmentFile", environmentalVariablesFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-			File globalVariablesFile = params.containsKey("globalVariablesFile") ? getFile(params.get("globalVariablesFile")) : null; //$NON-NLS-1$
-			if(globalVariablesFile != null) {
-				parts.add(new HttpPart("postmanGlobalFile", globalVariablesFile, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-			File additionalFiles = params.containsKey("additionalFiles") ? getFile(params.get("additionalFiles")) : null; //$NON-NLS-1$
-			if(additionalFiles != null) {
-				parts.add(new HttpPart("postmanAdditionalFiles", additionalFiles, "multipart/form-data")); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
+			addFilePart(params, parts, "postmanCollectionFile", "postmanCollectionFile");
+			addFilePart(params, parts, "environmentalVariablesFile", "postmanEnvironmentFile");
+			addFilePart(params, parts, "globalVariablesFile", "postmanGlobalFile");
+			addFilePart(params, parts, "additionalFiles", "postmanAdditionalFiles");
 			if(params.containsKey("additionalDomains")) {
 				parts.add(new HttpPart("additionalDomains", params.get("additionalDomains"))); //$NON-NLS-1$
 			}
 			parts.add(new HttpPart("asc_xsrf_token", request_headers.get("asc_xsrf_token"))); //$NON-NLS-1$
-		} catch (IOException e) {
-			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
-			return false;
-		}
 
-		HttpsClient client = new HttpsClient();
 
-		try {
 			HttpResponse response = client.postMultipart(request_url, request_headers, parts);
 			int status = response.getResponseCode();
 			if (status == HttpsURLConnection.HTTP_OK) {
@@ -360,6 +340,16 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		}
 		m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_FILE_NOT_FOUND, fileLocation)));
 		return null;
+	}
+
+	private void addFilePart(Map<String, String> params, List<HttpPart> parts, String paramKey, String partName) throws IOException {
+		String filePath = params.get(paramKey);
+		if (filePath != null && !filePath.isEmpty()) {
+			File file = getFile(filePath);
+			if (file != null) {
+				parts.add(new HttpPart(partName, file, "multipart/form-data")); //$NON-NLS-1$
+			}
+		}
 	}
 
 

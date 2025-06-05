@@ -1,9 +1,16 @@
+/**
+ * © Copyright HCL Technologies Ltd. 2025.
+ * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
+ */
+
 package com.hcl.appscan.sdk.scan;
 
+import com.hcl.appscan.sdk.CoreConstants;
+
 public enum ASEScanType {
-    FULL_SCAN("Full Scan", "1"),
-    TEST_ONLY("Test Only", "3"),
-    POSTMAN_COLLECTION("Postman Collection", "4");
+    FULL_SCAN(CoreConstants.FULL_SCAN, "1"),
+    TEST_ONLY(CoreConstants.TEST_ONLY, "3"),
+    POSTMAN_COLLECTION(CoreConstants.POSTMAN_COLLECTION, "4");
 
     private final String type;
     private final String code;

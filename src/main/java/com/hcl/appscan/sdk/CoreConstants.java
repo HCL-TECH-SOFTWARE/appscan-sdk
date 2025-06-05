@@ -110,6 +110,9 @@ public interface CoreConstants {
 	String PARTIAL_SUCCESS					= "PartialSuccess";										//$NON-NLS-1$
 	String SERVER_URL					= "serverURL";											//$NON-NLS-1$
 	String ACCEPT_INVALID_CERTS			= "acceptInvalidCerts";									//$NON-NLS-1$
+	String FULL_SCAN					= "Full Scan";											//$NON-NLS-1$
+	String TEST_ONLY					= "Test Only";											//$NON-NLS-1$
+	String POSTMAN_COLLECTION				= "Postman Collection";										//$NON-NLS-1$
 
 	String TOTAL_ISSUES					= "NIssuesFound";										//$NON-NLS-1$
 	String CRITICAL_ISSUES				= "NCriticalIssues";									//$NON-NLS-1$

@@ -112,72 +112,66 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     }
     
 	private String updateJob(Map<String, String> params, String jobId) {
-
 		String scanTypeValue = params.getOrDefault("scanType", "");
 
-		// Starting URL
-		if(!scanTypeValue.equals(POSTMAN_COLLECTION) && !params.get("startingURL").isEmpty() && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
-			return null;
-		}
-
-		// Agent Server
-		if(!params.get("agentServer").isEmpty() && !updateAgentServer(params, jobId)) {
-			return null;
-		}
-
-		// Login Management
-		if (params.containsKey("loginType") && !params.get("loginType").isEmpty()) {
-		    
-		    String loginType = params.get("loginType");
-		    if(!updatescantJob(getUpdatescantJobParams("LoginMethod", loginType, "false"),jobId)) {
-			    return null;
-		    }
-		    
-		    if (loginType.equals("Automatic")) 
-            {
-            	boolean status = updatescantJob(getUpdatescantJobParams("LoginUsername", params.get("userName"), "false"),jobId );
-            	if (status) {
-            		status = updatescantJob(getUpdatescantJobParams("LoginPassword", params.get("password"), "true"),jobId);
-            	}
-            	if(!status)
-            		return null;                
-		    }
-
-			File trafficFile = loginType.equals("Manual") ? getFile(params.get("trafficFile")) : null;
-			if(trafficFile != null) {
-				if (!updateTrafficJob(trafficFile,jobId,"login")) {
-					return null;
-				}
-			}
-		}
-
-		// Explore Data
-		if(params.containsKey("exploreData") && !params.get("exploreData").isEmpty()) {
-			if (!updateTrafficJob(getFile(params.get("exploreData")), jobId, "add")) {
-				return null;
-			}
-		}
-
-		// Scan Type
-		if(!scanTypeValue.isEmpty() && !scanTypeValue.equals(POSTMAN_COLLECTION) && !updateScanTypeJob(params, jobId)) {
-		    return null;
-		}
-
-		// Test Optimization
-		if(!params.get("testOptimization").isEmpty() &&
-		        !updatescantJob(getUpdatescantJobParams("TestOptimization",
-				params.get("testOptimization"), "false"), jobId)) {
-		   return null;
-		}
-
-		//Web API Scanning
-		if(scanTypeValue.equals(POSTMAN_COLLECTION) && !createPostmanCollectionJob(params, jobId)) {
-			return null;
-		}
+		if (!handleStartingURL(params, jobId, scanTypeValue)) return null;
+		if (!handleAgentServer(params, jobId)) return null;
+		if (!handleLoginManagement(params, jobId)) return null;
+		if (!handleExploreData(params, jobId)) return null;
+		if (!handleScanType(params, jobId, scanTypeValue)) return null;
+		if (!handleTestOptimization(params, jobId)) return null;
+		if (!handlePostmanCollection(params, jobId, scanTypeValue)) return null;
 
 		return jobId;
 	}
-    
+
+	private boolean handleStartingURL(Map<String, String> params, String jobId, String scanType) {
+		return scanType.equals(POSTMAN_COLLECTION) || params.get("startingURL").isEmpty() ||
+				updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"), jobId);
+	}
+
+	private boolean handleAgentServer(Map<String, String> params, String jobId) {
+		return params.get("agentServer").isEmpty() || updateAgentServer(params, jobId);
+	}
+
+	private boolean handleLoginManagement(Map<String, String> params, String jobId) {
+		String loginType = params.getOrDefault("loginType", "");
+		if (loginType.isEmpty()) return true;
+
+		if (!updatescantJob(getUpdatescantJobParams("LoginMethod", loginType, "false"), jobId)) return false;
+
+		if (loginType.equals("Automatic")) {
+			if (!updatescantJob(getUpdatescantJobParams("LoginUsername", params.get("userName"), "false"), jobId)) return false;
+			if (!updatescantJob(getUpdatescantJobParams("LoginPassword", params.get("password"), "true"), jobId)) return false;
+		}
+
+		if (loginType.equals("Manual")) {
+			File trafficFile = getFile(params.get("trafficFile"));
+			if (trafficFile != null && !updateTrafficJob(trafficFile, jobId, "login")) return false;
+		}
+
+		return true;
+	}
+
+	private boolean handleExploreData(Map<String, String> params, String jobId) {
+		String exploreData = params.getOrDefault("exploreData", "");
+		return exploreData.isEmpty() || updateTrafficJob(getFile(exploreData), jobId, "add");
+	}
+
+	private boolean handleScanType(Map<String, String> params, String jobId, String scanType) {
+		return scanType.isEmpty() || scanType.equals(POSTMAN_COLLECTION) || updateScanTypeJob(params, jobId);
+	}
+
+	private boolean handleTestOptimization(Map<String, String> params, String jobId) {
+		String testOpt = params.getOrDefault("testOptimization", "");
+		return testOpt.isEmpty() || updatescantJob(getUpdatescantJobParams("TestOptimization", testOpt, "false"), jobId);
+	}
+
+	private boolean handlePostmanCollection(Map<String, String> params, String jobId, String scanType) {
+		return !scanType.equals(POSTMAN_COLLECTION) || createPostmanCollectionJob(params, jobId);
+	}
+
+
 	private boolean updatescantJob(Map<String, String> params, String jobId) {
 
 		if(loginExpired())
@@ -303,10 +297,8 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		HttpsClient client = new HttpsClient();
 
 		try {
-			addFilePart(params, parts, "postmanCollectionFile", "postmanCollectionFile");
-			addFilePart(params, parts, "environmentalVariablesFile", "postmanEnvironmentFile");
-			addFilePart(params, parts, "globalVariablesFile", "postmanGlobalFile");
-			addFilePart(params, parts, "additionalFiles", "postmanAdditionalFiles");
+			addAllFileParts(params, parts);
+
 			if(params.containsKey("additionalDomains")) {
 				parts.add(new HttpPart("additionalDomains", params.get("additionalDomains"))); //$NON-NLS-1$
 			}
@@ -341,6 +333,20 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_FILE_NOT_FOUND, fileLocation)));
 		return null;
 	}
+
+	private void addAllFileParts(Map<String, String> params, List<HttpPart> parts) throws IOException {
+		String[][] filePartMappings = {
+				{"postmanCollectionFile", "postmanCollectionFile"},
+				{"environmentalVariablesFile", "postmanEnvironmentFile"},
+				{"globalVariablesFile", "postmanGlobalFile"},
+				{"additionalFiles", "postmanAdditionalFiles"}
+		};
+
+		for (String[] mapping : filePartMappings) {
+			addFilePart(params, parts, mapping[0], mapping[1]);
+		}
+	}
+
 
 	private void addFilePart(Map<String, String> params, List<HttpPart> parts, String paramKey, String partName) throws IOException {
 		String filePath = params.get(paramKey);

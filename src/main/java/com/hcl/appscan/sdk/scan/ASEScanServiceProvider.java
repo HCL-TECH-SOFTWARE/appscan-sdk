@@ -1,5 +1,5 @@
 /**
- * © Copyright HCL Technologies Ltd. 2019,2020.
+ * © Copyright HCL Technologies Ltd. 2019,2020, 2025.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.wink.json4j.JSONArray;
 import org.apache.wink.json4j.JSONException;
 import org.apache.wink.json4j.JSONObject;
@@ -64,10 +65,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         createJobParams.remove("templateId");
 		
         String request_url = m_authProvider.getServer() + String.format(ASE_CREATEJOB_TEMPLATE_ID, templateId);
-        Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-        request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-        request_headers.put(CHARSET, UTF8);
-        request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+        Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
 		
@@ -114,70 +112,73 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     }
     
 	private String updateJob(Map<String, String> params, String jobId) {
+		String scanTypeValue = params.getOrDefault("scanType", "");
 
-		// Starting URL
-		if(!params.get("startingURL").isEmpty() && !updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"),jobId)) {
-			return null;
-		}
-
-		// Agent Server
-		if(!params.get("agentServer").isEmpty() && !updateAgentServer(params, jobId)) {
-			return null;
-		}
-
-		// Login Management
-		if (!params.get("loginType").isEmpty()) {
-		    
-		    String loginType = params.get("loginType");
-		    if(!updatescantJob(getUpdatescantJobParams("LoginMethod", loginType, "false"),jobId)) {
-			    return null;
-		    }
-		    
-		    if (loginType.equals("Automatic")) 
-            {
-            	boolean status = updatescantJob(getUpdatescantJobParams("LoginUsername", params.get("userName"), "false"),jobId );
-            	if (status) {
-            		status = updatescantJob(getUpdatescantJobParams("LoginPassword", params.get("password"), "true"),jobId);
-            	}
-            	if(!status)
-            		return null;                
-		    }
-		    
-		    if (loginType.equals("Manual") && !updateTrafficJob(getFile(params.get("trafficFile")),jobId,"login")) {
-			    return null;
-		    }
-		}
-
-		// Explore Data
-		if(!params.get("exploreData").isEmpty() && !updateTrafficJob(getFile(params.get("exploreData")),jobId,"add")) {
-		    return null;
-		}
-
-		// Scan Type
-		if(!params.get("scanType").isEmpty() && !scanTypeJob(params, jobId)) {
-		    return null;
-		}
-
-		// Test Optimization
-		if(!params.get("testOptimization").isEmpty() &&
-		        !updatescantJob(getUpdatescantJobParams("TestOptimization",
-				params.get("testOptimization"), "false"), jobId)) {
-		   return null;
-		}
+		if (!handleStartingURL(params, jobId, scanTypeValue)) return null;
+		if (!handleAgentServer(params, jobId)) return null;
+		if (!handleLoginManagement(params, jobId)) return null;
+		if (!handleExploreData(params, jobId)) return null;
+		if (!handleScanType(params, jobId, scanTypeValue)) return null;
+		if (!handleTestOptimization(params, jobId)) return null;
+		if (!handlePostmanCollection(params, jobId, scanTypeValue)) return null;
 
 		return jobId;
 	}
-    
-	private Boolean updatescantJob(Map<String, String> params, String jobId) {
+
+	private boolean handleStartingURL(Map<String, String> params, String jobId, String scanType) {
+		return scanType.equals(POSTMAN_COLLECTION) || params.get("startingURL").isEmpty() ||
+				updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"), jobId);
+	}
+
+	private boolean handleAgentServer(Map<String, String> params, String jobId) {
+		return params.get("agentServer").isEmpty() || updateAgentServer(params, jobId);
+	}
+
+	private boolean handleLoginManagement(Map<String, String> params, String jobId) {
+		String loginType = params.getOrDefault("loginType", "");
+		if (loginType.isEmpty()) return true;
+
+		if (!updatescantJob(getUpdatescantJobParams("LoginMethod", loginType, "false"), jobId)) return false;
+
+		if (loginType.equals("Automatic")) {
+			if (!updatescantJob(getUpdatescantJobParams("LoginUsername", params.get("userName"), "false"), jobId)) return false;
+			if (!updatescantJob(getUpdatescantJobParams("LoginPassword", params.get("password"), "true"), jobId)) return false;
+		}
+
+		if (loginType.equals("Manual")) {
+			File trafficFile = getFile(params.get("trafficFile"));
+			if (trafficFile != null && !updateTrafficJob(trafficFile, jobId, "login")) return false;
+		}
+
+		return true;
+	}
+
+	private boolean handleExploreData(Map<String, String> params, String jobId) {
+		String exploreData = params.getOrDefault("exploreData", "");
+		return exploreData.isEmpty() || updateTrafficJob(getFile(exploreData), jobId, "add");
+	}
+
+	private boolean handleScanType(Map<String, String> params, String jobId, String scanType) {
+		return scanType.isEmpty() || scanType.equals(POSTMAN_COLLECTION) || updateScanTypeJob(params, jobId);
+	}
+
+	private boolean handleTestOptimization(Map<String, String> params, String jobId) {
+		String testOpt = params.getOrDefault("testOptimization", "");
+		return testOpt.isEmpty() || updatescantJob(getUpdatescantJobParams("TestOptimization", testOpt, "false"), jobId);
+	}
+
+	private boolean handlePostmanCollection(Map<String, String> params, String jobId, String scanType) {
+		return !scanType.equals(POSTMAN_COLLECTION) || createPostmanCollectionJob(params, jobId);
+	}
+
+
+	private boolean updatescantJob(Map<String, String> params, String jobId) {
 
 		if(loginExpired())
 			return false;
 
 		String request_url = m_authProvider.getServer() + String.format(ASE_UPDSCANT, jobId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 
 		HttpsClient client = new HttpsClient();
 
@@ -194,16 +195,13 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		return true;
 	}
     
-	private Boolean scanTypeJob (Map<String, String> params, String jobId) {
+	private boolean updateScanTypeJob (Map<String, String> params, String jobId) {
 
 		if(loginExpired())
 			return false;
 
-		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + params.get("scanType") + "&jobId="+ jobId;
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		String request_url = m_authProvider.getServer() + String.format(ASE_SCAN_TYPE) + "?scanTypeId=" + ASEScanType.scanTypeCode(params.get("scanType")) + "&jobId="+ jobId;
+		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
 
@@ -220,16 +218,13 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		return true;
 	}
     
-	private Boolean updateTrafficJob(File file, String jobId, String action) {
+	private boolean updateTrafficJob(File file, String jobId, String action) {
 
 		if(loginExpired() || file == null)
 			return false;
 
 		String request_url = m_authProvider.getServer() + String.format(ASE_UPDTRAFFIC, jobId, action);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 		
 		List<HttpPart> parts = new ArrayList<HttpPart>();
 		
@@ -264,10 +259,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return false;
 
 		String request_url = m_authProvider.getServer() + String.format(ASE_UPDTAGENT, jobId, params.get("agentServer"));
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 
 		HttpsClient client = new HttpsClient();
 		 
@@ -292,16 +284,82 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		//apiParams.put("allowExploreDataUpdate", "0");
 		return apiParams;
 	}
+
+	private boolean createPostmanCollectionJob(Map<String, String> params, String jobId) {
+
+		if(loginExpired() || params == null)
+			return false;
+
+		String request_url = m_authProvider.getServer() + String.format(ASE_POSTMAN_COLLECTION, jobId);
+		Map<String, String> request_headers = getRequestHeaders();
+
+		List<HttpPart> parts = new ArrayList<HttpPart>();
+		HttpsClient client = new HttpsClient();
+
+		try {
+			addAllFileParts(params, parts);
+
+			if(params.containsKey("additionalDomains")) {
+				parts.add(new HttpPart("additionalDomains", params.get("additionalDomains"))); //$NON-NLS-1$
+			}
+			parts.add(new HttpPart("asc_xsrf_token", request_headers.get("asc_xsrf_token"))); //$NON-NLS-1$
+
+
+			HttpResponse response = client.postMultipart(request_url, request_headers, parts);
+			int status = response.getResponseCode();
+			if (status == HttpsURLConnection.HTTP_OK) {
+				m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(UPDATE_POSTMAN_COLLECTION_SUCCESS, jobId)));
+			} else {
+				JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
+				if(json != null && json.has("errorMessage")){
+					m_progress.setStatus(new Message(Message.ERROR, json.getString("errorMessage")));
+				} else {
+					m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, status)));
+				}
+				return false;
+			}
+		} catch(IOException | JSONException e) {
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_UPDATE_JOB, e.getLocalizedMessage())));
+			return false;
+		}
+		return true;
+	}
    
 	private File getFile(String fileLocation) {
 		if(fileLocation != null && new File(fileLocation).isFile()) {
 			File file = new File(fileLocation);
 			return file;
 		}
+		m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_FILE_NOT_FOUND, fileLocation)));
 		return null;
 	}
-	
-    private boolean runScanJob(String jobId) {
+
+	private void addAllFileParts(Map<String, String> params, List<HttpPart> parts) throws IOException {
+		String[][] filePartMappings = {
+				{"postmanCollectionFile", "postmanCollectionFile"},
+				{"environmentalVariablesFile", "postmanEnvironmentFile"},
+				{"globalVariablesFile", "postmanGlobalFile"},
+				{"additionalFiles", "postmanAdditionalFiles"}
+		};
+
+		for (String[] mapping : filePartMappings) {
+			addFilePart(params, parts, mapping[0], mapping[1]);
+		}
+	}
+
+
+	private void addFilePart(Map<String, String> params, List<HttpPart> parts, String paramKey, String partName) throws IOException {
+		String filePath = params.get(paramKey);
+		if (filePath != null && !filePath.isEmpty()) {
+			File file = getFile(filePath);
+			if (file != null) {
+				parts.add(new HttpPart(partName, file, "multipart/form-data")); //$NON-NLS-1$
+			}
+		}
+	}
+
+
+	private boolean runScanJob(String jobId) {
       
        if(loginExpired())
 			return false;
@@ -311,10 +369,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         String eTag = "";
         eTag = getEtag(jobId);
 		String request_url = m_authProvider.getServer() + String.format(ASE_RUN_JOB_ACTION, jobId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-        request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-        request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
         request_headers.put("If-Match", eTag);
         Map<String ,String> params= new HashMap<>();
         params.put("type", "run");
@@ -342,10 +397,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return null;
 		
 		String request_url = m_authProvider.getServer() + String.format(ASE_GET_JOB, jobId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
-		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
-		request_headers.put(CHARSET, UTF8);
-		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
 		
@@ -380,7 +432,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 			return null;
 		String reportPackId=getReportPackId(jobId);
 		String request_url = m_authProvider.getServer() + String.format(ASE_REPORTS, reportPackId);
-		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+		Map<String, String> request_headers = getRequestHeaders();
 		
 		HttpsClient client = new HttpsClient();
 		HttpResponse response = client.get(request_url, request_headers, null);
@@ -516,4 +568,12 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         }
         return null;
     }
+
+	private Map<String, String> getRequestHeaders() {
+		Map<String, String> request_headers = m_authProvider.getAuthorizationHeader(true);
+		request_headers.put(CONTENT_TYPE, "application/json; utf-8"); //$NON-NLS-1$
+		request_headers.put(CHARSET, UTF8);
+		request_headers.put("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+		return request_headers;
+	}
 }

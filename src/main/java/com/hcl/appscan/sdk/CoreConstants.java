@@ -106,10 +106,14 @@ public interface CoreConstants {
 	String PAUSING						= "Pausing";											//$NON-NLS-1$
 	String PAUSED						= "Paused";												//$NON-NLS-1$
 	String SUSPENDED					= "Suspended";											//$NON-NLS-1$
+	String CANCELING				 	= "Canceling";											//$NON-NLS-1$
 	String UNKNOWN						= "Unknown";											//$NON-NLS-1$
 	String PARTIAL_SUCCESS					= "PartialSuccess";										//$NON-NLS-1$
 	String SERVER_URL					= "serverURL";											//$NON-NLS-1$
 	String ACCEPT_INVALID_CERTS			= "acceptInvalidCerts";									//$NON-NLS-1$
+	String FULL_SCAN					= "Full Scan";											//$NON-NLS-1$
+	String TEST_ONLY					= "Test Only";											//$NON-NLS-1$
+	String POSTMAN_COLLECTION				= "Postman Collection";										//$NON-NLS-1$
 
 	String TOTAL_ISSUES					= "NIssuesFound";										//$NON-NLS-1$
 	String CRITICAL_ISSUES				= "NCriticalIssues";									//$NON-NLS-1$
@@ -161,6 +165,8 @@ public interface CoreConstants {
 	String ERROR_EXECUTE_JOB  			= "error.execute.job";									//$NON-NLS-1$
 	String RESULTS_UNAVAILABLE		    = "message.results.unavailable";						//$NON-NLS-1$
 	String ERROR_INVALID_DETAILS        = "error.invalid.details";                              //$NON-NLS-1$
+	String UPDATE_POSTMAN_COLLECTION_SUCCESS   = "update.postman.collection.success";           //$NON-NLS-1$
+	String ERROR_FILE_NOT_FOUND         = "error.file.not.found";                               //$NON-NLS-1$
 
     // ASE APIs
     String ASE_API                      = "/api";												//$NON-NLS-1$
@@ -186,6 +192,7 @@ public interface CoreConstants {
     String ASE_UPLOADED_FILE            = "uploadedfile";										//$NON-NLS-1$
     String ASE_CURRENTUSER_V2           = ASE_API + "/currentuser_v2";							//$NON-NLS-1$
     String ASE_GET_FOLDER_ITEMS_STATISTICS	= ASE_API + "/folderitems/%s/statistics";			//$NON-NLS-1$
+    String ASE_POSTMAN_COLLECTION       = ASE_API + "/jobs/%s/dastconfig/postman/create";		//$NON-NLS-1$
 
     String UNAUTHORIZED_ACTION			= "UNAUTHORIZED_ACTION";								//$NON-NLS-1$
 

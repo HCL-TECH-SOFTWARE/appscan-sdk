@@ -185,6 +185,8 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
 				m_message = "";
 			} else if (RUNNING.equalsIgnoreCase(m_status)) {
 				m_message = "";
+			} else if (CANCELING.equalsIgnoreCase(m_status)) {
+				m_status = FAILED;
 			} else if (m_status.startsWith(SUSPENDED)) {  // In case of Scan Failure ASE returns Suspended (With Reason) in Status
 				this.m_message = m_status;
 				String description = "";

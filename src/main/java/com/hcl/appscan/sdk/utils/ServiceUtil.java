@@ -315,4 +315,37 @@ public class ServiceUtil implements CoreConstants {
         }
         return null;
     }
+
+    /**
+	 * Checks if the given url is valid for scanning.
+	 *
+	 * @param url The url to test.
+	 * @param provider The IAuthenticationProvider for authentication.
+	 * @param proxy The proxy to use for the connection.
+	 * @return True if the url is valid. False is returned if the url is not valid, the request fails, or an exception occurs.
+     */
+    public static boolean isValidDomain(String url, IAuthenticationProvider provider, Proxy proxy) {
+        String request_url = provider.getServer() + API_IS_VALID_DOMAIN;
+
+        try {
+            JSONObject body = new JSONObject();
+            body.put(URL, url);
+
+            HttpClient client = new HttpClient(proxy, provider.getacceptInvalidCerts());
+            Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);
+            requestHeaders.put("Content-Type", "application/json");
+            HttpResponse response = client.post(request_url, requestHeaders, body.toString());
+
+            if (response.isSuccess()) {
+                //response body is a boolean value
+                String responseContent = response.getResponseBodyAsString();
+                if (responseContent != null) {
+                	return Boolean.parseBoolean(responseContent.trim());
+                }
+            }
+        } catch (IOException | JSONException e) {
+            // Ignore and return false.
+        }
+            return true;
+    }
 }

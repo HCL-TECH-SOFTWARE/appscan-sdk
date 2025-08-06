@@ -388,7 +388,7 @@ public class SAClient implements SASTConstants {
 		return args;
 	}
 
-	private boolean compareVersions(String baseVersion, String newVersion) {
+	public boolean compareVersions(String baseVersion, String newVersion) {
 		if(baseVersion == null)
 			return true;
 		

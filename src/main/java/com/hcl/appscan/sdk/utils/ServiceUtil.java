@@ -324,12 +324,13 @@ public class ServiceUtil implements CoreConstants {
 	 * @param proxy The proxy to use for the connection.
 	 * @return True if the url is valid. False is returned if the url is not valid, the request fails, or an exception occurs.
      */
-    public static boolean isValidDomain(String url, IAuthenticationProvider provider, Proxy proxy) {
+    public static boolean isValidDomain(String url, String appId, IAuthenticationProvider provider, Proxy proxy) {
         String request_url = provider.getServer() + API_IS_VALID_DOMAIN;
 
         try {
             JSONObject body = new JSONObject();
-            body.put(URL, url);
+            body.put("AppId", appId);
+			body.put("STP", url);
 
             HttpClient client = new HttpClient(proxy, provider.getacceptInvalidCerts());
             Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);
@@ -346,6 +347,6 @@ public class ServiceUtil implements CoreConstants {
         } catch (IOException | JSONException e) {
             // Ignore and return false.
         }
-            return true;
+            return false;
     }
 }

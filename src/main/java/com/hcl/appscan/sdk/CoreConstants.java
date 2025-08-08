@@ -136,7 +136,8 @@ public interface CoreConstants {
 	String REGIONS						= "Regions";											//$NON-NLS-1$
 	String DEFAULT_REGION				= "DefaultRegion";										//$NON-NLS-1$
 	String URL							= "Url";												//$NON-NLS-1$
-	
+	String STP							= "STP";												//$NON-NLS-1$
+
 	String ERROR_AUTHENTICATING			= "error.authenticating";								//$NON-NLS-1$
 	String ERROR_DOWNLOADING_CLIENT 	= "error.download.client";								//$NON-NLS-1$
 	String ERROR_GETTING_DETAILS		= "error.getting.details";								//$NON-NLS-1$

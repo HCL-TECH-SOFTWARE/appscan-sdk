@@ -329,8 +329,8 @@ public class ServiceUtil implements CoreConstants {
 
         try {
             JSONObject body = new JSONObject();
-            body.put("AppId", appId);
-			body.put("STP", url);
+            body.put(CoreConstants.APP_ID, appId);
+			body.put(CoreConstants.STP, url);
 
             HttpClient client = new HttpClient(proxy, provider.getacceptInvalidCerts());
             Map<String,String> requestHeaders= provider.getAuthorizationHeader(false);

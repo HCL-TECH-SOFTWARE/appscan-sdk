@@ -89,6 +89,7 @@ public interface CoreConstants {
 	String API_ISSUES_COUNT				= API_ENV_LATEST + "/Issues/%s/%s";						//$NON-NLS-1$
 	String API_REGIONS					= API_ENV_LATEST + "/Utils/Regions";					//$NON-NLS-1$
 	String API_IS_VALID_URL				= API_ENV_LATEST + "/Scans/IsValidUrl";					//$NON-NLS-1$
+	String API_IS_VALID_DOMAIN			= API_ENV_LATEST + "/Domains/Verify";					//$NON-NLS-1$
 	String API_AUTHENTICATION			= API_ENV_LATEST + "/Account/IsAuthenticated";			//$NON-NLS-1$
 	String API_TENANT_INFO				= API_ENV_LATEST + "/Account/TenantInfo";				//$NON-NLS-1$
 	String API_EXECUTION_DETAILS		        = API_ENV_LATEST + "/Scans/%s/Executions";				    //$NON-NLS-1$
@@ -135,7 +136,8 @@ public interface CoreConstants {
 	String REGIONS						= "Regions";											//$NON-NLS-1$
 	String DEFAULT_REGION				= "DefaultRegion";										//$NON-NLS-1$
 	String URL							= "Url";												//$NON-NLS-1$
-	
+	String STP							= "STP";												//$NON-NLS-1$
+
 	String ERROR_AUTHENTICATING			= "error.authenticating";								//$NON-NLS-1$
 	String ERROR_DOWNLOADING_CLIENT 	= "error.download.client";								//$NON-NLS-1$
 	String ERROR_GETTING_DETAILS		= "error.getting.details";								//$NON-NLS-1$

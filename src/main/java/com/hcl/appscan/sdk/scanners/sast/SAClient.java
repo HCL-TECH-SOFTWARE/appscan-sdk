@@ -388,30 +388,8 @@ public class SAClient implements SASTConstants {
 		return args;
 	}
 
-	private boolean compareVersions(String baseVersion, String newVersion) {
-		if(baseVersion == null)
-			return true;
-		
-		if(baseVersion != null && newVersion != null) {
-			String[] base = baseVersion.split("\\."); //$NON-NLS-1$
-			String[] next = newVersion.split("\\."); //$NON-NLS-1$
-
-			try {
-				for(int iter = 0; iter < base.length && iter < next.length; iter++) {
-					int lVersion = Integer.parseInt(base[iter]);
-					int sVersion = Integer.parseInt(next[iter]);
-					
-					if (((iter==0) && lVersion<sVersion)
-							|| (iter==1 && lVersion<sVersion)
-							|| (iter==2 && lVersion<sVersion)) {
-						return true;
-					}
-				}
-			} catch (NumberFormatException e) {
-				return false;
-			}
-		}
-		return false;
+	public boolean compareVersions(String baseVersion, String newVersion) {
+		return ServiceUtil.compareVersions(baseVersion, newVersion);
 	}
 	
 	private String getVersionFromString(String name) {

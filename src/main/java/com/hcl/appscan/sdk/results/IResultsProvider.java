@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024.
+ * © Copyright HCL Technologies Ltd. 2017, 2025.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -109,4 +109,10 @@ public interface IResultsProvider {
 	 * @param progress The IProgress.
 	 */
 	public void setProgress(IProgress progress);
+
+	/**
+	 * Gets the results in a file.
+	 * @param destination The File to store the scan logs.
+	 */
+	public void getScanLogFile(File destination);
 }

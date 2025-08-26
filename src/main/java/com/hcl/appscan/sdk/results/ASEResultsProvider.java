@@ -1,5 +1,5 @@
 /**
- * © Copyright HCL Technologies Ltd. 2019, 2020, 2024.
+ * © Copyright HCL Technologies Ltd. 2019, 2025.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -402,5 +402,10 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
 			Logger.getLogger(ASEResultsProvider.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return null;
+	}
+
+	@Override
+	public void getScanLogFile(File file) {
+		// Not applicable for ASE Results Provider
 	}
 }

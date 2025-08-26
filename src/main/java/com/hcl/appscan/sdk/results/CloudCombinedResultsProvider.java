@@ -140,4 +140,11 @@ public class CloudCombinedResultsProvider implements IResultsProvider, Serializa
 		m_resultsProvider1.setProgress(progress);
 		m_resultsProvider2.setProgress(progress);
 	}
+
+	@Override
+	public void getScanLogFile(File file) {
+        if (m_status1 != null && m_status1.equalsIgnoreCase(CoreConstants.READY)) {
+            m_resultsProvider1.getScanLogFile(file);
+        }
+    }
 }

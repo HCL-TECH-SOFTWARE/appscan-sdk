@@ -1,8 +1,8 @@
----------------------
-Notices & Information
----------------------
+-----------------------
+Notices and Information
+-----------------------
 ----------------------
-HCL AppScan SDK v1.1.7
+HCL AppScan SDK v1.1.8
 ----------------------
 
 ======
@@ -11,62 +11,16 @@ DETAIL
 Note: generic licenses are marked with (*)
 Note: missing copyright references are marked with (*)
 **************************************************************
-1. Library: appscan-sdk-appscan.sdk-1.1.6 Product: AppScan-SDK
+1. Library: appscan-sdk-appscan.sdk-1.1.7 Product: AppScan-SDK
 **************************************************************
 ========
 LICENSES
 ========
 Licensed under Apache 2.0
-License terms can be found at: https://github.com/HCL-TECH-SOFTWARE/appscan-sdk/blob/appscan.sdk-1.1.6/LICENSE
+License terms can be found at: https://github.com/HCL-TECH-SOFTWARE/appscan-sdk/blob/appscan.sdk-1.1.7/LICENSE
 
-License Text Under Appendix
-
-
-
-==========
-COPYRIGHTS
-==========
-(*) The copyright for this library is unknown
-
-****************************************************
-2. Library: wink-json4j-1.4.jar Product: AppScan-SDK
-****************************************************
-========
-LICENSES
-========
-Licensed under Apache 2.0
-License terms can be found at: https://repo.maven.apache.org/maven2/org/apache/wink/wink-json4j/1.4/wink-json4j-1.4.pom
-
-License Text Under Appendix
-
-
-
-==========
-COPYRIGHTS
-==========
---------------------
-Copyright 1 out of 2
---------------------
-Copyrighted under Copyright 2009-2013 The Apache Software Foundation
-Copyright terms can be found at: https://index.whitesourcesoftware.com/gri/app/reader/resource/content/asString/319067ff-fe92-4549-b43c-4bf8645777a4
-
-
---------------------
-Copyright 2 out of 2
---------------------
-Copyrighted under Copyright The Apache Software Foundation
-Copyright terms can be found at: null(*) Cannot be established
-
-
-=========================
-APPENDIX: License Details
-=========================
-
-**********
-Apache 2.0
-**********
 License Text:
-Apache License
+(*) Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
 
@@ -139,6 +93,83 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+
+
+
+
+
+==========
+COPYRIGHTS
+==========
+(*) The copyright for this library is unknown
+
+****************************************************
+2. Library: wink-json4j-1.4.jar Product: AppScan-SDK
+****************************************************
+========
+LICENSES
+========
+Licensed under Apache 2.0
+License terms can be found at: https://repo.maven.apache.org/maven2/org/apache/wink/wink-json4j/1.4/wink-json4j-1.4.pom
+
+License Text:
+Manifest-Version: 1.0
+Export-Package: org.apache.wink.json4j;uses:="org.apache.wink.json4j.i
+ nternal";version="1.4.0",org.apache.wink.json4j.compat.impl;uses:="or
+ g.apache.wink.json4j,org.apache.wink.json4j.compat";version="1.4.0",o
+ rg.apache.wink.json4j.compat;version="1.4.0",org.apache.wink.json4j.u
+ tils;uses:="org.apache.wink.json4j,javax.xml.parsers,javax.xml.transf
+ orm.dom,org.apache.wink.json4j.utils.internal,org.w3c.dom,org.xml.sax
+ ,javax.xml.transform,javax.xml.transform.stream";version="1.4.0",org.
+ apache.wink.json4j.internal;uses:="org.apache.wink.json4j";version="1
+ .4.0",org.apache.wink.json4j.utils.internal;uses:="org.xml.sax.helper
+ s,org.xml.sax";version="1.4.0"
+Implementation-Title: Apache Wink :: JSON4J
+Built-By: lresende
+Tool: Bnd-1.50.0
+Implementation-Vendor: The Apache Software Foundation
+Implementation-Vendor-Id: org.apache.wink
+Specification-Title: Apache Wink :: JSON4J
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-SymbolicName: org.apache.wink.json4j
+X-Compile-Target-JDK: 1.5
+Implementation-Version: 1.4
+Specification-Vendor: The Apache Software Foundation
+Bundle-Name: Apache Wink :: JSON4J
+Created-By: Apache Maven Bundle Plugin
+X-Compile-Source-JDK: 1.5
+Bundle-Vendor: The Apache Software Foundation
+Build-Jdk: 1.6.0_26
+Bundle-Version: 1.4.0
+Bnd-LastModified: 1377495578737
+Bundle-ManifestVersion: 2
+Bundle-Description: The Apache Software Foundation provides support fo
+ r the Apache community of open-source software projects.    The Apach
+ e projects are characterized by a collaborative, consensus based deve
+ lopment process, an open and    pragmatic software license, and a des
+ ire to create high quality software that leads the way in its field. 
+    We consider ourselves not simply a group of projects sharing a ser
+ ver, but rather a community of developers    and users.
+Import-Package: javax.xml.parsers,javax.xml.transform,javax.xml.transf
+ orm.dom,javax.xml.transform.stream,org.w3c.dom,org.xml.sax,org.xml.sa
+ x.helpers
+Specification-Version: 1.4
+Bundle-DocURL: http://www.apache.org/
+Originally-Created-By: Apache Maven Bundle Plugin
+Archiver-Version: Plexus Archiver
+
+
+
+
+
+
+
+==========
+COPYRIGHTS
+==========
+Copyrighted under Copyright The Apache Software Foundation
+Copyright terms can be found at: null(*) Cannot be established
 
 
 

@@ -68,6 +68,7 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     }
                 } else {
                     m_status = obj.getString(STATUS);
+                    m_executionId = obj.getString(ID);
                 }
 
                 if (FAILED.equalsIgnoreCase(m_status) && obj.has(USER_MESSAGE)) {

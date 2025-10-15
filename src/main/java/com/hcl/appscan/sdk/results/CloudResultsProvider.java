@@ -259,13 +259,7 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
 
 	@Override
 	public void getScanLogFile(File file) {
-		if(file != null && !file.exists()) {
-			try {
-				getScanLog(m_scanId, file);
-			} catch (IOException | JSONException e) {
-				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_SCANLOG)), e);
-			}
-		}
+		getScanLogFile(file, m_scanId);
 	}
 
 	private void getScanLog(String scanId, File destination) throws IOException, JSONException {

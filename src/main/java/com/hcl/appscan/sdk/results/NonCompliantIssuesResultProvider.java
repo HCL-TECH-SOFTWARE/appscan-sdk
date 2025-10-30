@@ -1,5 +1,5 @@
 /**
- * © Copyright HCL Technologies Ltd. 2018, 2024.
+ * © Copyright HCL Technologies Ltd. 2018, 2025.
  */
 package com.hcl.appscan.sdk.results;
 
@@ -11,7 +11,6 @@ import com.hcl.appscan.sdk.http.HttpResponse;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.logging.Message;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
-import com.hcl.appscan.sdk.scanners.ASoCScan;
 import com.hcl.appscan.sdk.utils.SystemUtil;
 import java.io.File;
 import java.io.IOException;
@@ -263,5 +262,9 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
 			return "";
 		}
 
+	}
+
+	public void getScanLogs(File file) {
+		getScanLogFile(file);
 	}
 }

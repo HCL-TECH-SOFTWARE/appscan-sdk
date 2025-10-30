@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024.
+ * © Copyright HCL Technologies Ltd. 2017, 2025.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -247,24 +247,28 @@ public class CloudResultsProvider implements IResultsProvider, Serializable, Cor
     }
 
 
-	public void getScanLogFile(File file , String executionId) {
-
+	public void getScanLogFile(File file , String scanId) {
 		if(file != null && !file.exists()) {
 			try {
-				getScanLog(executionId, file);
+				getScanLog(scanId, file);
 			} catch (IOException | JSONException e) {
 				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_GETTING_SCANLOG)), e);
 			}
 		}
 	}
 
-	private void getScanLog(String executionId, File destination) throws IOException, JSONException {
+	@Override
+	public void getScanLogFile(File file) {
+		getScanLogFile(file, m_scanId);
+	}
+
+	private void getScanLog(String scanId, File destination) throws IOException, JSONException {
 		IAuthenticationProvider authProvider = m_scanProvider.getAuthenticationProvider();
 		if(authProvider.isTokenExpired()) {
 			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_LOGIN_EXPIRED)));
 			return;
 		}
-		String request_url = authProvider.getServer() + String.format(API_SCANS_SCANLOGS, executionId);
+		String request_url = authProvider.getServer() + String.format(API_SCANS_SCANLOGS, scanId);
 		Map<String, String> request_headers = authProvider.getAuthorizationHeader(true);
 		request_headers.put(CONTENT_LENGTH, "0"); //$NON-NLS-1$
 

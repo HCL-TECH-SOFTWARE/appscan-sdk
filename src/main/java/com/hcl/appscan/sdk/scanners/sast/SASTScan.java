@@ -127,7 +127,7 @@ public class SASTScan extends ASoCScan implements SASTConstants {
                 } else {
                     params.put(FILE_ID, fileId);
                     submitScan();
-                    if(getScanId() == null)
+                    if(!getProperties().containsKey(CoreConstants.INCLUDE_SCA) && getScanId() == null)
                         throw new ScannerException(Messages.getMessage(ERROR_CREATING_SCAN));
                 }
 	}

@@ -11,6 +11,7 @@ import com.hcl.appscan.sdk.http.HttpResponse;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.logging.Message;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
+import com.hcl.appscan.sdk.utils.ServiceUtil;
 import com.hcl.appscan.sdk.utils.SystemUtil;
 import java.io.File;
 import java.io.IOException;
@@ -88,6 +89,7 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     if(array == null) {
                         m_status = FAILED;
                     } else {
+                        m_progress.setStatus(new Message(Message.INFO, ServiceUtil.scanTypeShortForm(m_type).toUpperCase() +" scan completed."));
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject jobj = array.getJSONObject(i);
                             String sev = jobj.getString("Severity");

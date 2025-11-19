@@ -89,7 +89,6 @@ public class NonCompliantIssuesResultProvider extends CloudResultsProvider {
                     if(array == null) {
                         m_status = FAILED;
                     } else {
-                        m_progress.setStatus(new Message(Message.INFO, ServiceUtil.scanTypeShortForm(m_type).toUpperCase() +" scan completed."));
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject jobj = array.getJSONObject(i);
                             String sev = jobj.getString("Severity");

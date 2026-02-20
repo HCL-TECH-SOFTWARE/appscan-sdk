@@ -70,6 +70,23 @@ public class SystemUtil {
 	 */
 	public static String getOS() {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
+
+		if(os.startsWith("Windows")) //$NON-NLS-1$
+			os = "win"; //$NON-NLS-1$
+		else if(os.startsWith("Mac")) //$NON-NLS-1$
+			os = "mac"; //$NON-NLS-1$
+		else
+			os = "linux"; //$NON-NLS-1$
+		return os;
+	}
+
+	/**
+	 * Updated getOS method for ClientType values.
+	 *
+	 * @return A string representing the OS name. One of "win", "mac", "linux" or Others.
+	 */
+	public static String getOSUpdated() {
+		String os = System.getProperty("os.name"); //$NON-NLS-1$
 		os = os.toLowerCase();
 
 		// Windows (Windows 10, 11, Server, etc.)

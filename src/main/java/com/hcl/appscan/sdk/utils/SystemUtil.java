@@ -70,14 +70,20 @@ public class SystemUtil {
 	 */
 	public static String getOS() {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
-		
-		if(os.startsWith("Windows")) //$NON-NLS-1$
-			os = "win"; //$NON-NLS-1$
-		else if(os.startsWith("Mac")) //$NON-NLS-1$
-			os = "mac"; //$NON-NLS-1$
-		else
-			os = "linux"; //$NON-NLS-1$
+		os = os.toLowerCase();
 
+		// Windows (Windows 10, 11, Server, etc.)
+		if (os.contains("win")) { //$NON-NLS-1$
+			return "windows"; //$NON-NLS-1$
+		}
+		// macOS / Mac OS X
+		if (os.contains("mac")) { //$NON-NLS-1$
+			return "mac"; //$NON-NLS-1$
+		}
+		// Linux distributions (Ubuntu, RHEL, Debian, CentOS, etc.)
+		if (os.contains("linux")) { //$NON-NLS-1$
+			return "linux"; //$NON-NLS-1$
+		}
 		return os;
 	}
 	

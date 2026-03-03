@@ -70,7 +70,7 @@ public class SystemUtil {
 	 */
 	public static String getOS() {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
-		
+
 		if(os.startsWith("Windows")) //$NON-NLS-1$
 			os = "win"; //$NON-NLS-1$
 		else if(os.startsWith("Mac")) //$NON-NLS-1$
@@ -83,26 +83,22 @@ public class SystemUtil {
 	/**
 	 * Updated getOS method for ClientType values.
 	 *
-	 * @return A string representing the OS name. One of "win", "mac", "linux" or Others.
+	 * @return A string representing the OS name. One of "windows", "mac", "linux" or Others.
 	 */
 	public static String getOSUpdated() {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
 		os = os.toLowerCase();
 
-		// Windows (Windows 10, 11, Server, etc.)
 		if (os.contains("win")) { //$NON-NLS-1$
 			return "windows"; //$NON-NLS-1$
-		}
-		// macOS / Mac OS X
-		if (os.contains("mac")) { //$NON-NLS-1$
+		} else if (os.contains("mac")) { //$NON-NLS-1$
 			return "mac"; //$NON-NLS-1$
-		}
-		// Linux distributions (Ubuntu, RHEL, Debian, CentOS, etc.)
-		if (os.contains("linux")) { //$NON-NLS-1$
+		} else if (os.contains("linux")) { //$NON-NLS-1$
 			return "linux"; //$NON-NLS-1$
+		} else {
+			return os;
 		}
-		return os;
-	}
+    }
 	
 	/**
 	 * Determine if running on Windows.

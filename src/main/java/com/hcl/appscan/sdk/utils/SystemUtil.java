@@ -70,7 +70,7 @@ public class SystemUtil {
 	 */
 	public static String getOS() {
 		String os = System.getProperty("os.name"); //$NON-NLS-1$
-
+		
 		if(os.startsWith("Windows")) //$NON-NLS-1$
 			os = "win"; //$NON-NLS-1$
 		else if(os.startsWith("Mac")) //$NON-NLS-1$
@@ -98,7 +98,7 @@ public class SystemUtil {
 		} else {
 			return os;
 		}
-    }
+	}
 	
 	/**
 	 * Determine if running on Windows.

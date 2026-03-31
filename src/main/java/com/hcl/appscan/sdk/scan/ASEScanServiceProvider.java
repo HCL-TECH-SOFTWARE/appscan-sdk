@@ -478,8 +478,8 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 
     private String getReportPackId(String jobId) {
         return String.valueOf(Integer.parseInt(jobId)+1);
-        // Uncomment the below code when you figure out how to parse the reponse.
-        // currently the reponse is returned as array which makes no sense.
+        // Uncomment the below code when you figure out how to parse the response.
+        // currently the response is returned as array which makes no sense.
         /*IAuthenticationProvider authProvider = m_scanProvider.getAuthenticationProvider();
 		if(authProvider.isTokenExpired()) {
 			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_LOGIN_EXPIRED)));

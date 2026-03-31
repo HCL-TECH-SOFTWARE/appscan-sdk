@@ -275,8 +275,8 @@ public class ASEResultsProvider implements IResultsProvider, Serializable, CoreC
    
     private String getReportPackId(String scanId) {
         return String.valueOf(Integer.parseInt(scanId)+1);
-        // please uncomment the below code when you figure out how to parse the reponse.
-        // currently the reponse is returned as array which makes no sense.
+        // please uncomment the below code when you figure out how to parse the response.
+        // currently the response is returned as array which makes no sense.
         /*IAuthenticationProvider authProvider = m_scanProvider.getAuthenticationProvider();
 		if(authProvider.isTokenExpired()) {
 			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_LOGIN_EXPIRED)));

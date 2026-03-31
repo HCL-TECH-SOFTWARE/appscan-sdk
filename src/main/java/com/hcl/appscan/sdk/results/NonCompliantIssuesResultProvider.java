@@ -3,7 +3,6 @@
  */
 package com.hcl.appscan.sdk.results;
 
-import com.hcl.appscan.sdk.CoreConstants;
 import com.hcl.appscan.sdk.Messages;
 import com.hcl.appscan.sdk.auth.IAuthenticationProvider;
 import com.hcl.appscan.sdk.http.HttpClient;

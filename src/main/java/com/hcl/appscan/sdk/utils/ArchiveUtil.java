@@ -16,9 +16,7 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
 import com.hcl.appscan.sdk.Messages;
-import com.hcl.appscan.sdk.scanners.sast.SASTConstants;
 
 public class ArchiveUtil {
 

@@ -18,7 +18,6 @@ import com.hcl.appscan.sdk.error.ScannerException;
 import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.scan.IScanServiceProvider;
-import com.hcl.appscan.sdk.scan.CloudScanServiceProvider;
 import com.hcl.appscan.sdk.scanners.ASoCScan;
 import com.hcl.appscan.sdk.utils.ServiceUtil;
 import org.apache.wink.json4j.JSONException;

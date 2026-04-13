@@ -8,7 +8,6 @@ package com.hcl.appscan.sdk.scan;
 
 import com.hcl.appscan.sdk.error.InvalidTargetException;
 import com.hcl.appscan.sdk.error.ScannerException;
-import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.results.IResultsProvider;
 
 public interface IScan {

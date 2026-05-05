@@ -57,7 +57,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
         if(loginExpired())
            return null;
         
-        Map<String, String> createJobParams = getcreateJobParams(params);
+        Map<String, String> createJobParams = getCreateJobParams(params);
         m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATING_JOB)));
         
         // TODO : correct it .
@@ -72,34 +72,47 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 		try {
 			HttpResponse response = client.postForm(request_url, request_headers, createJobParams);
 			int status = response.getResponseCode();
+			JSONObject json = null;
 
-			// Handle scenarios of invalid input parameters during job creation.
-			// Currently ASE APIs do not return a valid response for invalid inputs 
-			// hence, making the check here for better error handling
-			if (status == HttpsURLConnection.HTTP_BAD_REQUEST
-					|| status == HttpsURLConnection.HTTP_NOT_FOUND) {
-				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(
-						ERROR_CREATE_JOB, Messages.getMessage(ERROR_INVALID_DETAILS))));
-				return null;
+			// Safely parse JSON response if available
+			try {
+				Object responseBody = response.getResponseBodyAsJSON();
+				if (responseBody instanceof JSONObject) {
+					json = (JSONObject) responseBody;
+				}
+			} catch (Exception ignored) {
+				// Ignore JSON parsing issues, handled later
 			}
 
-			JSONObject json = (JSONObject) response.getResponseBodyAsJSON();
-			
-			if (status == HttpsURLConnection.HTTP_CREATED) {
+			// Success case: 201 + valid ID
+			if (status == HttpsURLConnection.HTTP_CREATED && json != null && json.has(ASE_ID_ATTRIBUTE)) {
+				String jobId = json.getString(ASE_ID_ATTRIBUTE);
 				m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATE_JOB_SUCCESS)));
-				return json.getString(ASE_ID_ATTRIBUTE);
+				return jobId;
 			}
-			else if (json != null && json.has(MESSAGE))
-				m_progress.setStatus(new Message(Message.ERROR, json.getString(MESSAGE)));
-			else
-				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_CREATE_JOB, status)));
-		} catch(IOException | JSONException e) {
+
+			// Invalid input parameters
+			else if (status == HttpsURLConnection.HTTP_BAD_REQUEST || status == HttpsURLConnection.HTTP_NOT_FOUND) {
+				String errorMessage = "";
+				if (json != null) {
+					if (json.has("errorMessage")) {
+						errorMessage = json.optString("errorMessage");
+					} else if (json.has(MESSAGE)) {
+						errorMessage = json.optString(MESSAGE);
+					}
+				}
+				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_CREATE_JOB, errorMessage.isEmpty() ? Messages.getMessage(ERROR_INVALID_DETAILS) : errorMessage)));
+			} else {
+				m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_CREATE_JOB, Messages.getMessage(ERROR_INVALID_DETAILS))));
+			}
+
+		} catch (IOException | JSONException e) {
 			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_CREATE_JOB, e.getLocalizedMessage())));
 		}
 		return null;
     }
     
-    private Map<String,String> getcreateJobParams(Map<String,String> properties) {
+    private Map<String,String> getCreateJobParams(Map<String,String> properties) {
         Map<String,String> apiParams= new HashMap<>();
         apiParams.put("testPolicyId", properties.get("testPolicyId"));
         apiParams.put("folderId",properties.get("folder"));

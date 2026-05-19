@@ -80,7 +80,7 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 				if (responseBody instanceof JSONObject) {
 					json = (JSONObject) responseBody;
 				}
-			} catch (Exception ignored) {
+			} catch (IOException | JSONException ignored) {
 				// Ignore JSON parsing issues, handled later
 			}
 

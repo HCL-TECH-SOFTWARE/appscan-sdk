@@ -54,15 +54,21 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
     
     private String createJob(Map<String, String> params) {
     	
-        if(loginExpired())
-           return null;
+        if (loginExpired()) {
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_LOGIN_EXPIRED)));
+			return null;
+		}
         
         Map<String, String> createJobParams = getCreateJobParams(params);
         m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(CREATING_JOB)));
-        
-        // TODO : correct it .
-        String templateId = createJobParams.get("templateId");
-        createJobParams.remove("templateId");
+
+		String templateId = createJobParams.get("templateId");
+		createJobParams.remove("templateId");
+
+		if (templateId == null || templateId.trim().isEmpty()) {
+			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_CREATE_JOB, "Template ID is missing")));
+			return null;
+		}
 		
         String request_url = m_authProvider.getServer() + String.format(ASE_CREATEJOB_TEMPLATE_ID, templateId);
         Map<String, String> request_headers = getRequestHeaders();
@@ -139,49 +145,62 @@ public class ASEScanServiceProvider implements IScanServiceProvider, Serializabl
 	}
 
 	private boolean handleStartingURL(Map<String, String> params, String jobId, String scanType) {
-		return scanType.equals(POSTMAN_COLLECTION) || params.get("startingURL").isEmpty() ||
-				updatescantJob(getUpdatescantJobParams("StartingUrl", params.get("startingURL"), "false"), jobId);
+		String startingURL = params.get("startingURL");
+		return POSTMAN_COLLECTION.equals(scanType) || startingURL == null || startingURL.isEmpty()
+				|| updatescantJob(getUpdatescantJobParams("StartingUrl", startingURL, "false"), jobId);
 	}
 
 	private boolean handleAgentServer(Map<String, String> params, String jobId) {
-		return params.get("agentServer").isEmpty() || updateAgentServer(params, jobId);
+		String agentServer = params.getOrDefault("agentServer", "");
+		return agentServer == null || agentServer.isEmpty() || updateAgentServer(params, jobId);
 	}
 
 	private boolean handleLoginManagement(Map<String, String> params, String jobId) {
 		String loginType = params.getOrDefault("loginType", "");
-		if (loginType.isEmpty()) return true;
+		if (loginType == null || loginType.isEmpty()) {
+			m_progress.setStatus(new Message(Message.INFO, "No login management option selected, skipping login configuration."));
+			return true;
+		}
 
 		if (!updatescantJob(getUpdatescantJobParams("LoginMethod", loginType, "false"), jobId)) return false;
 
 		if (loginType.equals("Automatic")) {
-			if (!updatescantJob(getUpdatescantJobParams("LoginUsername", params.get("userName"), "false"), jobId)) return false;
-			if (!updatescantJob(getUpdatescantJobParams("LoginPassword", params.get("password"), "true"), jobId)) return false;
+			String userName = params.get("userName");
+			String password = params.get("password");
+			if (!updatescantJob(getUpdatescantJobParams("LoginUsername", userName == null ? "" : userName, "false"), jobId)) return false;
+			if (!updatescantJob(getUpdatescantJobParams("LoginPassword", password == null ? "" : password, "true"), jobId)) return false;
 		}
 
 		if (loginType.equals("Manual")) {
-			File trafficFile = getFile(params.get("trafficFile"));
-			if (trafficFile != null && !updateTrafficJob(trafficFile, jobId, "login")) return false;
+			String trafficFilePath = params.get("trafficFile");
+			if (trafficFilePath != null) {
+				File trafficFile = getFile(trafficFilePath);
+				if (trafficFile != null && !updateTrafficJob(trafficFile, jobId, "login")) {
+					return false;
+				}
+			} else {
+				m_progress.setStatus(new Message(Message.INFO, "Manual login selected but no traffic file provided, skipping login configuration."));
+			}
 		}
-
 		return true;
 	}
 
 	private boolean handleExploreData(Map<String, String> params, String jobId) {
 		String exploreData = params.getOrDefault("exploreData", "");
-		return exploreData.isEmpty() || updateTrafficJob(getFile(exploreData), jobId, "add");
+		return exploreData == null || exploreData.isEmpty() || updateTrafficJob(getFile(exploreData), jobId, "add");
 	}
 
 	private boolean handleScanType(Map<String, String> params, String jobId, String scanType) {
-		return scanType.isEmpty() || scanType.equals(POSTMAN_COLLECTION) || updateScanTypeJob(params, jobId);
+		return scanType == null || scanType.isEmpty() || scanType.equals(POSTMAN_COLLECTION) || updateScanTypeJob(params, jobId);
 	}
 
 	private boolean handleTestOptimization(Map<String, String> params, String jobId) {
 		String testOpt = params.getOrDefault("testOptimization", "");
-		return testOpt.isEmpty() || updatescantJob(getUpdatescantJobParams("TestOptimization", testOpt, "false"), jobId);
+		return testOpt == null || testOpt.isEmpty() || updatescantJob(getUpdatescantJobParams("TestOptimization", testOpt, "false"), jobId);
 	}
 
 	private boolean handlePostmanCollection(Map<String, String> params, String jobId, String scanType) {
-		return !scanType.equals(POSTMAN_COLLECTION) || createPostmanCollectionJob(params, jobId);
+		return !POSTMAN_COLLECTION.equals(scanType) || createPostmanCollectionJob(params, jobId);
 	}
 
 

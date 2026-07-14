@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024, 2025.
+ * © Copyright HCL Technologies Ltd. 2017, 2026.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -54,8 +54,13 @@ public class ServiceUtil implements CoreConstants {
 	 * @throws IOException If an error occurs.
 	 */
 	public static void getSAClientUtil(File destination, Proxy proxy, String serverURL, String acceptInvalidCerts) throws IOException {
-        String request_url = requiredServerURL(serverURL);
-        request_url += String.format(API_SACLIENT_DOWNLOAD, SystemUtil.getOS());
+
+		// Use override URL for testing
+		String request_url = System.getenv("SACLIENTUTIL_DOWNLOAD_URL");
+		if (request_url == null) {
+			request_url = requiredServerURL(serverURL);
+			request_url += String.format(API_SACLIENT_DOWNLOAD, SystemUtil.getOS());
+		}
 
         HttpClient client = new HttpClient(proxy,acceptInvalidCerts.equals("true"));
         HttpResponse response = client.get(request_url, null, null);
@@ -106,6 +111,12 @@ public class ServiceUtil implements CoreConstants {
 	 * @throws IOException If an error occurs.
 	 */
 	public static String getSAClientVersion(Proxy proxy, String serverURL, boolean acceptInvalidCerts) throws IOException {
+
+        final String versionEV = System.getenv("SACLIENTUTIL_DOWNLOAD_VERSION"); //$NON-NLS-1$
+        if (versionEV != null) {
+            return versionEV;
+        }
+
         String request_url = requiredServerURL(serverURL);
         request_url += String.format(API_SACLIENT_VERSION, SystemUtil.getOS(), "true");
 		

@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024.
+ * © Copyright HCL Technologies Ltd. 2017, 2026.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Proxy;
@@ -24,6 +25,7 @@ import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.logging.Message;
 import com.hcl.appscan.sdk.utils.ArchiveUtil;
+import com.hcl.appscan.sdk.utils.ArchiveUtilSymlinks;
 import com.hcl.appscan.sdk.utils.FileUtil;
 import com.hcl.appscan.sdk.utils.ServiceUtil;
 import com.hcl.appscan.sdk.utils.SystemUtil;
@@ -32,7 +34,6 @@ public class SAClient implements SASTConstants {
 
 	private static final File DEFAULT_INSTALL_DIR = new File(System.getProperty("user.home"), ".appscan"); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String SACLIENT = "SAClientUtil"; //$NON-NLS-1$
-	private static final String SACLIENT_SUBDIR_MAC = "Contents" + File.separator + "Home" + File.separator; //$NON-NLS-1$ //$NON-NLS-2$
 	private static final String VERSION_INFO = "version.info"; //$NON-NLS-1$
 	
 	private IProgress m_progress;
@@ -165,13 +166,8 @@ public class SAClient implements SASTConstants {
         public String getClientScript(String serverURL, String acceptInvalidCerts) throws IOException, ScannerException {
 		//See if we already have the client package.
 		String scriptPath = "bin" + File.separator + getScriptName(); //$NON-NLS-1$
-		String scriptPathMac= SACLIENT_SUBDIR_MAC + scriptPath;
 		File install = findClientInstall();
 
-		// Handle Mac bundle
-		if (SystemUtil.isMac() && new File(install, scriptPathMac).isFile() && !shouldUpdateClient(serverURL, Boolean.parseBoolean(acceptInvalidCerts)))
-			return new File(install, scriptPathMac).getAbsolutePath();
-		
 		if(install != null && new File(install, scriptPath).isFile() && !shouldUpdateClient(serverURL, Boolean.parseBoolean(acceptInvalidCerts)))
 			return new File(install, scriptPath).getAbsolutePath();
 		
@@ -195,14 +191,19 @@ public class SAClient implements SASTConstants {
 		if(clientZip.isFile()) {
 			m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(DOWNLOAD_COMPLETE)));
 			m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(EXTRACTING_CLIENT)));
-			ArchiveUtil.unzip(clientZip, m_installDir);
-			m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(DONE)));
 		}
 
-		// Handle Mac bundle
-		if (SystemUtil.isMac() && new File(install, scriptPathMac).isFile())
-			return new File(install, scriptPathMac).getAbsolutePath();
-		
+		// Handle Mac bundle release (which contains symlinks that aren't handled by the Java zip class)
+		if (SystemUtil.isMac()) {
+			ArchiveUtilSymlinks aus = new ArchiveUtilSymlinks();
+			aus.unzip(clientZip, m_installDir);
+		}
+		else {
+			ArchiveUtil au = new ArchiveUtil();
+			au.unzip(clientZip, m_installDir);
+		}
+		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(DONE)));
+
 		return new File(findClientInstall(), scriptPath).getAbsolutePath();
 	}
 	
@@ -279,18 +280,16 @@ public class SAClient implements SASTConstants {
 	private String getLocalClientVersion() {
 		File versionInfo = new File(findClientInstall(), VERSION_INFO);
 
-		// Handle Mac bundle
-		if (SystemUtil.isMac() && ! versionInfo.isFile()) {
-			versionInfo = new File(findClientInstall(), SACLIENT_SUBDIR_MAC + VERSION_INFO);
-		}
 		String version = null;
 		BufferedReader reader = null;
 		
 		try {
 			reader = new BufferedReader(new FileReader(versionInfo));
 			version = reader.readLine(); //The version is the first line of the version.info file.
+		} catch (FileNotFoundException ignore) {
+			// Expected before first installation
 		} catch (IOException e) {
-			m_progress.setStatus(new Message(Message.ERROR, Messages.getMessage(ERROR_CHECKING_SACLIENT_VER, e.getLocalizedMessage())));
+			m_progress.setStatus(new Message(Message.WARNING, Messages.getMessage(ERROR_CHECKING_SACLIENT_VER, e.getLocalizedMessage())));
 		} finally {
 			try {
 				if(reader != null)

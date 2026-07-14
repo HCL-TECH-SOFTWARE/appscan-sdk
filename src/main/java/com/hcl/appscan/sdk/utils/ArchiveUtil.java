@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2026.
+ * © Copyright HCL Technologies Ltd. 2017. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -20,7 +20,7 @@ import java.util.zip.ZipOutputStream;
 import com.hcl.appscan.sdk.Messages;
 import com.hcl.appscan.sdk.scanners.sast.SASTConstants;
 
-public class ArchiveUtil implements ArchiveUtilInterface {
+public class ArchiveUtil {
 
 	private static final double TOO_BIG = 4e9; // 4GB
 	private static final int BUFFER_SIZE = 4096;
@@ -44,7 +44,7 @@ public class ArchiveUtil implements ArchiveUtilInterface {
 	 * @param destDir The destination directory to unzip to.
 	 * @throws IOException If an error occurs during the unzip operation.
 	 */
-	public void unzip(File source, File destDir) throws IOException {
+	public static void unzip(File source, File destDir) throws IOException {
 		
 		FileInputStream input = new FileInputStream(source);
 		ZipInputStream zip = new ZipInputStream(new BufferedInputStream(input));

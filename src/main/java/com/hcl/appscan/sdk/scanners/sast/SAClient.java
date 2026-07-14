@@ -13,7 +13,6 @@ import java.io.FilenameFilter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.net.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +25,7 @@ import com.hcl.appscan.sdk.logging.DefaultProgress;
 import com.hcl.appscan.sdk.logging.IProgress;
 import com.hcl.appscan.sdk.logging.Message;
 import com.hcl.appscan.sdk.utils.ArchiveUtil;
-import com.hcl.appscan.sdk.utils.ArchiveUtilInterface;
+import com.hcl.appscan.sdk.utils.ArchiveUtilSymlinks;
 import com.hcl.appscan.sdk.utils.FileUtil;
 import com.hcl.appscan.sdk.utils.ServiceUtil;
 import com.hcl.appscan.sdk.utils.SystemUtil;
@@ -196,20 +195,14 @@ public class SAClient implements SASTConstants {
 
 		// Handle Mac bundle release (which contains symlinks that aren't handled by the Java zip class)
 		if (SystemUtil.isMac()) {
-			try {
-				Class<?> c = Class.forName("com.ibm.appscan.common.utils.ArchiveUtilSymlinks");
-				Object o = c.getDeclaredConstructor().newInstance();
-				((ArchiveUtilInterface)o).unzip(clientZip, m_installDir);
-			}
-			catch(ClassNotFoundException|NoSuchMethodException|InstantiationException|InvocationTargetException|IllegalAccessException e) {
-				throw new ScannerException(Messages.getMessage(ERROR_DOWNLOADING_CLIENT, e.getLocalizedMessage()));
-			}
+			ArchiveUtilSymlinks aus = new ArchiveUtilSymlinks();
+			aus.unzip(clientZip, m_installDir);
 		}
 		else {
 			ArchiveUtil au = new ArchiveUtil();
 			au.unzip(clientZip, m_installDir);
-			m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(DONE)));
 		}
+		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(DONE)));
 
 		return new File(findClientInstall(), scriptPath).getAbsolutePath();
 	}

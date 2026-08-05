@@ -80,6 +80,9 @@ public class ServiceUtil implements CoreConstants {
         if(serverURL != null && !serverURL.isEmpty()) {
                 request_url = serverURL;
             }
+		while (request_url != null && request_url.endsWith("/")) {
+			request_url = request_url.substring(0, request_url.length() - 1);
+		}
         return request_url;
     }
 	

@@ -2,7 +2,7 @@
 Notices and Information
 -----------------------
 -----------------------
-HCL AppScan SDK v1.1.11
+HCL AppScan SDK v1.1.12
 -----------------------
 
 ======
@@ -11,19 +11,13 @@ DETAIL
 Note: generic licenses are marked with (*)
 Note: missing copyright references are marked with (*)
 ***************************************************************
-1. Library: appscan-sdk-appscan.sdk-1.1.10 Product: AppScan-SDK
+1. Library: appscan-sdk-appscan-sdk-1.1.11 Product: AppScan-SDK
 ***************************************************************
---------
-PROJECTS
---------
-1.1.11
-
-
 ========
 LICENSES
 ========
 Licensed under Apache 2.0
-License terms can be found at: https://github.com/HCL-TECH-SOFTWARE/appscan-sdk/blob/appscan.sdk-1.1.10/LICENSE
+License terms can be found at: https://github.com/HCL-TECH-SOFTWARE/appscan-sdk/blob/appscan-sdk-1.1.11/LICENSE
 
 License Text Under Appendix
 
@@ -34,15 +28,75 @@ COPYRIGHTS
 ==========
 (*) The copyright for this library is unknown
 
-****************************************************
-2. Library: wink-json4j-1.4.jar Product: AppScan-SDK
-****************************************************
---------
-PROJECTS
---------
-1.1.11
+************************************************************
+2. Library: commons-compress-1.26.0.jar Product: AppScan-SDK
+************************************************************
+========
+LICENSES
+========
+Licensed under Apache 2.0
+License terms can be found at: https://repo.maven.apache.org/maven2/org/apache/commons/commons-compress/1.26.0/commons-compress-1.26.0.pom
+
+License Text Under Appendix
 
 
+
+==========
+COPYRIGHTS
+==========
+Copyrighted under Copyright The Apache Software Foundation
+Copyright terms can be found at: https://commons.apache.org/proper/commons-compress/
+
+
+
+
+******************************************************
+3. Library: commons-io-2.17.0.jar Product: AppScan-SDK
+******************************************************
+========
+LICENSES
+========
+Licensed under Apache 2.0
+License terms can be found at: https://repo.maven.apache.org/maven2/commons-io/commons-io/2.17.0/commons-io-2.17.0.pom
+
+License Text Under Appendix
+
+
+
+==========
+COPYRIGHTS
+==========
+Copyrighted under Copyright The Apache Software Foundation
+Copyright terms can be found at: https://commons.apache.org/proper/commons-io/
+
+
+
+
+*********************************************************
+4. Library: commons-lang3-3.14.0.jar Product: AppScan-SDK
+*********************************************************
+========
+LICENSES
+========
+Licensed under Apache 2.0
+License terms can be found at: https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.pom
+
+License Text Under Appendix
+
+
+
+==========
+COPYRIGHTS
+==========
+Copyrighted under Copyright The Apache Software Foundation
+Copyright terms can be found at: https://commons.apache.org/proper/commons-lang/
+
+
+
+
+****************************************************
+5. Library: wink-json4j-1.4.jar Product: AppScan-SDK
+****************************************************
 ========
 LICENSES
 ========

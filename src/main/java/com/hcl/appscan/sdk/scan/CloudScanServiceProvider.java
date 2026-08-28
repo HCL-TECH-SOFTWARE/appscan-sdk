@@ -70,7 +70,6 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 
         Map<String, String> updateParams = new HashMap<>();
         updateParams.put("Name", params.remove(CoreConstants.SCAN_NAME));
-        updateParams.put("EnableMailNotifications", params.remove(CoreConstants.EMAIL_NOTIFICATION));
         updateParams.put("FullyAutomatic", params.remove("FullyAutomatic"));
         updateScanData(updateParams, scanId);
 

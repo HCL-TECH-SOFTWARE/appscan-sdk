@@ -16,7 +16,6 @@ public interface CoreConstants {
 	String STATIC_TECH					= "StaticAnalyzer";										//$NON-NLS-1$
 	
 	String APP_ID						= "AppId";												//$NON-NLS-1$
-	String EMAIL_NOTIFICATION			= "EnableMailNotification";								//$NON-NLS-1$
 	String PERSONAL_SCAN 				= "Personal";											//$NON-NLS-1$
 	String FILE_ID 						= "FileId"; 											//$NON-NLS-1$
 	String FILE_TO_UPLOAD 				= "fileToUpload";										//$NON-NLS-1$

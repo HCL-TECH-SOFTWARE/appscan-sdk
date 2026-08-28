@@ -117,9 +117,6 @@ public abstract class ASoCScan implements IScan, ScanConstants, Serializable {
 	protected Map<String, String> getProperties() {
 		if(!m_properties.containsKey(CoreConstants.LOCALE))
 			m_properties.put(CoreConstants.LOCALE, SystemUtil.getLocale());
-		if(!m_properties.containsKey(CoreConstants.EMAIL_NOTIFICATION) ||
-				!Boolean.parseBoolean(m_properties.get(CoreConstants.EMAIL_NOTIFICATION)))
-			m_properties.put(CoreConstants.EMAIL_NOTIFICATION, Boolean.toString(false));
 		return m_properties;
 	}
 	

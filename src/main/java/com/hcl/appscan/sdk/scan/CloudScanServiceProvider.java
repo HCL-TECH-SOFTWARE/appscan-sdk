@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024.
+ * © Copyright HCL Technologies Ltd. 2017, 2026.
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -70,7 +70,6 @@ public class CloudScanServiceProvider implements IScanServiceProvider, Serializa
 
         Map<String, String> updateParams = new HashMap<>();
         updateParams.put("Name", params.remove(CoreConstants.SCAN_NAME));
-        updateParams.put("EnableMailNotifications", params.remove(CoreConstants.EMAIL_NOTIFICATION));
         updateParams.put("FullyAutomatic", params.remove("FullyAutomatic"));
         updateScanData(updateParams, scanId);
 

@@ -1,6 +1,6 @@
 /**
  * © Copyright IBM Corporation 2016.
- * © Copyright HCL Technologies Ltd. 2017, 2024. 
+ * © Copyright HCL Technologies Ltd. 2017, 2026. 
  * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
  */
 
@@ -117,9 +117,6 @@ public abstract class ASoCScan implements IScan, ScanConstants, Serializable {
 	protected Map<String, String> getProperties() {
 		if(!m_properties.containsKey(CoreConstants.LOCALE))
 			m_properties.put(CoreConstants.LOCALE, SystemUtil.getLocale());
-		if(!m_properties.containsKey(CoreConstants.EMAIL_NOTIFICATION) ||
-				!Boolean.parseBoolean(m_properties.get(CoreConstants.EMAIL_NOTIFICATION)))
-			m_properties.put(CoreConstants.EMAIL_NOTIFICATION, Boolean.toString(false));
 		return m_properties;
 	}
 	

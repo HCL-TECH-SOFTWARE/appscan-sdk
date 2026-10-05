@@ -29,6 +29,7 @@ import com.hcl.appscan.sdk.utils.ArchiveUtilSymlinks;
 import com.hcl.appscan.sdk.utils.FileUtil;
 import com.hcl.appscan.sdk.utils.ServiceUtil;
 import com.hcl.appscan.sdk.utils.SystemUtil;
+import com.hcl.appscan.sdk.utils.VersionInfo;
 
 public class SAClient implements SASTConstants {
 
@@ -173,8 +174,6 @@ public class SAClient implements SASTConstants {
 		
 		//Download it.
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(DOWNLOADING_CLIENT)));
-		if(install != null && install.isDirectory())
-			deleteDirectory(install);
 		
 		File clientZip = new File(m_installDir, SACLIENT + ".zip"); //$NON-NLS-1$
 		if(clientZip.isFile())
@@ -196,12 +195,22 @@ public class SAClient implements SASTConstants {
 		// Handle Mac bundle release (which contains symlinks that aren't handled by the Java zip class)
 		if (SystemUtil.isMac()) {
 			ArchiveUtilSymlinks aus = new ArchiveUtilSymlinks();
-			aus.unzip(clientZip, m_installDir);
+			File location = aus.unzip(clientZip, m_installDir);
+			if (isSAClientUtilIncompatible(location) ) {
+				deleteDirectory(location);
+				clientZip.delete();
+				throw new ScannerException(Messages.getMessage(ERROR_DOWNLOADING_CLIENT, "Release is not compatible with system")); //$NON_NLS-1$ //$NON_NLS-2$
+			}
 		}
 		else {
 			ArchiveUtil au = new ArchiveUtil();
 			au.unzip(clientZip, m_installDir);
 		}
+
+		// Now it's safe to delete any previous installation
+		if(install != null && install.isDirectory())
+			deleteDirectory(install);
+
 		m_progress.setStatus(new Message(Message.INFO, Messages.getMessage(DONE)));
 
 		return new File(findClientInstall(), scriptPath).getAbsolutePath();
@@ -301,14 +310,13 @@ public class SAClient implements SASTConstants {
 	}
 	
 	private void deleteDirectory(File directory) {
-		if(!directory.isDirectory())
-			directory.delete();
-		
-		for(File file : directory.listFiles()) {
-			if(file.isDirectory())
-				deleteDirectory(file);
-			else
-				file.delete();
+		if(directory.isDirectory()) {
+			for(File file : directory.listFiles()) {
+				if(file.isDirectory())
+					deleteDirectory(file);
+				else
+					file.delete();
+			}
 		}
 		directory.delete();
 	}
@@ -396,5 +404,41 @@ public class SAClient implements SASTConstants {
 		if(version.trim().startsWith(".")) //$NON-NLS-1$
 			version = version.substring(1);
 		return version;
+	}
+
+private boolean isSAClientUtilIncompatible(File location) {
+		// Is an ARM SAClientUtil being installed on an Intel Mac?
+		try {
+			// Test system architecture for Intel - can't use System.getProperty("os.arch") to determine
+			// this because Rosetta causes it to return "x86_64", so use the method given at
+			// https://developer.apple.com/documentation/kernel/1387446-sysctlbyname/determining_instruction_set_characteristics
+			ProcessBuilder processBuilder = new ProcessBuilder("sysctl", "-b", "hw.optional.arm64"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			Process process = processBuilder.start();
+
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+
+				// Return code is nonzero when the variable doesn't even exist (i.e. Intel)
+				int val = reader.read();
+				int exitCode = process.waitFor();
+				if (exitCode == 0 && val == 1) {
+					// ARM system
+					return false;
+				}
+			} catch (IOException | InterruptedException e) {
+				// ignore problems
+				return false;
+			}
+		}
+		catch (IOException e) {
+			return false;
+		}
+
+		// Test downloaded SAClientUtil build for Intel executable
+		VersionInfo version = new VersionInfo(location.getAbsolutePath());
+		if (version.getArchitecture() != null && version.getArchitecture().equals("x64")) { //$NON-NLS-1$
+			return false;
+		}
+
+		return true;
 	}
 }

@@ -1,13 +1,8 @@
-/*************************************************************************
-* IBM and/or HCL Confidential
-* AppScan Static Analyzer
-* (c) Copyright IBM Corp. 2013, 2017 All Rights Reserved.
-* (c) Copyright HCL Technologies, Ltd. 2023, 2026 All Rights Reserved.
-*
-* The source code for this program is not published or otherwise
-* divested of its trade secrets, irrespective of what has been
-* deposited with the U.S. Copyright Office.
-*/
+/**
+ * © Copyright IBM Corporation 2016.
+ * © Copyright HCL Technologies Ltd. 2023, 2026.
+ * LICENSE: Apache License, Version 2.0 https://www.apache.org/licenses/LICENSE-2.0
+ */
 
 package com.hcl.appscan.sdk.utils;
 
@@ -21,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
@@ -87,9 +83,10 @@ public class ArchiveUtilSymlinks {
 	 * 
 	 * @param source The source archive.
 	 * @param dest The destination directory to unzip to.
+	 * @return The resulting directory.
 	 * @throws IOException If an error occurs during the unzip operation.
 	 */
-	public void unzip(File source, File dest) throws IOException {
+	public File unzip(File source, File dest) throws IOException {
 
 		// See https://commons.apache.org/proper/commons-compress/examples.html
 		// and https://issues.apache.org/jira/browse/COMPRESS-689 for why this
@@ -97,7 +94,8 @@ public class ArchiveUtilSymlinks {
 		try ( ZipFile zipFile = ZipFile.builder().setFile(source).get() )
 		{
 			Enumeration<ZipArchiveEntry> entries = zipFile.getEntries();
-			Collections.list(entries).forEach(entry -> {
+			List<ZipArchiveEntry> list = Collections.list(entries);
+			list.forEach(entry -> {
 				try {
 					if (! processEntry(zipFile, entry, dest, true)) {
 						final File f = new File(dest, entry.getName());
@@ -108,6 +106,10 @@ public class ArchiveUtilSymlinks {
 					throw new UncheckedIOException(e);
 				}
 			});
+
+			// Provide result location
+ 			final Path resultPath = Paths.get(list.get(0).getName() );
+			return new File(dest, resultPath.subpath(0, 1).toString() );
 		}
 		catch (IOException | UncheckedIOException e) {
 			throw new IOException(e);

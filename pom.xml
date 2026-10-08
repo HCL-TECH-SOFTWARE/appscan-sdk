@@ -103,6 +103,11 @@
 				  <artifactId>central-publishing-maven-plugin</artifactId>
 				  <version>0.8.0</version>
 			  </plugin>
+			  <plugin>
+				  <groupId>org.apache.maven.plugins</groupId>
+				  <artifactId>maven-dependency-plugin</artifactId>
+				  <version>3.6.0</version>
+			  </plugin>
 		  </plugins>
 	  </pluginManagement>
 
@@ -142,7 +147,7 @@
 							  </requirePluginVersions>
 							  <banDynamicVersions>
 								  <message>Dynamic versions (ranges, LATEST, RELEASE) are strictly prohibited!</message>
-								  <allowSnapshots>true</allowSnapshots>
+								  <allowSnapshots>false</allowSnapshots>
 							  </banDynamicVersions>
 						  </rules>
 					  </configuration>
